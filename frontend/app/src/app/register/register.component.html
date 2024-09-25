@@ -1,0 +1,82 @@
+<section class="hero is-fullheight is-light">
+    <div class="hero-body">
+      <div class="container">
+        <div class="box" style="max-width: 500px; margin: auto; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);">
+          <h1 class="title is-uppercase has-text-centered">Talk Tide</h1>
+          <h3 class="subtitle has-text-centered">Register</h3>
+          
+          <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+            <div class="field">
+              <label class="label">Username <span class="has-text-danger">*</span></label>
+              <div class="control has-icons-left">
+                <input class="input" type="text" placeholder="Enter your username" formControlName="username">
+                <span class="icon is-small is-left">
+                  <i class="fas fa-user"></i>
+                </span>
+              </div>
+              <div *ngIf="registerForm.get('username')?.errors?.['invalidUsername'] && registerForm.get('username')?.touched" class="help is-danger">
+                Username can only contain small letters, numbers, underscores, and hyphens.
+              </div>
+              <div *ngIf="registerForm.get('username')?.invalid && registerForm.get('username')?.touched" class="help is-danger">
+                Username is required.
+              </div>
+            </div>
+            <div class="field">
+              <div class="control">
+                <button class="button is-primary" type="button" (click)="onProceed()" [disabled]="isProceedClicked">Proceed</button>
+              </div>
+            </div>
+            <div class="field" *ngIf="isProceedClicked">
+              <label class="label">First Name <span class="has-text-danger">*</span></label>
+              <div class="control">
+                <input class="input" type="text" placeholder="Enter your first name" formControlName="firstName">
+              </div>
+              <div *ngIf="registerForm.get('firstName')?.invalid && registerForm.get('firstName')?.touched" class="help is-danger">
+                First Name is required.
+              </div>
+            </div>
+            <div class="field" *ngIf="isProceedClicked">
+              <label class="label">Last Name</label>
+              <div class="control">
+                <input class="input" type="text" placeholder="Enter your last name" formControlName="lastName">
+              </div>
+            </div>
+            <div class="field" *ngIf="isProceedClicked">
+              <label class="label">Password <span class="has-text-danger">*</span></label>
+              <div class="control">
+                <input class="input" type="password" placeholder="Enter your password" formControlName="password">
+              </div>
+              <div *ngIf="registerForm.get('password')?.errors && registerForm.get('password')?.touched" class="help is-danger">
+                <div *ngIf="registerForm.get('password')?.errors?.['required']">Password is required.</div>
+                <div *ngIf="registerForm.get('password')?.errors?.['minlength']">Minimum length is 6.</div>
+                <div *ngIf="registerForm.get('password')?.errors?.['weakPassword']">At least one number is required.</div>
+              </div>
+            </div>
+            <div class="field" *ngIf="isProceedClicked">
+              <label class="label">Re-enter Password <span class="has-text-danger">*</span></label>
+              <div class="control">
+                <input class="input" type="password" placeholder="Re-enter your password" formControlName="confirmPassword">
+              </div>
+              <div *ngIf="registerForm.get('confirmPassword')?.errors && registerForm.get('confirmPassword')?.touched" class="help is-danger">
+                <div *ngIf="registerForm.get('confirmPassword')?.errors?.['required']">Confirmation password is required.</div>
+                <div *ngIf="registerForm.get('confirmPassword')?.errors?.['matchingPasswords']">Passwords do not match.</div>
+              </div>
+            </div>
+            <div class="field">
+              <div class="control">
+                <button class="button is-primary" type="submit" [disabled]="registerForm.invalid" *ngIf="isProceedClicked">Submit</button>
+              </div>
+            </div>
+          
+        </form>
+          <div class="field">
+            <p>
+              Already have an account? 
+              <a routerLink="/login" class="has-text-primary">Login here</a>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  
