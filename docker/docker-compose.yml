@@ -50,6 +50,8 @@ services:
     image: chat-gateway:1.0.0
     ports:
       - 8080:8080
+    env_file:
+      - .env
     command: /bin/sh -c "while true; do sleep 300; done"
     volumes:
       - ../gateway/app/:/app/
@@ -62,6 +64,8 @@ services:
       dockerfile: Dockerfile
       target: stage
     container_name: chat-service-authuser
+    env_file:
+      - .env
     image: chat-service-authuser:1.0.0
     command: /bin/sh -c "while true; do sleep 300; done"
     volumes:
