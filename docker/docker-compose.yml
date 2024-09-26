@@ -13,6 +13,18 @@ services:
     volumes:
       - chat-db-vol:/var/lib/postgresql/data
 
+  talktide-broker:
+    image: rabbitmq:3-management-alpine
+    container_name: rabbitmq
+    ports:
+        - 5672:5672
+        - 15672:15672
+    volumes:
+        - rabbitmq-data-vol:/var/lib/rabbitmq/
+        - rabbitmq-log-vol:/var/log/rabbitmq
+    networks:
+        - chat-net
+
   talktide-fe:
     build: 
       context: ../frontend
@@ -43,9 +55,24 @@ services:
       - ../gateway/app/:/app/
     networks:
       - chat-net
+  
+  talktide-service-authuser:
+    build: 
+      context: ../service-authuser
+      dockerfile: Dockerfile
+      target: stage
+    container_name: chat-service-authuser
+    image: chat-service-authuser:1.0.0
+    command: /bin/sh -c "while true; do sleep 300; done"
+    volumes:
+      - ../service-authuser/app/:/app/
+    networks:
+      - chat-net
 
 volumes:
   chat-db-vol:
+  rabbitmq-log-vol:
+  rabbitmq-data-vol:
 
 networks:
   chat-net:
