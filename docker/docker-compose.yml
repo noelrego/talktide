@@ -29,6 +29,21 @@ services:
     networks:
       - chat-net
 
+  talktide-gateway:
+    build: 
+      context: ../gateway
+      dockerfile: Dockerfile
+      target: stage
+    container_name: chat-gateway
+    image: chat-gateway:1.0.0
+    ports:
+      - 8080:8080
+    command: /bin/sh -c "while true; do sleep 300; done"
+    volumes:
+      - ../gateway/app/:/app/
+    networks:
+      - chat-net
+
 volumes:
   chat-db-vol:
 
