@@ -10,6 +10,7 @@ import { NotFoundComponent } from './not-found/not-found.component';
 import { HTTP_INTERCEPTORS, provideHttpClient } from '@angular/common/http';
 import { HttpCustomInterceptor } from './config/http-intercepter.cofig';
 import { ApiDataService } from './service/api';
+import { CustomCookieService } from './service/api/cookie/cookie.service';
 
 @NgModule({
   declarations: [
@@ -30,7 +31,8 @@ import { ApiDataService } from './service/api';
       useClass: HttpCustomInterceptor,
       multi: true
     },
-    ApiDataService
+    ApiDataService,
+    CustomCookieService
   ],
   bootstrap: [AppComponent]
 })

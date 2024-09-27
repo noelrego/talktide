@@ -32,15 +32,25 @@
             <div class="control">
               <input class="input" type="text" placeholder="Enter your first name" formControlName="firstName">
             </div>
-            <div *ngIf="registerForm.get('firstName')?.invalid && registerForm.get('firstName')?.touched"
+            <div *ngIf="registerForm.get('firstName')?.errors?.['required'] && registerForm.get('firstName')?.touched"
               class="help is-danger">
               First Name is required.
+            </div>
+            <div
+              *ngIf="registerForm.get('firstName')?.errors?.['pattern']"
+              class="help is-danger">
+              No special chars are allwoed
             </div>
           </div>
           <div class="field">
             <label class="label">Last Name</label>
             <div class="control">
               <input class="input" type="text" placeholder="Enter your last name" formControlName="lastName">
+            </div>
+            <div
+              *ngIf="registerForm.get('lastName')?.errors?.['pattern']"
+              class="help is-danger">
+              No special chars are allwoed
             </div>
           </div>
           <div class="field">

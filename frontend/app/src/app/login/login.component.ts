@@ -3,6 +3,7 @@ import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/fo
 import { Router } from '@angular/router';
 import { ApiDataService } from '../service/api';
 import { LoginUserDto } from '../common';
+import { CustomCookieService } from '../service/api/cookie/cookie.service';
 
 @Component({
   selector: 'app-login',
@@ -18,7 +19,8 @@ export class LoginComponent {
   constructor(
     private fb: FormBuilder,
     private router: Router,
-    private apiData: ApiDataService
+    private apiData: ApiDataService,
+    private myCookie : CustomCookieService
   ) {
     this.loginForm = this.fb.group({
       username: ['', [Validators.required, this.usernameValidator]],
@@ -45,6 +47,7 @@ export class LoginComponent {
       this.apiData.loginUser(payload).subscribe({
         next: (response) => {
           if (response.status === 200) {
+            this.myCookie.setTokenCookie(response.body?.resData?.accessToken);
             this.router.navigate(['/chat']);
           }
         },

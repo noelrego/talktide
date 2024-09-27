@@ -26,8 +26,8 @@ export class RegisterComponent {
   ) {
     this.registerForm = this.fb.group({
       username: ['', [Validators.required, this.usernameValidator]],
-      firstName: ['', Validators.required],
-      lastName: [''],
+      firstName: ['', [Validators.required, Validators.pattern(/^[a-zA-Z1-9 ]*$/)]],
+      lastName: ['', [Validators.pattern(/^[a-zA-Z1-9 ]*$/)]],
       password: ['', [Validators.required, Validators.minLength(6), this.passwordValidator]],
       confirmPassword: ['', Validators.required]
     }, { validator: this.matchingPasswords('password', 'confirmPassword') });
@@ -61,11 +61,17 @@ export class RegisterComponent {
   }
 
   usernameValidator(control: AbstractControl): { [key: string]: any } | null {
-    const usernamePattern = /^[a-z0-9_-]+$/; // Allows small letters, digits, underscores, and hyphens
+    const usernamePattern = /^[\sa-z0-9_-]+$/; // Allows small letters, digits, underscores, and hyphens
     return usernamePattern.test(control.value) ? null : { invalidUsername: true };
   }
 
+  nameValidator(control: AbstractControl): { [key: string]: any } | null {
+    const usernamePattern = /^[a-z0-9_A-Z-]+$/; // Allows small letters, digits, underscores, and hyphens
+    return usernamePattern.test(control.value) ? null : { invalidName: true };
+  }
+
   onSubmit() {
+    if (!this.userAvailable) return;
     if (this.registerForm.valid) {
       console.log('Registration Form Submitted!', this.registerForm.value);
 
