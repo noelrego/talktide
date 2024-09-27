@@ -1,5 +1,13 @@
 import { IsNotEmpty, IsOptional, IsString, Length, Matches } from "class-validator";
 
+export class CheckUserNameDto {
+    @IsString()
+    @IsNotEmpty()
+    @Length(2, 32, {message: 'User Name should be between 2 to 32 chars'})
+    @Matches(/^[a-z0-9_-]+$/, { message: 'User Name should have small letters, numbers, underscores, and hyphens.'})
+    userName: string;
+}
+
 export class RegisterUserDto {
     @IsString()
     @IsNotEmpty()

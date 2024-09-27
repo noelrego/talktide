@@ -1,7 +1,7 @@
 import { Body, Controller, Get, Post, Res } from '@nestjs/common';
 import { AuthuserService } from './authuser.service';
 import { Response } from 'express';
-import { LoginUserDto, RegisterUserDto } from 'src/dto';
+import { CheckUserNameDto, LoginUserDto, RegisterUserDto } from 'src/dto';
 
 @Controller('user')
 export class AuthuserController {
@@ -9,6 +9,15 @@ export class AuthuserController {
     constructor (
         private userService: AuthuserService
     ) {}
+
+    /**
+     * POST /api/check-username
+     */
+    @Post('check-username')
+    async checkuserName(@Res() res: Response, @Body() dto: CheckUserNameDto) {
+        const response = await this.userService.checkUserNameService(dto);
+        return res.status(response.statusCode).json(response);
+    }
 
     /**
      * POST /api/user/register

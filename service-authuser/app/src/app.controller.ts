@@ -1,24 +1,34 @@
 import { Controller, Get } from '@nestjs/common';
 import { AppService } from './app.service';
 import { MessagePattern, Payload } from '@nestjs/microservices';
-import { MsgPatternAuthUserService } from '@nn-rego/chatapp-common';
+import { N_MsgPatternAuthUserService } from '@nn-rego/chatapp-common';
+import { AuthLoginType, CheckUserNameType, RegisterUserType } from './common';
 
 @Controller()
 export class AppController {
   constructor(private readonly appService: AppService) {}
 
-  @MessagePattern(MsgPatternAuthUserService.GET_ALL_USERS)
+
+  @MessagePattern(N_MsgPatternAuthUserService.CHECK_USERNAME)
+  async checkUserName(@Payload() payload: CheckUserNameType) {
+    return this.appService.checkUserNameService(payload);
+  }
+
+
+  @MessagePattern(N_MsgPatternAuthUserService.GET_ALL_USERS)
   async getAllUser() {
     return this.appService.getAllUserService();
   }
 
-  @MessagePattern(MsgPatternAuthUserService.REGISTER_USER)
-  async registerUser(@Payload() payload: any) {
+
+  @MessagePattern(N_MsgPatternAuthUserService.REGISTER_USER)
+  async registerUser(@Payload() payload: RegisterUserType) {
     return this.appService.registerUserService(payload);
   }
 
-  @MessagePattern(MsgPatternAuthUserService.LOGIN_USER)
-  loginAuthUser(@Payload() payload: any) {
+
+  @MessagePattern(N_MsgPatternAuthUserService.LOGIN_USER)
+  loginAuthUser(@Payload() payload: AuthLoginType) {
     return this.appService.loginAuthUserService(payload);
   }
 }

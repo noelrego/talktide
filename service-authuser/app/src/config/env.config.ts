@@ -35,21 +35,7 @@ export class CustomConfigService {
     return process.env.POSTGRES_PASSWORD;
   }
 
-  createDataSourceOptions = (): DataSourceOptions => {
-    return {
-      type: 'postgres',
-      host: this.getDbHost(),
-      port: this.getDbPort(),
-      username: this.getDbUser(),
-      password: this.getDbPass(),
-      database: this.getDbNameforService(),
-      entities: [__dirname + '/../**/*.entity{.ts,.js}'],
-      synchronize: false,
-      migrationsRun: false,
-    };
-  };
-
-  createDataSource = (): DataSource => {
-    return new DataSource(this.createDataSourceOptions());
-  };
+  getJwtSecret(): string {
+    return process.env.JET_SECRET;
+  }
 }

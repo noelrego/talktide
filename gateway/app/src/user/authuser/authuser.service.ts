@@ -1,9 +1,9 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
-import { LoginUserDto, RegisterUserDto } from 'src/dto';
+import { CheckUserNameDto, LoginUserDto, RegisterUserDto } from 'src/dto';
 
 import { ClientProxy } from '@nestjs/microservices';
 import { firstValueFrom } from 'rxjs';
-import { MsgPatternAuthUserService, N_GenericResType } from '@nn-rego/chatapp-common';
+import { N_MsgPatternAuthUserService, N_GenericResType } from '@nn-rego/chatapp-common';
 import { MicroServiceName } from 'src/common';
 
 @Injectable()
@@ -14,6 +14,27 @@ export class AuthuserService {
         @Inject(MicroServiceName.AUTH_SERVICE) private authUserClient: ClientProxy
     ) {}
 
+    /**
+     * Function to Check the user name availablity
+     */
+    async checkUserNameService(dto: CheckUserNameDto) : Promise<N_GenericResType> {
+
+        const response : N_GenericResType = await firstValueFrom(
+            this.authUserClient.send(N_MsgPatternAuthUserService.CHECK_USERNAME, dto)
+        );
+
+        if (response?.errors) {
+            this.logger.error(response.errors);
+            return {
+                statusCode: response.statusCode,
+                message: response.message
+            }
+        }
+
+        return response;
+        
+    }
+
 
     /**
      * Function to return all the users in the system.
@@ -21,7 +42,7 @@ export class AuthuserService {
     async getAllUserService() : Promise<N_GenericResType> {
 
         const response : N_GenericResType = await firstValueFrom(
-            this.authUserClient.send(MsgPatternAuthUserService.GET_ALL_USERS, 'data')
+            this.authUserClient.send(N_MsgPatternAuthUserService.GET_ALL_USERS, 'none')
         );
 
         if (response?.errors) {
@@ -42,7 +63,7 @@ export class AuthuserService {
      */
     async registerUserService(dto: RegisterUserDto) : Promise<N_GenericResType> {
         const response : N_GenericResType = await firstValueFrom(
-            this.authUserClient.send(MsgPatternAuthUserService.REGISTER_USER, dto)
+            this.authUserClient.send(N_MsgPatternAuthUserService.REGISTER_USER, dto)
         );
 
         if (response?.errors) {
@@ -62,7 +83,7 @@ export class AuthuserService {
      */
     async loginAuthUserService(dto: LoginUserDto) : Promise<N_GenericResType> {
         const response : N_GenericResType = await firstValueFrom(
-            this.authUserClient.send(MsgPatternAuthUserService.LOGIN_USER, dto)
+            this.authUserClient.send(N_MsgPatternAuthUserService.LOGIN_USER, dto)
         );
 
         if (response?.errors) {
