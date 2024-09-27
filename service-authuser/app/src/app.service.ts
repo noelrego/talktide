@@ -32,7 +32,7 @@ export class AppService {
       if (!user) {
         return {
           statusCode: HttpStatus.OK,
-          message: 'User name available'
+          message: 'Username is available'
         }
       } else {
         return {
@@ -129,8 +129,8 @@ export class AppService {
 
       if (!user) {
         return {
-          statusCode: HttpStatus.FORBIDDEN,
-          message: 'Unauthorized'
+          statusCode: HttpStatus.UNAUTHORIZED,
+          message: 'Unauthorized access'
         }
       }
 
@@ -143,20 +143,20 @@ export class AppService {
           userName: user.userName
         };
 
-        const signedJwt = await this.helper.generateAuthToken(jwtPayload);
+        const accessToken = await this.helper.generateAuthToken(jwtPayload);
 
         return {
           statusCode: HttpStatus.OK,
           message: 'Authenticated Successfully',
           resData: {
-            jwtToken: signedJwt
+            accessToken
           }
         }
 
       } else {
           return {
-            statusCode: HttpStatus.FORBIDDEN,
-            message: 'Unauthorized'
+            statusCode: HttpStatus.UNAUTHORIZED,
+            message: 'Unauthorized access'
           }
       }
 

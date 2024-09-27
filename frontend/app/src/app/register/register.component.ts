@@ -1,5 +1,8 @@
 import { Component } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ApiDataService } from '../service/api';
+import { RegisterUserDto } from '../common';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-register',
@@ -11,9 +14,16 @@ export class RegisterComponent {
 
   registerForm: FormGroup;
   isProceedClicked: boolean = false;
-  showPassword = false;
+  registerSuccess = false;
 
-  constructor(private fb: FormBuilder) {
+  userAvailableResponse: string = '';
+  userAvailable: boolean = false;
+
+  constructor(
+    private fb: FormBuilder,
+    private apiData: ApiDataService,
+    private router: Router
+  ) {
     this.registerForm = this.fb.group({
       username: ['', [Validators.required, this.usernameValidator]],
       firstName: ['', Validators.required],
@@ -23,20 +33,31 @@ export class RegisterComponent {
     }, { validator: this.matchingPasswords('password', 'confirmPassword') });
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void { }
 
-  onProceed() {
-    if (this.registerForm.get('username')?.invalid) {
-      this.isProceedClicked = false;
-    } else {
-      this.isProceedClicked = true;
+  checkUserName(event: any) {
+    const userName = this.registerForm.get('username')?.value;
+    if (!userName) return;
+    if (userName?.length < 3) {
+      this.userAvailable = false;
+      this.userAvailableResponse = '';
+      return;
     }
-    
-  }
 
-  togglePasswordVisibility() {
+    this.apiData.checkUserName(userName).subscribe({
+      next: (response) => {
+        console.log(response);
+        if (response.status === 200) {
+          this.userAvailable = true;
+          this.userAvailableResponse = response.body.message;
+        }
+      },
+      error: (err) => {
+        this.userAvailable = false;
+        this.userAvailableResponse = 'User name not available'
+      }
+    });
 
-    this.showPassword = !this.showPassword;
   }
 
   usernameValidator(control: AbstractControl): { [key: string]: any } | null {
@@ -47,6 +68,35 @@ export class RegisterComponent {
   onSubmit() {
     if (this.registerForm.valid) {
       console.log('Registration Form Submitted!', this.registerForm.value);
+
+      // Make API Call
+      const payload: RegisterUserDto = {
+        userName: this.registerForm.value.username,
+        firstName: this.registerForm.value.firstName,
+        lastName: this.registerForm.value.lastName,
+        password: this.registerForm.value.password
+      }
+      console.log(payload);
+      this.apiData.registerUser(payload).subscribe({
+        next: (response) => {
+          if (response.status === 201) {
+            this.userAvailable = false;
+            this.userAvailableResponse = '';
+            this.registerForm.reset();
+            this.registerForm.markAsPending();
+            this.registerSuccess = true;
+            setTimeout(() => {
+              this.router.navigate(['/login'])
+            }, 2000);
+          }
+        },
+        error: (err) => {
+          console.error(err);
+          // this.registerForm.reset();
+        }
+      })
+    } else {
+      this.registerForm.markAllAsTouched();
     }
   }
 
@@ -55,7 +105,7 @@ export class RegisterComponent {
     return (formGroup: FormGroup) => {
       const password = formGroup.controls[passwordKey];
       const confirmPassword = formGroup.controls[confirmPasswordKey];
-      
+
       if (confirmPassword.errors && !confirmPassword.errors['matchingPasswords']) {
         return;
       }
@@ -76,4 +126,5 @@ export class RegisterComponent {
     }
     return null;
   }
+
 }

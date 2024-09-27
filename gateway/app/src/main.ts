@@ -12,7 +12,10 @@ async function bootstrap() {
   app.setGlobalPrefix('api');
 
   app.useGlobalPipes(new ValidationPipe());
-  
+  app.enableCors({
+    credentials: true,
+    origin: [configService.getFrontendOrigin()],
+  })
   await app.listen(port);
 
   console.log(`GATEWAY running on port ${port} started at ${new Date()}`);

@@ -10,6 +10,10 @@ export class ConfigService {
         return Number(process.env.GATEWAY_PORT) || 8080;
     }
 
+    getFrontendOrigin() : string {
+        return 'http://localhost:4200'  // Demo purpose
+    }
+
     getRMQurl() : string {
         return process.env.RABBITMQ_HOST_URL;
     }
