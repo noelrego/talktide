@@ -65,17 +65,11 @@
     margin-left: 10px;
 }
 
-.chat-footer {
-    padding: 10px;
-    border-top: 1px solid #ddd;
+.line {
+    border-top: 1px solid rgb(210, 210, 210);
 }
-
-.chat-footer .field {
-    display: flex;
-    width: 100%;
-}
-
-.chat-footer .control {
-    flex-grow: 1;
-    margin-right: 10px;
+.preview-msg {
+    background: white;
+    border: 1px solid rgb(193, 190, 190);
+    border-radius: 10px;
 }
