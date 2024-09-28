@@ -13,8 +13,12 @@ export class CustomCookieService {
     ) {}
 
 
+    // Demo purpose
     setTokenCookie(data: string) : void {
-        this.cookieService.set(COOKIE_NAME, data, {expires: 1});
+        let ex = new Date();
+        let extend = ex.getHours() + 2;
+        ex.setHours(extend);
+        this.cookieService.set(COOKIE_NAME, data, {expires: ex});
     }
 
     hasTokenCookie() : boolean {

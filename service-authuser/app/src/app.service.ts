@@ -144,12 +144,17 @@ export class AppService {
         };
 
         const accessToken = await this.helper.generateAuthToken(jwtPayload);
-
+        const userInfo = {
+          authId: user.id,
+          username: user.userName,
+          fullName: `${user.firstName}${(user?.lastName)? ' ' +user.lastName : ''}`
+        }
         return {
           statusCode: HttpStatus.OK,
           message: 'Authenticated Successfully',
           resData: {
-            accessToken
+            accessToken,
+            userInfo
           }
         }
 
