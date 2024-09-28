@@ -7,3 +7,10 @@ export enum LocalStrgNames {
 export enum ProvideReducerName {
     TALK_TIDE_STORE = 'talk_tide_store'
 }
+
+export enum UserStatus {
+    BUSY = 'busy',
+    AVAILABLE = 'available',
+    OFFLINE = 'offline',
+    AWAY = 'away'
+}

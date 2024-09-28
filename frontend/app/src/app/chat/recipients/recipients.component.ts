@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-recipients',
@@ -7,13 +7,13 @@ import { Component, OnInit } from '@angular/core';
 })
 export class RecipientsComponent implements OnInit{
 
-  receipientList : any;
-  selectedReceipient: number = -1; 
+  recipientList : any;
+  selectedRecipient: number = -1; 
 
   constructor () {}
 
   ngOnInit(): void {
-    this.receipientList = [
+    this.recipientList = [
       {
         id: 1,
         fullName: 'Noel Rego',
@@ -31,7 +31,7 @@ export class RecipientsComponent implements OnInit{
       {
         id: 3,
         fullName: 'Noel Rego',
-        status: 'away',
+        status: 'offline',
         msgPreview: 'Hi ',
         time: '10:00 PM'
       },
@@ -59,14 +59,14 @@ export class RecipientsComponent implements OnInit{
       {
         id: 7,
         fullName: 'Posh',
-        status: 'away',
+        status: 'available',
         msgPreview: 'Hi oklk.',
         time: '11:00 AM'
       },
       {
         id: 8,
         fullName: 'Marray',
-        status: 'away',
+        status: 'available',
         msgPreview: 'Hi Hellow Dollay . . . .',
         time: '11:00 AM'
       },
@@ -74,9 +74,8 @@ export class RecipientsComponent implements OnInit{
     ] ;
   }
 
-  selectRipient(id: number) : void {
-    console.log('Selected Receie', id);
-    this.selectedReceipient = id;
+  selectRecipient(recipientId: number): void {
+    this.selectedRecipient = recipientId;
   }
 
 }

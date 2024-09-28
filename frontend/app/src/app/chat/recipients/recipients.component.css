@@ -18,6 +18,7 @@
     height: 90svh;
     overflow-x: hidden;
     overflow-y: scroll;
+    background: var(--theme-bg);
 }
 
 .recipient-list {
@@ -62,17 +63,29 @@
     position: absolute;
     bottom: 0;
     right: 0;
-    width: 12px;
-    height: 12px;
+    width: 15px;
+    height: 15px;
     border-radius: 50%;
 }
 
-.status-online {
-    background-color: green;
+.away {
+    background-color: var(--status-away);
 }
 
-.status-offline {
-    background-color: red;
+.busy {
+    background-color: var(--status-busy);
+}
+
+.away {
+    background-color: var(--status-away);
+}
+
+.available {
+    background-color: var(--status-available);
+}
+
+.offline {
+    background-color: var(--status-offline);
 }
 
 .name-preview {

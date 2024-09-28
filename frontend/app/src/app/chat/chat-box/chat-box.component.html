@@ -1,1 +1,34 @@
-<p>chat-box works!</p>
+<!-- chat-app.component.html -->
+<div class="chat-window">
+    <!-- Chat Header -->
+    <div class="has-text-centered px-3 py-3 card selected-name">
+      <h5 class="title is-5" style="color: var(--theme-color);">{{ userName }}</h5>
+    </div>
+  
+    <!-- Chat Body -->
+    <div class="chat-body">
+      <!-- Loop through messages -->
+      <div *ngFor="let message of messages" [ngClass]="{'chat-message': true, 'left': message.side === 'left', 'right': message.side === 'right'}">
+        
+          <img src="assets/profile-pic.png" class="mr-2 ml-2" alt="profile" style="height: 24px; width: auto;">
+     
+        <div class="content" [ngClass]="{'has-background-primary has-text-white': message.side === 'right'}">
+          <p>{{ message.text }}</p>
+        </div>
+        <time>{{ message.time }}</time>
+      </div>
+    </div>
+  
+    <!-- Chat Footer -->
+    <div class="chat-footer">
+      <div class="field has-addons">
+        <div class="control is-expanded">
+          <input class="input" [inputMode]="newMessage" type="text" placeholder="Type your message..." (keydown.enter)="sendMessage()">
+        </div>
+        <div class="control">
+          <button class="button is-primary" (click)="sendMessage()">Send</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
