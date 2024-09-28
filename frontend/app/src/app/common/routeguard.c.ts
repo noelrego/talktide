@@ -1,12 +1,11 @@
 import { inject } from "@angular/core";
 import { CanActivateFn, Router } from "@angular/router";
-import { CustomCookieService } from "../service/api/cookie/cookie.service";
+import { CustomCookieService } from "../service/cookie/cookie.service";
 
 export const AuthRouteGuard: CanActivateFn = (route, state) => {
     const router = inject(Router);
-
     const cookieService = inject(CustomCookieService);
-
+    console.log('ROUTER GUARD EXEC ------------------------------');
     // TO DO: Get from State and Cookie service
     const authenticated : boolean = cookieService.hasTokenCookie();
 

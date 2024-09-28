@@ -1,6 +1,7 @@
-export enum LocalSrtgNames {
+export enum LocalStrgNames {
     SELECTED_CHAT = 'selected_chat',
-    HISTORY_CHAT = 'history_chat'
+    HISTORY_CHAT = 'history_chat',
+    USER_INFO = 'usEr_iNfo'
 }
 
 export enum ProvideReducerName {

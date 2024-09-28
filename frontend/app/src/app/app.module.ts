@@ -10,10 +10,10 @@ import { NotFoundComponent } from './not-found/not-found.component';
 import { HTTP_INTERCEPTORS, provideHttpClient } from '@angular/common/http';
 import { HttpCustomInterceptor } from './config/http-intercepter.cofig';
 import { ApiDataService } from './service/api';
-import { CustomCookieService } from './service/api/cookie/cookie.service';
+import { CustomCookieService } from './service/cookie/cookie.service';
 import { provideState, provideStore, StoreModule } from '@ngrx/store';
 import { R_setUserLoggedin } from './STORE/chat.reducer';
-import { ProvideReducerName } from './common';
+import { LocalStrgService } from './service/ls/ls.service';
 
 @NgModule({
   declarations: [
@@ -40,7 +40,8 @@ import { ProvideReducerName } from './common';
       multi: true
     },
     ApiDataService,
-    CustomCookieService
+    CustomCookieService,
+    LocalStrgService
   ],
   bootstrap: [AppComponent]
 })

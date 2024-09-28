@@ -1,0 +1,42 @@
+<div>
+    <!-- <div class="list-headding">
+        <h5 class="is-size-7 has-text-centered">Reciepients</h5>
+    </div>
+    <div class="lists">
+        <div class="card">
+            <header class="card-header">
+                <p class="card-header-title">Name</p>
+                <div class="card-header-icon">
+                    <span class="icon">
+                        <i class="fas fa-circle"></i>
+                    </span>
+                </div>
+            </header>
+            
+        </div>
+    </div> -->
+    <div class="rec-box box">
+        <div class="list-headding has-text-white">
+            <h5 class="is-size-6 is-uppercase has-text-centered" style="color: var(--theme-color);">Reciepients</h5>
+        </div>
+
+        <div class="recipient-list">
+            <div class="recipient-row card" *ngFor="let receipient of receipientList"
+            (click)="selectRipient(receipient.id)"
+            [ngClass]="(selectedReceipient === receipient.id)? 'has-background-primary': ''">
+                <div class="group">
+                    <div class="profile-pic">
+                        <img src="assets/profile-pic.png" alt="Profie Pic">
+                        <span class="status-icon status-online"></span>
+                    </div>
+                    <div class="name-preview res-name-preview">
+                        <span class="name">{{ receipient.fullName }}</span>
+                        <span class="preview-message">{{ receipient.msgPreview }}</span>
+                    </div>
+                </div>
+                <div class="date">{{ receipient.time }}</div>
+                <!-- <div class="name-responsive is-size-7">{{ receipient.fullName }}</div> -->
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,10 +1,103 @@
-<div class="section">
-    <h2 class="title">{{loggedInstate}}</h2>
-    <div *ngIf="userInfo$ | async as userInfo">
-        <h2>User Info:</h2>
-        <p>Auth ID: {{ userInfo.authId }}</p>
-        <p>User Name: {{ userInfo.userName }}</p>
-        <p>Full Name: {{ userInfo.fullName }}</p>
+<!-- Navbar -->
+<div class="is-fullheight is-white">
+
+    <nav class="navbar is-fixed-top has-shadow">
+        <div class="navbar-brand ml-3">
+            <a class="navbar-item is-uppercase" style="color: var(--theme-color);">
+                <strong>talktide</strong>
+            </a>
+            <div class="navbar-item">
+                <span class="icon">
+                    <i class="fas fa-circle has-text-success"></i>
+                </span>
+            </div>
+            <div class="navbar-burger" (click)="toggleBurgerMenu()" [class.is-active]="isActive">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+
+  
+        <div class="navbar-menu mr-3" [class.is-active]="isActive">
+            <div class="navbar-end">
+                <div class="navbar-item" style="white-space: nowrap;">
+                    Hi, <strong>{{ username }}</strong>
+                </div>
+                <div class="navbar-item">
+                    <div class="select is-small">
+                        <select>
+                            <option value="ready">Ready</option>
+                            <option value="away">Away</option>
+                            <option value="notReady">Not Ready</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="navbar-item">
+                    <button class="button is-small is-rounded is-primary" (click)="logout()">Logout</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- CHAT WINDOW -->
+    <section class="chat-layout">
+      <div class="app-recipient">
+        <app-recipients></app-recipients>
       </div>
-      <h3 class="is-text-h1">{{isLoggedIn$ | async}}</h3>
+      <div class="app-chatbox">
+        <app-chat-box></app-chat-box>
+      </div>
+    </section>
+    
+
+    <!-- Main layout 
+  <div class="columns is-gapless mt-6">
+    Left side (Recipient List) 
+    <div class="column is-3 recipient-list is-hidden-mobile">
+      <div class="box" *ngFor="let recipient of recipients">
+        <article class="media">
+          <figure class="media-left">
+            <p class="image is-64x64">
+              <img [src]="recipient.logo" alt="Recipient logo">
+            </p>
+          </figure>
+          <div class="media-content">
+            <p>{{ recipient.name }}</p>
+          </div>
+        </article>
+      </div>
+    </div>
+  
+     Responsive recipient list 
+    <div class="column is-1 is-hidden-desktop is-flex recipient-list-mobile">
+      <div *ngFor="let recipient of recipients">
+        <figure class="image is-48x48 m-2">
+          <img [src]="recipient.logo" alt="Recipient logo">
+        </figure>
+      </div>
+    </div>
+  
+     Right side (Chat window) 
+    <div class="column is-9 chat-window">
+      <div class="box chat-content">
+        <div class="message" *ngFor="let message of messages">
+          <p><strong>{{ message.sender }}:</strong> {{ message.text }}</p>
+        </div>
+      </div>
+  
+      Chat input
+      <div class="box">
+        <div class="field">
+          <div class="control">
+            <input class="input" placeholder="Type a message...">
+          </div>
+        </div>
+        <div class="field is-grouped">
+          <p class="control">
+            <button class="button is-primary" (click)="sendMessage()">Send</button>
+          </p>
+        </div>
+      </div>
+    </div> -->
 </div>

@@ -3,11 +3,12 @@ import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/fo
 import { Router } from '@angular/router';
 import { ApiDataService } from '../service/api';
 import { LoginUserDto, ProvideReducerName, UserInfoType } from '../common';
-import { CustomCookieService } from '../service/api/cookie/cookie.service';
+import { CustomCookieService } from '../service/cookie/cookie.service';
 import { Store } from '@ngrx/store';
 import { A_setUserInfo, A_userLoggedin } from '../STORE/chat.action';
 import { Observable } from 'rxjs';
 import { S_loggedInstate, TalkTideState } from '../STORE';
+import { LocalStrgService } from '../service/ls/ls.service';
 
 @Component({
   selector: 'app-login',
@@ -27,7 +28,8 @@ export class LoginComponent {
     private fb: FormBuilder,
     private router: Router,
     private apiData: ApiDataService,
-    private myCookie : CustomCookieService
+    private myCookie : CustomCookieService,
+    private lsService: LocalStrgService
   ) {
     this.LOGGED_IN$ = this.store.select(S_loggedInstate);
     this.loginForm = this.fb.group({
@@ -36,7 +38,10 @@ export class LoginComponent {
     });
   }
 
-  ngOnInit(): void {
+  ngOnInit(): void { 
+    if(this.myCookie.hasTokenCookie()) {
+      this.router.navigate(['chat']);
+    }
    }
 
   usernameValidator(control: AbstractControl): { [key: string]: any } | null {
@@ -67,9 +72,11 @@ export class LoginComponent {
               fullName: response.body?.resData?.userInfo?.fullName
             }
             // Set unser info in State and Local storage
+            this.lsService.setUserInfo(tempUserInfo);
             this.store.dispatch(A_setUserInfo({
               userInfo: tempUserInfo
-            }))
+            }));
+            
             this.router.navigate(['/chat']);
           }
         },

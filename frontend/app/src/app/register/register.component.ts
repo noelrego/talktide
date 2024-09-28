@@ -3,6 +3,7 @@ import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/fo
 import { ApiDataService } from '../service/api';
 import { RegisterUserDto } from '../common';
 import { Router } from '@angular/router';
+import { CustomCookieService } from '../service/cookie/cookie.service';
 
 @Component({
   selector: 'app-register',
@@ -22,7 +23,8 @@ export class RegisterComponent {
   constructor(
     private fb: FormBuilder,
     private apiData: ApiDataService,
-    private router: Router
+    private router: Router,
+    private myCookie: CustomCookieService
   ) {
     this.registerForm = this.fb.group({
       username: ['', [Validators.required, this.usernameValidator]],
@@ -33,7 +35,11 @@ export class RegisterComponent {
     }, { validator: this.matchingPasswords('password', 'confirmPassword') });
   }
 
-  ngOnInit(): void { }
+  ngOnInit(): void {
+    if(this.myCookie.hasTokenCookie()) {
+      this.router.navigate(['chat']);
+    }
+   }
 
   checkUserName(event: any) {
     const userName = this.registerForm.get('username')?.value;

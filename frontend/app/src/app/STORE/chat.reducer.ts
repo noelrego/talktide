@@ -6,10 +6,17 @@
 import { createReducer, on } from "@ngrx/store";
 import { A_setUserInfo, A_userLoggedin } from "./chat.action";
 import { TalkTideState } from "./app.state";
+import { LocalStrgService } from "../service/ls/ls.service";
+
+const hasUserInfo = () => {
+    const ls = new LocalStrgService();
+    const tempData = ls.getUserInfo();
+    return tempData;
+}
 
 export const initialGlobalState : TalkTideState = {
     isLoggedIn : false,
-    userInfo : null,
+    userInfo : hasUserInfo(),
     selectedRecipient: null
 }; // Inital State
 

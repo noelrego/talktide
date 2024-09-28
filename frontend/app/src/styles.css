@@ -1,0 +1,9 @@
+* {
+    /* outline: 1px solid limegreen !important; */
+}
+
+:root{
+    --theme-color: rgb(253, 126, 20);
+
+    --responsive-recipient-height: 6rem;
+}
