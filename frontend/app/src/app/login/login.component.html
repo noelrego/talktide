@@ -4,7 +4,7 @@
       <div class="container">
         <div class="box" style="max-width: 400px; margin: auto; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);">
           <h1 class="title has-text-centered is-uppercase">Talk Tide</h1>
-
+          <h2 class="title">{{LOGGED_IN$ | async}}OK</h2>
           <h4 class="subtitle has-text-centered mt-2">Login</h4>
 
           <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">

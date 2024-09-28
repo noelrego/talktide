@@ -11,6 +11,9 @@ import { HTTP_INTERCEPTORS, provideHttpClient } from '@angular/common/http';
 import { HttpCustomInterceptor } from './config/http-intercepter.cofig';
 import { ApiDataService } from './service/api';
 import { CustomCookieService } from './service/api/cookie/cookie.service';
+import { provideState, provideStore, StoreModule } from '@ngrx/store';
+import { R_setUserLoggedin } from './STORE/chat.reducer';
+import { ProvideReducerName } from './common';
 
 @NgModule({
   declarations: [
@@ -23,9 +26,14 @@ import { CustomCookieService } from './service/api/cookie/cookie.service';
     BrowserModule,
     AppRoutingModule,
     ReactiveFormsModule,
+    StoreModule.forRoot({'blah': R_setUserLoggedin})
   ],
   providers: [
     provideHttpClient(),
+    // provideStore(),
+    // provideState(
+    //   { name: 'blah', reducer: R_setUserLoggedin},
+    // ),
     {
       provide: HTTP_INTERCEPTORS,
       useClass: HttpCustomInterceptor,

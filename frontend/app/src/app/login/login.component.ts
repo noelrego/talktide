@@ -2,8 +2,12 @@ import { Component } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ApiDataService } from '../service/api';
-import { LoginUserDto } from '../common';
+import { LoginUserDto, ProvideReducerName, UserInfoType } from '../common';
 import { CustomCookieService } from '../service/api/cookie/cookie.service';
+import { Store } from '@ngrx/store';
+import { A_setUserInfo, A_userLoggedin } from '../STORE/chat.action';
+import { Observable } from 'rxjs';
+import { S_loggedInstate, TalkTideState } from '../STORE';
 
 @Component({
   selector: 'app-login',
@@ -16,12 +20,16 @@ export class LoginComponent {
   loginForm: FormGroup;
   invalidUser: boolean = false;
 
+  LOGGED_IN$ : Observable<boolean | null>;
+
   constructor(
+    private store: Store,
     private fb: FormBuilder,
     private router: Router,
     private apiData: ApiDataService,
     private myCookie : CustomCookieService
   ) {
+    this.LOGGED_IN$ = this.store.select(S_loggedInstate);
     this.loginForm = this.fb.group({
       username: ['', [Validators.required, this.usernameValidator]],
       password: ['', Validators.required]
@@ -48,6 +56,19 @@ export class LoginComponent {
         next: (response) => {
           if (response.status === 200) {
             this.myCookie.setTokenCookie(response.body?.resData?.accessToken);
+
+            // Dispatch to update logged in state
+            this.store.dispatch(A_userLoggedin({isLoggedIn: true}));
+
+            let tempUserInfo : UserInfoType = {
+              authId: response.body?.resData?.userInfo?.authId,
+              userName: response.body?.resData?.userInfo?.username,
+              fullName: response.body?.resData?.userInfo?.fullName
+            }
+            // Set unser info in State and Local storage
+            this.store.dispatch(A_setUserInfo({
+              userInfo: tempUserInfo
+            }))
             this.router.navigate(['/chat']);
           }
         },
