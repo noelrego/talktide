@@ -36,7 +36,8 @@ export class LoginComponent {
     });
   }
 
-  ngOnInit(): void { }
+  ngOnInit(): void {
+   }
 
   usernameValidator(control: AbstractControl): { [key: string]: any } | null {
     const usernamePattern = /^[a-z0-9_-]+$/; // Allows small letters, digits, underscores, and hyphens

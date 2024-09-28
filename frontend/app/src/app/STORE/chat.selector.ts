@@ -1,7 +1,7 @@
 import { createFeatureSelector, createSelector } from "@ngrx/store";
 import { TalkTideState } from "./app.state";
 
-export const myState = createFeatureSelector<TalkTideState>('blah');
+export const myState = createFeatureSelector<TalkTideState>('chatapp');
 
 export const S_loggedInstate = createSelector(
     myState,

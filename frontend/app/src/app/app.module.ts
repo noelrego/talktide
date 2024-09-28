@@ -26,7 +26,7 @@ import { ProvideReducerName } from './common';
     BrowserModule,
     AppRoutingModule,
     ReactiveFormsModule,
-    StoreModule.forRoot({'blah': R_setUserLoggedin})
+    StoreModule.forRoot({'chatapp': R_setUserLoggedin})
   ],
   providers: [
     provideHttpClient(),

@@ -14,20 +14,17 @@ export class ChatWindowComponent implements OnInit, OnDestroy{
   loggedInstate: any = 'Setting Now';
   s : boolean = true;
   userInfo$ : Observable<UserInfoType | null>;
-  userInfo : UserInfoType | null = null;
+  isLoggedIn$ : Observable<boolean | null>;
   
   constructor (
     private store: Store,
   ) {
     this.userInfo$ = this.store.select(S_userInfo);
+    this.isLoggedIn$ = this.store.select(S_loggedInstate);
   }
 
   ngOnInit(): void {
-    console.log(this.userInfo$.forEach(item => {
-      this.userInfo = item;
-
-      console.log(this.userInfo);
-    }));
+    
   }
 
   ngOnDestroy(): void {
