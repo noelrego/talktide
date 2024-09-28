@@ -18,6 +18,10 @@ export class ConfigService {
         return process.env.RABBITMQ_HOST_URL;
     }
 
+    getJwtSecret() : string {
+        return process.env.JET_SECRET;
+    }
+
     getAuthUserServiceProxy() : any {
         return {
             transport: Transport.RMQ,
