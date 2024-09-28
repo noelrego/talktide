@@ -25,7 +25,7 @@
                 <img src="assets/profile-pic2.png" alt="User Profile">
               </div>
                 <div class="navbar-item" style="white-space: nowrap;">
-                    Hi, <strong>{{ username }}</strong>
+                    Hi, <strong>{{ (userInfo$ | async)?.userName }}</strong>
                 </div>
                 <div class="navbar-item">
                     <div class="select is-small">

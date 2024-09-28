@@ -13,7 +13,7 @@ import { Router } from '@angular/router';
 })
 export class ChatWindowComponent implements OnInit, OnDestroy{
 
-  username = 'Charles';
+  username : string | undefined= '';
   status = 'ready';
   isActive = false;
 
@@ -26,18 +26,24 @@ export class ChatWindowComponent implements OnInit, OnDestroy{
   messages = [
     { sender: 'Jane Doe', text: 'Good morning Charles!' },
     { sender: 'Jane Doe', text: 'How are you?' },
-    // More chat messages...
   ];
 
   newMessage = '';
 
+  userInfo$ : Observable<UserInfoType | null>;
+
   constructor (
+    private store: Store,
     private myCookie: CustomCookieService,
     private router: Router
-  ) {}
+  ) {
+    this.userInfo$ = this.store.select(S_userInfo);
+  }
 
   ngOnInit(): void {
-    
+    this.userInfo$.subscribe(res => {
+      this.username = res?.fullName
+    })
   }
 
   toggleBurgerMenu() {
