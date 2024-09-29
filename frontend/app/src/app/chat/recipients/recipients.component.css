@@ -18,7 +18,7 @@
     height: 90svh;
     overflow-x: hidden;
     overflow-y: scroll;
-    background: var(--theme-bg);
+    background: linear-gradient(0deg, var(--theme-bg-light), white 90%) no-repeat;
 }
 
 .recipient-list {

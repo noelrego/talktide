@@ -1,8 +1,8 @@
 <!-- chat-app.component.html -->
 <div class="chat-window">
     <!-- Chat Header -->
-    <div class="has-text-centered px-3 py-3 card has-background-primary-10">
-      <h5 class="title is-5 has-text-white">{{ userName }}</h5>
+    <div class="has-text-centered px-3 py-3 card" style="border-bottom: 1px solid var(--theme-color);">
+      <h5 class="title is-5 has-text-primary">{{ userName }}</h5>
     </div>
   
     <!-- Chat Body -->
@@ -49,20 +49,17 @@
   </div>
   
     <!-- Chat Footer -->
-    <div class="columns mb-2 ml-2 mr-2 line is-white">
-      <div class="column is-four-fifths">
-        <input type="text" class="input" role="text" placeholder="Enter your message here. . ." />
-      </div>
-      <div class="column">
-        <p class="buttons ">
-          <button class="button has-background-primary-20 has-text-white">
-            <span class="icon is-small is-rounded ">
-              <i class="fas fa-paper-plane"></i>
-            </span>
-            <span>Send</span>
-          </button>
-        </p>
-      </div>
-    </div>
+    <div class="bottom-control">
+      <input type="text" class="input mx-2 my-2" role="text" placeholder="Enter your message here. . ." />
+      <p class="buttons">
+        <button class="button is-rounded has-text-white mx-2 my-2 pl-2 pr-2" style=" background: var(--theme-color);">
+          <span class="icon is-small is-rounded" >
+            <i class="fas fa-paper-plane"></i>
+          </span>
+          <span>Send</span>
+        </button>
+      </p>
+   </div>
+
   </div>
   
