@@ -68,26 +68,6 @@
     border-radius: 50%;
 }
 
-.away {
-    background-color: var(--status-away);
-}
-
-.busy {
-    background-color: var(--status-busy);
-}
-
-.away {
-    background-color: var(--status-away);
-}
-
-.available {
-    background-color: var(--status-available);
-}
-
-.offline {
-    background-color: var(--status-offline);
-}
-
 .name-preview {
     display: flex;
     flex-direction: column;

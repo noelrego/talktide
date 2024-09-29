@@ -12,3 +12,8 @@ export const S_userInfo = createSelector(
     myState,
     (state) => state.userInfo
 )
+
+export const S_userState = createSelector(
+    myState,
+    (state) => state.userState
+)

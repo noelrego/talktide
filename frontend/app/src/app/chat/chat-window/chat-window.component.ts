@@ -1,10 +1,11 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
-import { S_loggedInstate, S_userInfo, TalkTideState } from '../../STORE';
+import { A_setUserState, S_loggedInstate, S_userInfo, S_userState, TalkTideState } from '../../STORE';
 import { ProvideReducerName, UserInfoType } from '../../common';
 import { CustomCookieService } from '../../service/cookie/cookie.service';
 import { Router } from '@angular/router';
+import { FormControl } from '@angular/forms';
 
 @Component({
   selector: 'app-chat-window',
@@ -16,6 +17,8 @@ export class ChatWindowComponent implements OnInit, OnDestroy{
   username : string | undefined= '';
   status = 'ready';
   isActive = false;
+  
+  selectOption = new FormControl('');
 
   recipients = [
     { name: 'Jane Doe', logo: 'path_to_logo1.jpg' },
@@ -31,6 +34,7 @@ export class ChatWindowComponent implements OnInit, OnDestroy{
   newMessage = '';
 
   userInfo$ : Observable<UserInfoType | null>;
+  userStatus$ : Observable<string | null>;
 
   constructor (
     private store: Store,
@@ -38,12 +42,21 @@ export class ChatWindowComponent implements OnInit, OnDestroy{
     private router: Router
   ) {
     this.userInfo$ = this.store.select(S_userInfo);
+    this.userStatus$ = this.store.select(S_userState);
   }
 
   ngOnInit(): void {
     this.userInfo$.subscribe(res => {
       this.username = res?.fullName
+    });
+
+    this.userStatus$.subscribe(res => {
+      this.selectOption.setValue(res);
     })
+
+    // V18 Angular Documentation
+   
+
   }
 
   toggleBurgerMenu() {
@@ -68,6 +81,9 @@ export class ChatWindowComponent implements OnInit, OnDestroy{
     }
   }
 
+  chnage(event : any) {
+    console.log('Changed comething . . .');
+  }
 
 
   ngOnDestroy(): void {

@@ -15,3 +15,24 @@
     --status-offline: gray;
     --status-busy: red;
 }
+
+
+.away {
+    background-color: var(--status-away);
+}
+
+.busy {
+    background-color: var(--status-busy);
+}
+
+.away {
+    background-color: var(--status-away);
+}
+
+.available {
+    background-color: var(--status-available);
+}
+
+.offline {
+    background-color: var(--status-offline);
+}

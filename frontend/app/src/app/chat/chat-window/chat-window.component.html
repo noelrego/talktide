@@ -7,8 +7,7 @@
                 <strong>talktide</strong>
             </a>
             <div class="navbar-item">
-                <span class="icon">
-                    <i class="fas fa-circle has-text-success"></i>
+                <span class="status-user" [title]="userStatus$ | async" [ngClass]="userStatus$| async">
                 </span>
             </div>
             <div class="navbar-burger" (click)="toggleBurgerMenu()" [class.is-active]="isActive">
@@ -25,11 +24,11 @@
                 <img src="assets/profile-pic2.png" alt="User Profile">
               </div>
                 <div class="navbar-item" style="white-space: nowrap;">
-                    Hi, <strong>{{ (userInfo$ | async)?.userName }}</strong>
+                    Hi, <strong>{{ (userInfo$ | async)?.fullName }}</strong>
                 </div>
                 <div class="navbar-item">
                     <div class="select is-small">
-                        <select>
+                        <select [formControl]="selectOption" id="dropdown-ele">
                             <option value="available">Available</option>
                             <option value="away">Away</option>
                             <option value="busy">Busy</option>

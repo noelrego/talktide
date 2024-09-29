@@ -1,12 +1,3 @@
-.chat-layout {
-  position: relative;
-  margin: 4rem 3rem 1rem 3rem;
-  display: grid;
-  grid-template-columns: 1fr 2fr;
-  grid-template-rows: 1fr;
-  height: calc(95svh - 4rem);
-  gap: 2rem;
-}
 
 @media screen and (max-width: 895px) {
   .chat-layout {
@@ -20,4 +11,20 @@
     width: auto;
     overflow-y: scroll;
   }
+}
+
+.chat-layout {
+  position: relative;
+  margin: 4rem 3rem 1rem 3rem;
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  grid-template-rows: 1fr;
+  height: calc(95svh - 4rem);
+  gap: 2rem;
+}
+
+.status-user {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
 }

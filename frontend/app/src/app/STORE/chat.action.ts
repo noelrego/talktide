@@ -9,3 +9,7 @@ export const A_userLoggedin = createAction('[Auth] User Logged in status',
 export const A_setUserInfo = createAction('[Auth] to set the logged in user', 
     props<{ userInfo: UserInfoType }>()
 )
+
+export const A_setUserState = createAction('[User] to set user state', 
+    props<{userState: string}>()
+)
