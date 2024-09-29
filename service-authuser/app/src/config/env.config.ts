@@ -36,6 +36,6 @@ export class CustomConfigService {
   }
 
   getJwtSecret(): string {
-    return process.env.JET_SECRET;
+    return process.env.JWT_SECRET;
   }
 }

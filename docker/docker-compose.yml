@@ -74,6 +74,23 @@ services:
       - ../service-authuser/app/:/app/
     networks:
       - chat-net
+  
+  talktide-socket-server:
+    build: 
+      context: ../socket-server
+      dockerfile: Dockerfile
+      target: stage
+    container_name: chat-socket
+    image: chat-socket:1.0.0
+    ports:
+      - 8082:8082
+    env_file:
+      - .env
+    command: /bin/sh -c "while true; do sleep 300; done"
+    volumes:
+      - ../socket-server/app/:/app/
+    networks:
+      - chat-net
 
 volumes:
   chat-db-vol:

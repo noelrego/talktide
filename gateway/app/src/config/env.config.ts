@@ -11,7 +11,7 @@ export class ConfigService {
     }
 
     getFrontendOrigin() : string {
-        return 'http://localhost:4200'  // Demo purpose
+        return process.env.FRONTEND_ORIGIN; // Demo purpose
     }
 
     getRMQurl() : string {
@@ -19,7 +19,7 @@ export class ConfigService {
     }
 
     getJwtSecret() : string {
-        return process.env.JET_SECRET;
+        return process.env.JWT_SECRET;
     }
 
     getAuthUserServiceProxy() : any {
