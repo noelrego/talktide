@@ -5,7 +5,7 @@ import { A_setUserState, S_loggedInstate, S_userInfo, S_userState, TalkTideState
 import { ProvideReducerName, UserInfoType } from '../../common';
 import { CustomCookieService } from '../../service/cookie/cookie.service';
 import { Router } from '@angular/router';
-import { FormControl } from '@angular/forms';
+import { FormControl, ValueChangeEvent } from '@angular/forms';
 
 @Component({
   selector: 'app-chat-window',
@@ -55,7 +55,13 @@ export class ChatWindowComponent implements OnInit, OnDestroy{
     })
 
     // V18 Angular Documentation
-   
+   this.selectOption.events.subscribe(e => {
+    if (e instanceof ValueChangeEvent) {
+      this.store.dispatch(A_setUserState({userState: e.source.value}));
+
+      
+    }
+   })
 
   }
 
@@ -79,10 +85,6 @@ export class ChatWindowComponent implements OnInit, OnDestroy{
       });
       this.newMessage = '';
     }
-  }
-
-  chnage(event : any) {
-    console.log('Changed comething . . .');
   }
 
 

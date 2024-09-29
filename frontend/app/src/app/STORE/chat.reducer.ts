@@ -17,7 +17,7 @@ const hasUserInfo = () => {
 
 export const initialGlobalState : TalkTideState = {
     isLoggedIn : false,
-    userState: UserStatus.AVAILABLE,
+    userState: UserStatus.AWAY,
     userInfo : hasUserInfo(),
     selectedRecipient: null
 }; // Inital State
