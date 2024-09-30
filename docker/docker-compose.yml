@@ -74,6 +74,21 @@ services:
       - ../service-authuser/app/:/app/
     networks:
       - chat-net
+
+  talktide-service-amessage:
+    build: 
+      context: ../service-message
+      dockerfile: Dockerfile
+      target: stage
+    container_name: chat-service-message
+    env_file:
+      - .env
+    image: chat-service-message:1.0.0
+    command: /bin/sh -c "while true; do sleep 300; done"
+    volumes:
+      - ../service-message/app/:/app/
+    networks:
+      - chat-net
   
   talktide-socket-server:
     build: 

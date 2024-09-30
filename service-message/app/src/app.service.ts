@@ -122,7 +122,7 @@ export class AppService {
    */
   async loginAuthUserService(payload: AuthLoginType) : Promise<N_GenericResType> {
     try {
-      
+      console.log('OKOOKOKOKO')
       const user = await this.authUserRepo.findOne({
         where: { userName: payload.userName }
       });

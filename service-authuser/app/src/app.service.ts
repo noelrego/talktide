@@ -122,6 +122,7 @@ export class AppService {
    */
   async loginAuthUserService(payload: AuthLoginType) : Promise<N_GenericResType> {
     try {
+      console.log(' - - - - -- --')
       
       const user = await this.authUserRepo.findOne({
         where: { userName: payload.userName }
@@ -140,10 +141,11 @@ export class AppService {
         //User is valid Generate JWT token
         const jwtPayload: AuthTokenPayloadType = {
           id: user.id.toString(),
-          userName: user.userName
+          userName: user.userName,
+          fullName: `${user.firstName}${(user?.lastName)? ' ' +user.lastName : ''}`
         };
-
         const accessToken = await this.helper.generateAuthToken(jwtPayload);
+
         const userInfo = {
           authId: user.id,
           username: user.userName,

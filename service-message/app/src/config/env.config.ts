@@ -12,7 +12,7 @@ export class CustomConfigService {
   }
 
   getMyServiceQueueName(): string {
-    return process.env.QUEUE_AUTHUSER_SERVICE || 'temp_queue_1';
+    return process.env.QUEUE_MESSAGE_SERVICE || 'temp_queue_2';
   }
 
   getDbHost(): string {

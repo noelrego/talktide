@@ -46,7 +46,8 @@ export class HelperClass {
         const jwtToken : string = await this.jwtService.signAsync(
             {
             authId: payload.id,
-            userName: payload.userName
+            userName: payload.userName,
+            fullName: payload.fullName
             },
             {
                 secret: this.configService.getJwtSecret(),

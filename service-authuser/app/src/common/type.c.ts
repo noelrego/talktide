@@ -12,6 +12,7 @@ export type RegisterUserType = {
 export type AuthTokenPayloadType = {
     id: string;
     userName: string;
+    fullName: string;
 }
 
 export type AuthLoginType = {
