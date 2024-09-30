@@ -50,10 +50,16 @@
   
     <!-- Chat Footer -->
     <div class="bottom-control">
-      <input type="text" class="input mx-2 my-2" role="text" placeholder="Enter your message here. . ." />
+      <div class="control mx-2 my-2 pl-2 pr-2">
+        <textarea rows="1"
+          class="textarea has-fixed-size"
+          placeholder="Fixed size textarea"
+        ></textarea>
+      </div>
+      <!-- <input type="text" class="input mx-2 my-2" role="text" placeholder="Enter your message here. . ." /> -->
       <p class="buttons">
-        <button class="button is-rounded has-text-white mx-2 my-2 pl-2 pr-2" style=" background: var(--theme-color);">
-          <span class="icon is-small is-rounded" >
+        <button class="button has-text-white mx-2 my-2 pl-2 pr-2" style=" background: var(--theme-color);">
+          <span class="icon is-small" >
             <i class="fas fa-paper-plane"></i>
           </span>
           <span>Send</span>
