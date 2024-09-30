@@ -7,6 +7,10 @@ import { ClientUserData } from 'src/common';
 const config = new EnvConfig();
 const origin = config.getFrontendOrigin();
 
+// Redis mimic
+
+const activeLoggedinUsers: ClientUserData[] = [];
+
 @WebSocketGateway({
   namespace: '/chat',
   cros: {
@@ -26,17 +30,58 @@ export class ChatSocketGateway implements OnGatewayInit, OnGatewayConnection, On
   afterInit(client: Socket) {
     //TO DO: Use middleware for JWT
     client.use(WsMiddleware() as any);
+    console.log('Inital User List: ', activeLoggedinUsers);
   }
 
   handleConnection(client: Socket, ...args: any[]) {
 
-    const authData: ClientUserData = client['user'];
+    const authData: ClientUserData = client['user'] || {};
 
-    console.log('Handle connection: ', client.id, authData);
+    // Add to active users list
+    if (authData) {
+      this.addUserToList(authData);
+    }
+
+    console.log(activeLoggedinUsers);
+
+    // FIlter the user data for same user
+    this.server.emit('B_LIN', activeLoggedinUsers);
   }
 
   handleDisconnect(client: any) {
     console.log('DIsconnected server: ', client.id);
+    const authData: ClientUserData = client['user'] || {};
+
+    // Add to active users list
+    if (authData) {
+      this.removeUserFromList(authData.authId);
+
+    }
+
+    // Filter the data for same user
+    const activeUsersList = activeLoggedinUsers.filter(item => item.authId !== authData.authId);
+    const dataToFrontend = {
+      theUserLoggedOut: authData.authId,
+      remainingUsers: activeLoggedinUsers
+    }
+    this.server.emit('B_LOUT', dataToFrontend);
+  }
+
+
+  private addUserToList(authData: ClientUserData) : void {
+    const isUserPresent = activeLoggedinUsers.some(item => item.authId === authData.authId);
+
+    if(!isUserPresent) {
+      activeLoggedinUsers.push(authData);
+    }
+  }
+
+  private removeUserFromList(authId: number) : void {
+    console.log('To remove auth id:', authId);
+    const index = activeLoggedinUsers.findIndex(item => item.authId === authId);
+    activeLoggedinUsers.splice(index, 1);
+
+    console.log('After upadte: ', activeLoggedinUsers);
   }
 
 }
