@@ -9,7 +9,8 @@ import { SocketService } from '../socket/socket.service';
 export class RecipientsComponent implements OnInit{
 
   recipientList : any;
-  selectedRecipient: number = -1; 
+  selectedRecipient: number = -1;
+  avilableUsersList : any;
 
   constructor (
     private socketService: SocketService
@@ -43,10 +44,39 @@ export class RecipientsComponent implements OnInit{
       },
 
     ] ;
+
+    this.avilableUsersList = [
+        {
+            "authId": "1",
+            "userName": "one",
+            "fullName": "One 1",
+            "userStatus": "available"
+        },
+        {
+            "authId": "2",
+            "userName": "one",
+            "fullName": "One 1",
+            "userStatus": "busy"
+        },
+        {
+            "authId": "3",
+            "userName": "one",
+            "fullName": "One 1",
+            "userStatus": "offline"
+        }
+    ]
   }
 
+  // To set in state for Selected user
   selectRecipient(recipientId: number): void {
     this.selectedRecipient = recipientId;
+  }
+
+  
+  // To create a chat History from Selected Available list
+  createChatHistory(userInfo: any) : void {
+    console.log('To create chat History: ', userInfo);
+
   }
 
 }
