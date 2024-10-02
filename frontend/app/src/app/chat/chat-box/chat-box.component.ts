@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { SocketService } from '../socket/socket.service';
 
 @Component({
   selector: 'app-chat-box',
@@ -11,6 +12,10 @@ export class ChatBoxComponent {
   newMessage: string = '';
   showPreviewMessage: boolean = false;
   replayingToPreviewMsg: string = ''
+
+  constructor(
+    private socketService: SocketService
+  ) {}
 
   // Example messages for demonstration
   messages = [

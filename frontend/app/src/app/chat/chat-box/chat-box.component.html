@@ -14,10 +14,10 @@
      
         <div class="content" [ngClass]="{'has-background-primary has-text-white': message.side === 'right'}">
           <button class="button is-small is-text" (click)="clickReplayMessage(message.msgId, message.text)">
-            <span class="icon pr-1">
+            <span class="icon pr-1" title="Replay">
               <i class="fas fa-reply"></i>
             </span>
-            <span>Replay</span>
+            <!-- <span>Replay</span> -->
           </button>
           <!-- If preview is there -->
            <div class="preview-msg px-2 py-2" *ngIf="message.hasPreview">

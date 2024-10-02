@@ -1,29 +1,14 @@
 <div>
-    <!-- <div class="list-headding">
-        <h5 class="is-size-7 has-text-centered">Reciepients</h5>
-    </div>
-    <div class="lists">
-        <div class="card">
-            <header class="card-header">
-                <p class="card-header-title">Name</p>
-                <div class="card-header-icon">
-                    <span class="icon">
-                        <i class="fas fa-circle"></i>
-                    </span>
-                </div>
-            </header>
-            
-        </div>
-    </div> -->
     <div class="rec-box box">
         <div class="list-headding has-text-white">
-            <h5 class="is-size-6 is-uppercase has-text-centered has-text-weight-bold" style="color: var(--theme-color);">Reciepients</h5>
+            <h5 class="is-size-7 is-uppercase has-text-centered has-text-weight-bold"
+                style="color: var(--theme-color);">Chat History</h5>
         </div>
 
         <div class="recipient-list">
             <div class="recipient-row card" *ngFor="let receipient of recipientList"
-            (click)="selectRecipient(receipient.id)"
-            [ngClass]="(selectedRecipient === receipient.id)? 'has-background-primary-20 has-text-white': ''">
+                (click)="selectRecipient(receipient.id)"
+                [ngClass]="(selectedRecipient === receipient.id)? 'has-background-primary-20 has-text-white': ''">
                 <div class="group">
                     <div class="profile-pic" [title]="receipient.status" style="cursor: pointer;">
                         <img src="assets/profile-pic.png" alt="Profie Pic">
@@ -38,5 +23,11 @@
                 <!-- <div class="name-responsive is-size-7">{{ receipient.fullName }}</div> -->
             </div>
         </div>
+
+        <div class="list-headding has-text-white">
+            <h5 class="is-size-7 is-uppercase has-text-centered has-text-weight-bold"
+                style="color: var(--theme-color);">Available Users</h5>
+        </div>
+
     </div>
 </div>
