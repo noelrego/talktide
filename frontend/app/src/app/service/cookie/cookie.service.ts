@@ -25,6 +25,13 @@ export class CustomCookieService {
         return this.cookieService.check(COOKIE_NAME);
     }
 
+    getTokenCookie() : string {
+        if (this.hasTokenCookie()) {
+            return this.cookieService.get(COOKIE_NAME);
+        }
+        return '';
+    }
+
     deleteCookie() : void {
         this.cookieService.deleteAll();
     }

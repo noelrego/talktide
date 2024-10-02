@@ -13,8 +13,9 @@ const activeLoggedinUsers: ClientUserData[] = [];
 
 @WebSocketGateway({
   namespace: '/chat',
-  cros: {
-    origin: origin
+  cors: {
+    origin: '*',
+    method: ['GET', 'POST', 'OPTIONS']
   }
 })
 export class ChatSocketGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {

@@ -6,6 +6,7 @@ import { ProvideReducerName, UserInfoType } from '../../common';
 import { CustomCookieService } from '../../service/cookie/cookie.service';
 import { Router } from '@angular/router';
 import { FormControl, ValueChangeEvent } from '@angular/forms';
+import { SocketService } from '../socket/socket.service';
 
 @Component({
   selector: 'app-chat-window',
@@ -39,7 +40,8 @@ export class ChatWindowComponent implements OnInit, OnDestroy{
   constructor (
     private store: Store,
     private myCookie: CustomCookieService,
-    private router: Router
+    private router: Router,
+    private socketService: SocketService
   ) {
     this.userInfo$ = this.store.select(S_userInfo);
     this.userStatus$ = this.store.select(S_userState);

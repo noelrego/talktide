@@ -77,7 +77,7 @@ export class LoginComponent {
               userInfo: tempUserInfo
             }));
             
-            this.router.navigate(['/chat']);
+            this.router.navigate(['/chatapp']);
           }
         },
         error: (err) => {

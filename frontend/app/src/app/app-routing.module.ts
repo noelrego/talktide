@@ -18,7 +18,7 @@ const routes: Routes = [
     component: RegisterComponent
   },
   {
-    path: 'chat', 
+    path: 'chatapp', 
     canActivate: [AuthRouteGuard],
     loadChildren: () => import('./chat/chat.module').then(m => m.ChatModule)
   },
