@@ -2,7 +2,7 @@ import { OnGatewayConnection, OnGatewayDisconnect, OnGatewayInit, SubscribeMessa
 import { Server, Socket } from 'socket.io';
 import { EnvConfig } from 'src/config';
 import { WsMiddleware } from './ws.middleware';
-import { ClientUserData } from 'src/common';
+import { ClientJwtData, ClientUserData } from 'src/common';
 
 const config = new EnvConfig();
 const origin = config.getFrontendOrigin();
@@ -17,11 +17,11 @@ const activeLoggedinUsers: ClientUserData[] = [];
     origin: origin
   }
 })
-export class ChatSocketGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect{
-  
+export class ChatSocketGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
+
   @WebSocketServer() server: Server<any, any>;
 
-  constructor () {}
+  constructor() { }
 
   /**
    * To validate Socker JWT token in Middleware.
@@ -35,11 +35,16 @@ export class ChatSocketGateway implements OnGatewayInit, OnGatewayConnection, On
 
   handleConnection(client: Socket, ...args: any[]) {
 
-    const authData: ClientUserData = client['user'] || {};
-
+    const authData: ClientJwtData = client['user'] || {};
+    
     // Add to active users list
     if (authData) {
-      this.addUserToList(authData);
+      const filterAuthData : ClientJwtData = {
+        authId: authData.authId,
+        userName: authData.userName,
+        fullName: authData.fullName
+      }
+      this.addUserToList(filterAuthData);
     }
 
     console.log(activeLoggedinUsers);
@@ -50,8 +55,8 @@ export class ChatSocketGateway implements OnGatewayInit, OnGatewayConnection, On
 
   handleDisconnect(client: any) {
     console.log('DIsconnected server: ', client.id);
-    const authData: ClientUserData = client['user'] || {};
-
+    const authData = client['user'] || {};
+  
     // Add to active users list
     if (authData) {
       this.removeUserFromList(authData.authId);
@@ -68,15 +73,20 @@ export class ChatSocketGateway implements OnGatewayInit, OnGatewayConnection, On
   }
 
 
-  private addUserToList(authData: ClientUserData) : void {
+  private addUserToList(authData: ClientJwtData): void {
     const isUserPresent = activeLoggedinUsers.some(item => item.authId === authData.authId);
 
-    if(!isUserPresent) {
-      activeLoggedinUsers.push(authData);
+
+    if (!isUserPresent) {
+      const newUser: ClientUserData = {
+        ...authData, // spread the authData properties (authId, userName, fullName)
+        userStatus: 'available' // or some other default status
+      };
+      activeLoggedinUsers.push(newUser);
     }
   }
 
-  private removeUserFromList(authId: number) : void {
+  private removeUserFromList(authId: number): void {
     console.log('To remove auth id:', authId);
     const index = activeLoggedinUsers.findIndex(item => item.authId === authId);
     activeLoggedinUsers.splice(index, 1);
