@@ -9,7 +9,7 @@
 }
 
 
-@media screen and (max-width: 895px) {
+@media screen and (max-width: 720px) {
   .chat-layout {
     grid-template-columns: 1fr;
     grid-template-rows: var(--responsive-recipient-height) 1fr;
