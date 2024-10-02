@@ -4,7 +4,7 @@
  */
 
 import { createReducer, on } from "@ngrx/store";
-import { A_setUserInfo, A_setUserState, A_userLoggedin } from "./chat.action";
+import { A_deleteAvailableUser, A_insertAvailableUserList, A_setUserInfo, A_setUserState, A_updateAvilableUserState, A_userLoggedin } from "./chat.action";
 import { TalkTideState } from "./app.state";
 import { LocalStrgService } from "../service/localstorage/ls.service";
 
@@ -14,7 +14,8 @@ export const initialGlobalState : TalkTideState = {
     isLoggedIn : false,
     userState: ls.getUserStatus(),
     userInfo : ls.getUserInfo(),
-    selectedRecipient: null
+    selectedRecipient: null,
+    availableUsersList: []
 }; // Inital State
 
 export const R_setUserLoggedin = createReducer(
@@ -40,6 +41,42 @@ export const R_setUserLoggedin = createReducer(
             ...state,
             userState: userState
         }
-    ))
+    )),
+
+    on(A_deleteAvailableUser, (state, { authId }) => (
+        {
+            ...state,
+            availableUsersList: state.availableUsersList.filter(
+                user => user.authId !== authId
+            )
+        }
+    )),
+
+    on(A_updateAvilableUserState, (state, { authId, newState }) => (
+        {
+            ...state,
+            availableUsersList: state.availableUsersList.map(
+                user => user.authId === authId ? 
+                {...user, userStatus: newState}
+                : 
+                user
+            )
+        }
+    )),
+
+    /**
+     * On receiving socket events list of availabel list, make sure no duplicate entries
+     */
+    on(A_insertAvailableUserList, (state, {availableUsersList}) => ({
+        ...state,
+        availableUsersList: [
+            ...state.availableUsersList,
+            ...availableUsersList.filter(
+                oneUser => !state.availableUsersList!.some(
+                    exisingUser => oneUser.authId === exisingUser.authId
+                )
+            )
+        ]
+    }))
 
 )

@@ -26,15 +26,21 @@
 
         <!-- Available User where chat history not yet create -->
         <div class="list-headding has-text-white">
-            <h5 class="is-size-7 is-uppercase has-text-centered has-text-weight-bold"
-                style="color: var(--theme-color);">Available Users</h5>
+            <h5 class="is-size-7 is-uppercase has-text-centered has-text-weight-bold" style="color: var(--theme-color);"
+            *ngIf="(availableUserList$ | async)?.length; else noAvilableUsers">
+                Available Users
+            </h5>
+            <ng-template #noAvilableUsers>
+                <div class="card px-2 py-2 mt-2 mb-2 has-text-centered is-size-7 is-uppercase has-text-centered has-text-weight-bold">No Available users</div>  
+            </ng-template>
+
         </div>
 
         <div class="recipient-list">
-            <div class="recipient-row card" *ngFor="let avilableUser of avilableUsersList"
+            <div class="recipient-row card" *ngFor="let avilableUser of availableUserList$ | async"
                 (click)="createChatHistory(avilableUser)">
                 <div class="group">
-                    <div class="profile-pic" [title]="avilableUser.status" style="cursor: pointer;">
+                    <div class="profile-pic" [title]="avilableUser.userStatus" style="cursor: pointer;">
                         <img src="assets/profile-pic.png" alt="Profie Pic">
                         <span class="status-icon" [ngClass]="avilableUser.userStatus"></span>
                     </div>

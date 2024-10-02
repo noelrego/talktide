@@ -17,3 +17,8 @@ export const S_userState = createSelector(
     myState,
     (state) => state.userState
 )
+
+export const S_availableUserList = createSelector(
+    myState,
+    (state) => state.availableUsersList
+)

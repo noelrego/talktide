@@ -1,5 +1,9 @@
 import { Component, ElementRef, OnInit } from '@angular/core';
 import { SocketService } from '../socket/socket.service';
+import { Observable } from 'rxjs';
+import { AvailableUserType } from '../../common';
+import { Store } from '@ngrx/store';
+import { S_availableUserList } from '../../STORE';
 
 @Component({
   selector: 'app-recipients',
@@ -12,9 +16,14 @@ export class RecipientsComponent implements OnInit{
   selectedRecipient: number = -1;
   avilableUsersList : any;
 
+  availableUserList$ : Observable<AvailableUserType[]>;
+
   constructor (
-    private socketService: SocketService
-  ) {}
+    private socketService: SocketService,
+    private store: Store
+  ) {
+    this.availableUserList$ = this.store.select(S_availableUserList);
+  }
 
   ngOnInit(): void {
 

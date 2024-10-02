@@ -3,9 +3,7 @@
 }
 
 @media screen and (max-width: 895px) {
-    .list-headding {
-        display: none;
-    }
+   
 
     .rec-box {
         height: var(--responsive-recipient-height) !important;
