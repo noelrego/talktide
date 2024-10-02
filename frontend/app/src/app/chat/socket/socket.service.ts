@@ -17,6 +17,8 @@ export class SocketService {
   }
 
   private connectSocket(): void {
+
+    console.log(' S O C K E T   C O O N E C T I N G');
     const socketUrl = ENVS.WEBSOCKRT_URL;
     console.log('SOCKET URI: ', socketUrl);
 
@@ -81,6 +83,7 @@ export class SocketService {
 
   // Generic: Emit events to the server
   emit(event: string, data: any): void {
+    console.log('Calling EMIT EVENT:  ', event);
     this.socket.emit(event, data);
   }
 
