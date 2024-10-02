@@ -95,6 +95,6 @@ export class ChatWindowComponent implements OnInit, OnDestroy{
 
 
   ngOnDestroy(): void {
-    
+    this.socketService.disconnect();
   }
 }

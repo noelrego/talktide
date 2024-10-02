@@ -15,7 +15,6 @@ export const WsMiddleware = () : SocketMiddleWare => {
     return(client, next) => {
 
         // Validate JWT and extract authId
-        console.log('Trying to ADD MIDDLE JWT')
 
         try {
             const token = client.handshake.headers['authorization'].split(' ')[1]; // Bearer {token}
@@ -24,7 +23,6 @@ export const WsMiddleware = () : SocketMiddleWare => {
                 ignoreExpiration: false
             });
 
-            console.log(res);
             client['user'] = res;
 
             next();

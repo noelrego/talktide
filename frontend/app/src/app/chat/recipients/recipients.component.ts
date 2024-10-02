@@ -1,7 +1,7 @@
 import { Component, ElementRef, OnInit } from '@angular/core';
 import { SocketService } from '../socket/socket.service';
 import { Observable } from 'rxjs';
-import { AvailableUserType } from '../../common';
+import { AvailableUserType, SocketEvtNames } from '../../common';
 import { Store } from '@ngrx/store';
 import { A_insertAvailableUserList, S_availableUserList } from '../../STORE';
 
@@ -38,6 +38,7 @@ export class RecipientsComponent implements OnInit{
     this.socketService.onEvent('B_LOUT').subscribe(data => {
     });
 
+    this.socketService.emit(SocketEvtNames.REQUEST_LOGGEDINUSERS, {});
     this.recipientList = [
       
       {

@@ -1,5 +1,5 @@
 export type ClientJwtData = {
-    authId: number;
+    authId: string;
     userName: string;
     fullName: string;
 }

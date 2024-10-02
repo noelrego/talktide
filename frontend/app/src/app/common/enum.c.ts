@@ -15,3 +15,7 @@ export enum UserStatus {
     OFFLINE = 'offline',
     AWAY = 'away'
 }
+
+export enum SocketEvtNames {
+    REQUEST_LOGGEDINUSERS = 'requestLoggedUsers'
+}

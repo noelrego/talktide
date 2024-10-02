@@ -1,8 +1,8 @@
-import { OnGatewayConnection, OnGatewayDisconnect, OnGatewayInit, SubscribeMessage, WebSocketGateway, WebSocketServer } from '@nestjs/websockets';
+import { ConnectedSocket, MessageBody, OnGatewayConnection, OnGatewayDisconnect, OnGatewayInit, SubscribeMessage, WebSocketGateway, WebSocketServer } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 import { EnvConfig } from 'src/config';
 import { WsMiddleware } from './ws.middleware';
-import { ClientJwtData, ClientUserData } from 'src/common';
+import { ClientJwtData, ClientUserData, SocketEvtNames } from 'src/common';
 
 const config = new EnvConfig();
 const origin = config.getFrontendOrigin();
@@ -37,7 +37,6 @@ export class ChatSocketGateway implements OnGatewayInit, OnGatewayConnection, On
   handleConnection(client: Socket, ...args: any[]) {
 
     const authData: ClientJwtData = client['user'] || {};
-    
     // Add to active users list
     if (authData) {
       const filterAuthData : ClientJwtData = {
@@ -48,29 +47,38 @@ export class ChatSocketGateway implements OnGatewayInit, OnGatewayConnection, On
       this.addUserToList(filterAuthData);
     }
 
-    console.log(activeLoggedinUsers);
+    // Filter connected user from avilable list
+    // const connectAuthId: string = client['user'].authId;
 
-    // FIlter the user data for same user
-    this.server.emit('B_LIN', activeLoggedinUsers);
+    // const filterUserInfo = activeLoggedinUsers.filter(
+    //   user => user.authId === connectAuthId
+    // );
+    // this.server.emit('B_LIN', filterUserInfo);
+    
   }
 
-  handleDisconnect(client: any) {
-    console.log('DIsconnected server: ', client.id);
+  handleDisconnect(client: Socket) {
+    console.log('DIsconnected server: ', client['user'].authId);
     const authData = client['user'] || {};
   
     // Add to active users list
     if (authData) {
       this.removeUserFromList(authData.authId);
-
     }
 
     // Filter the data for same user
-    const activeUsersList = activeLoggedinUsers.filter(item => item.authId !== authData.authId);
-    const dataToFrontend = {
-      theUserLoggedOut: authData.authId,
-      remainingUsers: activeLoggedinUsers
-    }
-    this.server.emit('B_LOUT', dataToFrontend);
+    const clientAuthId = client['user'].authId;
+    console.log('------------------------------------------')
+    console.log('COnnetd user: ', clientAuthId);
+    console.log('BREFORE LIST: ', activeLoggedinUsers);
+    const cleanedUserInfo = activeLoggedinUsers.filter(
+      user => user.authId !== clientAuthId
+    );
+    console.log('AFTER LIST: ', cleanedUserInfo);
+    console.log('------------------------------------------')
+
+    
+    // client.emit('B_LIN', cleanedUserInfo);
   }
 
 
@@ -87,12 +95,31 @@ export class ChatSocketGateway implements OnGatewayInit, OnGatewayConnection, On
     }
   }
 
-  private removeUserFromList(authId: number): void {
+  private removeUserFromList(authId: string): void {
     console.log('To remove auth id:', authId);
     const index = activeLoggedinUsers.findIndex(item => item.authId === authId);
     activeLoggedinUsers.splice(index, 1);
+  }
 
-    console.log('After upadte: ', activeLoggedinUsers);
+
+  // Client asking for Logged in users
+  
+  @SubscribeMessage(SocketEvtNames.REQUEST_LOGGEDINUSERS)
+  handleRequestLoggedinUsers (@ConnectedSocket() client: Socket) {
+    const clientAuthId = client['user'].authId;
+
+    // Filter out this client user info;
+    console.log('------------------------------------------')
+    console.log('COnnetd user: ', clientAuthId);
+    console.log('BREFORE LIST: ', activeLoggedinUsers);
+    const cleanedUserInfo = activeLoggedinUsers.filter(
+      user => user.authId !== clientAuthId
+    );
+    console.log('AFTER LIST: ', cleanedUserInfo);
+    console.log('------------------------------------------')
+
+
+    client.emit('B_LIN', cleanedUserInfo);
   }
 
 }
