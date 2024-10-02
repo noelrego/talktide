@@ -7,6 +7,7 @@ import { CustomCookieService } from '../../service/cookie/cookie.service';
 import { Router } from '@angular/router';
 import { FormControl, ValueChangeEvent } from '@angular/forms';
 import { SocketService } from '../socket/socket.service';
+import { LocalStrgService } from '../../service/localstorage';
 
 @Component({
   selector: 'app-chat-window',
@@ -41,7 +42,8 @@ export class ChatWindowComponent implements OnInit, OnDestroy{
     private store: Store,
     private myCookie: CustomCookieService,
     private router: Router,
-    private socketService: SocketService
+    private socketService: SocketService,
+    private lsService: LocalStrgService
   ) {
     this.userInfo$ = this.store.select(S_userInfo);
     this.userStatus$ = this.store.select(S_userState);
@@ -60,8 +62,9 @@ export class ChatWindowComponent implements OnInit, OnDestroy{
    this.selectOption.events.subscribe(e => {
     if (e instanceof ValueChangeEvent) {
       this.store.dispatch(A_setUserState({userState: e.source.value}));
-
       
+      // Update LocalStorage
+      this.lsService.setUserStatus(e.source.value);
     }
    })
 
@@ -75,6 +78,7 @@ export class ChatWindowComponent implements OnInit, OnDestroy{
     // Handle logout
     console.log('Logging out...');
     this.myCookie.deleteCookie();
+    this.lsService.deleteLocalStorage();
     this.router.navigate(['/login'])
 
   }

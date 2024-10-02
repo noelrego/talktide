@@ -13,7 +13,7 @@ import { ApiDataService } from './service/api';
 import { CustomCookieService } from './service/cookie/cookie.service';
 import { provideState, provideStore, StoreModule } from '@ngrx/store';
 import { R_setUserLoggedin } from './STORE/chat.reducer';
-import { LocalStrgService } from './service/ls/ls.service';
+import { LocalStrgService } from './service/localstorage/ls.service';
 
 @NgModule({
   declarations: [
