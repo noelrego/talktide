@@ -3,7 +3,7 @@ import { SocketService } from '../socket/socket.service';
 import { Observable } from 'rxjs';
 import { AvailableUserType } from '../../common';
 import { Store } from '@ngrx/store';
-import { S_availableUserList } from '../../STORE';
+import { A_insertAvailableUserList, S_availableUserList } from '../../STORE';
 
 @Component({
   selector: 'app-recipients',
@@ -28,11 +28,14 @@ export class RecipientsComponent implements OnInit{
   ngOnInit(): void {
 
     this.socketService.onEvent('B_LIN').subscribe(data => {
-      console.log('Data from server LOGIN:', data);
+
+      this.store.dispatch(A_insertAvailableUserList({
+        availableUsersList: data
+      }));
+      console.log('Data from server LOGIN:');
     });
 
     this.socketService.onEvent('B_LOUT').subscribe(data => {
-      console.log('Data from server SOMEONE LOGOUT:', data);
     });
 
     this.recipientList = [

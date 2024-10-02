@@ -1,5 +1,5 @@
 export type UserInfoType = {
-    authId: number | null;
+    authId: string | null;
     userName: string;
     fullName: string;
 }
@@ -11,7 +11,7 @@ export type SelectedRecipienttoChatType = {
 }
 
 export type AvailableUserType = {
-    authId: number;
+    authId: string;
     userName: string;
     fullName: string;
     userStatus: string;

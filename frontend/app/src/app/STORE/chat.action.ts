@@ -21,9 +21,9 @@ export const A_insertAvailableUserList = createAction('[Recipient] Recipient avi
 
 
 export const A_deleteAvailableUser = createAction('[Recipient] To remove as he loggs out', 
-    props<{ authId: number }>()
+    props<{ authId: string }>()
 )
 
 export const A_updateAvilableUserState = createAction('[Recipient] To update user status as he chnages the state', 
-    props<{ authId: number, newState: string }>()
+    props<{ authId: string, newState: string }>()
 )

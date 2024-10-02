@@ -70,6 +70,7 @@ export const R_setUserLoggedin = createReducer(
     on(A_insertAvailableUserList, (state, {availableUsersList}) => ({
         ...state,
         availableUsersList: [
+            // ...availableUsersList
             ...state.availableUsersList,
             ...availableUsersList.filter(
                 oneUser => !state.availableUsersList!.some(
