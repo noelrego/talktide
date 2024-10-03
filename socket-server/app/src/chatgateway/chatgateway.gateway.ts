@@ -36,14 +36,14 @@ export class ChatSocketGateway implements OnGatewayInit, OnGatewayConnection, On
     client.use(WsMiddleware() as any);
   }
 
+
   handleConnection(client: Socket, ...args: any[]) {
 
     const authData: ClientJwtData = client['user'] || {};
-    console.log('[Connected]: ', authData.authId, authData.userName);
 
     // Add to active users list
     if (authData) {
-      const filterAuthData : ClientJwtData = {
+      const filterAuthData: ClientJwtData = {
         authId: authData.authId,
         userName: authData.userName,
         fullName: authData.fullName
@@ -52,13 +52,13 @@ export class ChatSocketGateway implements OnGatewayInit, OnGatewayConnection, On
       const loggedInUser = this.getUserInfoByAuthId(authData.authId);
       this.server.emit('USER_LOGGEDIN', loggedInUser);
     }
-    
+
   }
+
 
   handleDisconnect(client: Socket) {
     const authData = client['user'];
-    console.log('[Disconnected]: ', authData.authId, authData.userName);
-    
+
     // Remove from active users list
     if (authData) {
       this.removeUserFromList(authData.authId);
@@ -67,9 +67,12 @@ export class ChatSocketGateway implements OnGatewayInit, OnGatewayConnection, On
     // Broadcast and inform all that this user logged out
     this.server.emit('USER_LOGGEDOUT', authData.authId);
   }
+
+
+
   // Client asking for Logged in users
   @SubscribeMessage(SocketEvtNames.REQUEST_LOGGEDINUSERS)
-  handleRequestLoggedinUsers (@ConnectedSocket() client: Socket) {
+  handleRequestLoggedinUsers(@ConnectedSocket() client: Socket) {
     const clientAuthId = client['user'].authId;
     const cleanedUserInfo = activeLoggedinUsers.filter(
       user => user.authId !== clientAuthId
@@ -77,11 +80,12 @@ export class ChatSocketGateway implements OnGatewayInit, OnGatewayConnection, On
     client.emit('B_LIN', cleanedUserInfo);
   }
 
+
+
   // Client is chnaging the status
   @SubscribeMessage(SocketEvtNames.CHANGE_USER_STATE)
   handleUserStateChange(@ConnectedSocket() client: Socket, @MessageBody() newState: string) {
-    const clientAuth : ClientJwtData = client['user'];
-    console.log('CHANGE STATE: ', clientAuth, newState);
+    const clientAuth: ClientJwtData = client['user'];
     this.updateUserState(clientAuth.authId, newState);
     this.server.emit('USER_CHANGED_STATE', {
       authId: clientAuth.authId,
@@ -90,11 +94,13 @@ export class ChatSocketGateway implements OnGatewayInit, OnGatewayConnection, On
   }
 
 
+
   // To create members like chat history
   @SubscribeMessage(SocketEvtNames.CREATE_MEMBER_BY_AVAILABLE_LIST)
   handleCreateMember(@ConnectedSocket() client: Socket, @MessageBody() members: CreateMemberType) {
     this.socketService.createChatMembersService(members);
   }
+
 
 
   // Get Participient list
@@ -107,10 +113,10 @@ export class ChatSocketGateway implements OnGatewayInit, OnGatewayConnection, On
   }
 
 
+
   /**
    * Helper functions
    */
-
   private addUserToList(authData: ClientJwtData): void {
     const isUserPresent = activeLoggedinUsers.some(item => item.authId === authData.authId);
     if (!isUserPresent) {
@@ -122,19 +128,21 @@ export class ChatSocketGateway implements OnGatewayInit, OnGatewayConnection, On
     }
   }
 
+
   private removeUserFromList(authId: string): void {
     const index = activeLoggedinUsers.findIndex(item => item.authId === authId);
     activeLoggedinUsers.splice(index, 1);
   }
 
 
-  private getUserInfoByAuthId(id: string) : ClientUserData {
+
+  private getUserInfoByAuthId(id: string): ClientUserData {
     const res = activeLoggedinUsers.find(user => user.authId === id);
     return res;
   }
 
-  private updateUserState(id: string,  newState: string) {
-    console.log('BEFORE STATE CHNAGE: ', activeLoggedinUsers);
+  
+  private updateUserState(id: string, newState: string) {
     activeLoggedinUsers.map(
       user => {
         if (user.authId == id) {
@@ -142,8 +150,6 @@ export class ChatSocketGateway implements OnGatewayInit, OnGatewayConnection, On
         }
       }
     )
-
-    console.log('AFTER STATE CHNAGE: ', activeLoggedinUsers);
 
   }
 
