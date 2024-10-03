@@ -67,4 +67,34 @@ export class AppService {
       }
     }
   }
+
+
+
+  async getRecipientListService(authId: string): Promise<N_GenericResType> {
+    console.log('GET RECEIPEINT LIST: ', authId);
+
+    try {
+      
+      const chatMembers = [authId];
+
+      const ifExists = await this.memberRepo.find({
+        where : {
+          chatMembers: Raw (alias => `${alias} && ARRAY[:...chatMembers]::text[]`, { chatMembers })
+        }
+      });
+
+      console.log(ifExists);
+      
+      return {
+        statusCode: HttpStatus.OK,
+        message: 'Available List',
+        resData: {authId}
+      }
+    } catch (error) {
+      return {
+        statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
+        message: 'Could not fetch list'
+      }
+    }
+  }
 }

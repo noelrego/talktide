@@ -1,7 +1,7 @@
 import { AfterContentInit, Component, ElementRef, OnDestroy, OnInit } from '@angular/core';
 import { SocketService } from '../socket/socket.service';
 import { Observable, Subscription } from 'rxjs';
-import { AvailableUserType, SocketEvtNames, UserInfoType } from '../../common';
+import { AvailableUserType, CreateMemberType, SocketEvtNames, UserInfoType } from '../../common';
 import { Store } from '@ngrx/store';
 import { A_deleteAvailableUser, A_insertAvailableUser, A_insertAvailableUserList, A_otherUserChangedState, S_availableUserList, S_userInfo, S_userState } from '../../STORE';
 
@@ -42,6 +42,7 @@ export class RecipientsComponent implements OnInit, AfterContentInit, OnDestroy{
     if(!this.socketService.socketConnected) {
       this.socketService.connectSocket();
     }
+    
 
     // Update Initial State to server on Page refresh!
     this.userStatus$.subscribe(res => 
@@ -150,12 +151,32 @@ export class RecipientsComponent implements OnInit, AfterContentInit, OnDestroy{
   
   // To create a chat History from Selected Available list
   createChatHistory(userInfo: any) : void {
-    console.log('To create chat History: ', userInfo);
+
+    this.loggedInUser$.subscribe(res => {
+
+      const members: CreateMemberType = {
+        firstRecipient: (res?.authId) ? res.authId : '', // Alwayd ID present
+        secondRecipient: userInfo.authId
+      }
+      console.log(members)
+      this.socketService.emit(SocketEvtNames.CREATE_MEMBER_BY_AVAILABLE_LIST, members);
+
+      this.store.dispatch(A_deleteAvailableUser({
+        authId: userInfo.authId
+      }))
+
+    })
+    
 
   }
 
   ngAfterContentInit(): void {
+    
+    // Get the available Logged in users 
     this.socketService.emit(SocketEvtNames.REQUEST_LOGGEDINUSERS, {});
+
+    // Get the Chat History Recipient list
+    this.socketService.emit(SocketEvtNames.GET_RECIPIENT_LIST, {});
   }
   
 

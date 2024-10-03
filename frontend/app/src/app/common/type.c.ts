@@ -26,3 +26,8 @@ export type ReciepientListType = {
     lastMessage: string | null;
     newMessage: boolean;
 }
+
+export type CreateMemberType = {
+    firstRecipient: string;
+    secondRecipient: string;
+}

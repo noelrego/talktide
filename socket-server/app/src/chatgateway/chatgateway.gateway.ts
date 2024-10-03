@@ -2,7 +2,8 @@ import { ConnectedSocket, MessageBody, OnGatewayConnection, OnGatewayDisconnect,
 import { Server, Socket } from 'socket.io';
 import { EnvConfig } from 'src/config';
 import { WsMiddleware } from './ws.middleware';
-import { ClientJwtData, ClientUserData, SocketEvtNames } from 'src/common';
+import { ClientJwtData, ClientUserData, CreateMemberType, SocketEvtNames } from 'src/common';
+import { ChatGatewayService } from './chatgateway.service';
 
 const config = new EnvConfig();
 const origin = config.getFrontendOrigin();
@@ -23,7 +24,9 @@ export class ChatSocketGateway implements OnGatewayInit, OnGatewayConnection, On
   @WebSocketServer()
   server: Server;
 
-  constructor() { }
+  constructor(
+    private socketService: ChatGatewayService
+  ) { }
 
   /**
    * To validate Socker JWT token in Middleware.
@@ -84,6 +87,23 @@ export class ChatSocketGateway implements OnGatewayInit, OnGatewayConnection, On
       authId: clientAuth.authId,
       userStatus: newState
     });
+  }
+
+
+  // To create members like chat history
+  @SubscribeMessage(SocketEvtNames.CREATE_MEMBER_BY_AVAILABLE_LIST)
+  handleCreateMember(@ConnectedSocket() client: Socket, @MessageBody() members: CreateMemberType) {
+    this.socketService.createChatMembersService(members);
+  }
+
+
+  // Get Participient list
+  @SubscribeMessage(SocketEvtNames.GET_RECIPIENT_LIST)
+  async handleGetRecipientList(@ConnectedSocket() client: Socket) {
+    const clientinfo: ClientJwtData = client['user'];
+
+    const result = await this.socketService.getRecipientListService(clientinfo.authId)
+    console.log(result);
   }
 
 

@@ -7,3 +7,8 @@ export type ClientJwtData = {
 export type ClientUserData =  ClientJwtData & {
     userStatus: string;
 }
+
+export type CreateMemberType = {
+    firstRecipient: string;
+    secondRecipient: string;
+}

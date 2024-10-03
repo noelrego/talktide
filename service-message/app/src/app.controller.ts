@@ -13,4 +13,10 @@ export class AppController {
   async createChatMember(@Payload() payload: CreateMemberType) {
     return this.appService.createChatMemberService(payload);
   }
+
+
+  @MessagePattern(N_MsgPatternmessageService.GET_CHAT_MEMBERS_LIST)
+  async getRecipientList(@Payload() authId: string) {
+    return this.appService.getRecipientListService(authId);
+  }
 }
