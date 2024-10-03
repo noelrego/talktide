@@ -18,7 +18,8 @@ export class AppService {
 
 
   /**
-   * Function to create Chat member
+   * Function to create Chat member, Before creating checking with 'array overlap'
+   * to make sure no two users create same chat memeber. Once a user creates then we can use that in Participient list
    */
   async createChatMemberService(payload: CreateMemberType) : Promise<N_GenericResType> {
     try {
@@ -35,27 +36,24 @@ export class AppService {
         }
       })
 
-      console.log(ifExists);
+      if (!ifExists) {
+        const newRecord = this.memberRepo.create({
+          chatMembers: chatMembers,
+          roomName: roomName
+        });
+        const savedData = await this.memberRepo.save(newRecord);
 
-      return {
-        statusCode: HttpStatus.CREATED,
-        message: 'Created Chat history',
-        resData: {
-          chatMembers, roomName
+        return {
+          statusCode: HttpStatus.CREATED,
+          message: 'Created Chat history',
+          resData: savedData
         }
-      }
 
-      const newRecord = this.memberRepo.create({
-        chatMembers: chatMembers,
-        roomName: roomName
-      });
-      await this.memberRepo.save(newRecord);
-
-      return {
-        statusCode: HttpStatus.CREATED,
-        message: 'Created Chat history',
-        resData: {
-          chatMembers, roomName
+      } else {
+        return {
+          statusCode: HttpStatus.CONFLICT,
+          message: 'Already have a chat room',
+          resData: ifExists
         }
       }
 
