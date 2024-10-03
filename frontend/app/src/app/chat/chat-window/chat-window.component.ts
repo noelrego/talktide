@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { Observable } from 'rxjs';
+import { Observable, Subscribable, Subscription } from 'rxjs';
 import { A_resetAvailableUserList, A_setUserState, S_loggedInstate, S_userInfo, S_userState, TalkTideState } from '../../STORE';
 import { ProvideReducerName, SocketEvtNames, UserInfoType } from '../../common';
 import { CustomCookieService } from '../../service/cookie/cookie.service';
@@ -38,6 +38,9 @@ export class ChatWindowComponent implements OnInit, OnDestroy{
   userInfo$ : Observable<UserInfoType | null>;
   userStatus$ : Observable<string | null>;
 
+  // Socket events
+ 
+
   constructor (
     private store: Store,
     private myCookie: CustomCookieService,
@@ -50,6 +53,7 @@ export class ChatWindowComponent implements OnInit, OnDestroy{
   }
 
   ngOnInit(): void {
+
     this.userInfo$.subscribe(res => {
       this.username = res?.fullName
     });

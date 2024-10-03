@@ -8,7 +8,7 @@ const routes: Routes = [
     path: '', component: ChatWindowComponent
   },
   {
-    path: '**', component: NotFoundComponent
+    path: '**', redirectTo: 'login', pathMatch: 'full'
   }
 ];
 

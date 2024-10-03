@@ -21,6 +21,7 @@ export class RecipientsComponent implements OnInit, AfterContentInit, OnDestroy{
 
   B_LIN$ : Subscription;
   USER_LOGGEDOUT$ : Subscription;
+  USER_LOGGEDIN$ : Subscription;
 
   constructor (
     private socketService: SocketService,
@@ -40,12 +41,40 @@ export class RecipientsComponent implements OnInit, AfterContentInit, OnDestroy{
     // Subscribe to socket events;
     this.B_LIN$ = this.socketService.onEvent('B_LIN').subscribe(data => {
       console.log('[SOCKET RECEIVE] B_LIN: ', data);
+
+      this.store.dispatch(A_insertAvailableUserList({
+        availableUsersList: data
+      }))
+      
     });
 
     //Subscribe to user who logs out
     this.USER_LOGGEDOUT$ = this.socketService.onEvent('USER_LOGGEDOUT').subscribe(data => {
       console.log('[SOCKET RECEIVE] USER_LOGGEDOUT: ', data);
+
+      this.store.dispatch(A_deleteAvailableUser({
+        authId: data
+      }))
+    });
+
+    //Subscribe to socket event
+    this.USER_LOGGEDIN$ = this.socketService.onEvent('USER_LOGGEDIN').subscribe(data => {
+      console.log('[SOKET RECEIVE]------ Some one logged in: ', data);
+
+      const loggedInUser = this.loggedInUser$.subscribe(item =>  { 
+        if (item?.authId !== data.authId) {
+          this.store.dispatch(A_insertAvailableUser({
+            availableUser: data
+          }))
+        }
+      });
+      
+      // this.availableUserList$.subscribe(item => console.log(item));
+      // this.store.dispatch(A_insertAvailableUser({
+      //   availableUser: data
+      // }))
     })
+
 
 
 
@@ -114,6 +143,7 @@ export class RecipientsComponent implements OnInit, AfterContentInit, OnDestroy{
   ngOnDestroy(): void {
     this.B_LIN$.unsubscribe();
     this.USER_LOGGEDOUT$.unsubscribe();
+    this.USER_LOGGEDIN$.unsubscribe();
   }
 
 }
