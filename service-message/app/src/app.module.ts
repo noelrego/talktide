@@ -3,9 +3,10 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { CustomConfigService } from './config';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { AuthUserRepo } from './entity/auth-user.entity';
+import { MembersRepo } from './entity/members.entity';
 import { HelperClass } from './helper/hash.helper';
 import { JwtService } from '@nestjs/jwt';
+import { MessageRepo } from './entity/message.entity';
 
 const conf = new CustomConfigService();
 
@@ -19,14 +20,14 @@ const conf = new CustomConfigService();
         username: conf.getDbUser(),
         password: conf.getDbPass(),
         database: conf.getDbNameforService(),
-        entities: [AuthUserRepo],
+        entities: [MembersRepo, MessageRepo],
         synchronize: false,  // DB alter should not
         migrationsRun: false,
       }),
     }),
 
     TypeOrmModule.forFeature([
-      AuthUserRepo
+      MembersRepo, MessageRepo
     ])
   ],
   controllers: [AppController],

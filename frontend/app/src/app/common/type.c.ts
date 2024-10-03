@@ -16,3 +16,13 @@ export type AvailableUserType = {
     fullName: string;
     userStatus: string;
 }
+
+export type ReciepientListType = {
+    memberId: string;
+    roomName: string;
+    recipientAuthId: string;
+    recipientStatus: string;
+    fullName: string;
+    lastMessage: string | null;
+    newMessage: boolean;
+}

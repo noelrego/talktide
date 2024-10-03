@@ -24,7 +24,7 @@ export class CustomConfigService {
   }
 
   getDbNameforService(): string {
-    return process.env.AUTH_SERVICE_DB;
+    return process.env.MESSAGE_SERVICE_DB;
   }
 
   getDbUser(): string {

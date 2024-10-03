@@ -16,7 +16,8 @@ export const initialGlobalState : TalkTideState = {
     userState: ls.getUserStatus(),
     userInfo : ls.getUserInfo(),
     selectedRecipient: null,
-    availableUsersList: []
+    availableUsersList: [],
+    recipientList: []
 }; // Inital State
 
 export const R_setUserLoggedin = createReducer(
