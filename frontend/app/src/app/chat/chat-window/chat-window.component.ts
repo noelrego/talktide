@@ -87,7 +87,7 @@ export class ChatWindowComponent implements OnInit, OnDestroy{
     console.log('Logging out...');
     this.myCookie.deleteCookie();
     this.lsService.deleteLocalStorage();
-
+    this.store.dispatch(A_resetAvailableUserList());
     this.socketService.socket.disconnect();
     
     this.router.navigate(['/login']);

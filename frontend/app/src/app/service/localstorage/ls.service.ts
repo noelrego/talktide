@@ -37,6 +37,7 @@ export class LocalStrgService {
     }
 
     deleteIfExists(key: string) : void {
+        console.log('[Localstorage] deletething :', key)
         if (localStorage.getItem(key)) {
             localStorage.removeItem(key);
         }
