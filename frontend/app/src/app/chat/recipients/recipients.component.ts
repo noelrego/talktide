@@ -1,44 +1,42 @@
-import { Component, ElementRef, OnInit } from '@angular/core';
+import { AfterContentInit, Component, ElementRef, OnDestroy, OnInit } from '@angular/core';
 import { SocketService } from '../socket/socket.service';
-import { Observable } from 'rxjs';
-import { AvailableUserType, SocketEvtNames } from '../../common';
+import { Observable, Subscription } from 'rxjs';
+import { AvailableUserType, SocketEvtNames, UserInfoType } from '../../common';
 import { Store } from '@ngrx/store';
-import { A_insertAvailableUserList, S_availableUserList } from '../../STORE';
+import { A_deleteAvailableUser, A_insertAvailableUser, A_insertAvailableUserList, S_availableUserList, S_userInfo } from '../../STORE';
 
 @Component({
   selector: 'app-recipients',
   templateUrl: './recipients.component.html',
   styleUrl: './recipients.component.css'
 })
-export class RecipientsComponent implements OnInit{
+export class RecipientsComponent implements OnInit, AfterContentInit, OnDestroy{
 
   recipientList : any;
   selectedRecipient: number = -1;
   avilableUsersList : any;
 
   availableUserList$ : Observable<AvailableUserType[]>;
+  loggedInUser$ : Observable<UserInfoType | null>;
 
   constructor (
     private socketService: SocketService,
     private store: Store
   ) {
     this.availableUserList$ = this.store.select(S_availableUserList);
+    this.loggedInUser$ = this.store.select(S_userInfo);
   }
 
   ngOnInit(): void {
 
-    this.socketService.onEvent('B_LIN').subscribe(data => {
+    console.log('[SOCKET] Socket state: ', this.socketService.socketConnected);
+    if(!this.socketService.socketConnected) {
+      this.socketService.connectSocket();
+    }
 
-      this.store.dispatch(A_insertAvailableUserList({
-        availableUsersList: data
-      }));
-      console.log('Data from server LOGIN:');
-    });
+    this.availableUserList$.subscribe(res => console.log(' [STATE] available user list: ', res))
+    this.loggedInUser$.subscribe(res => console.log(' [STATE] logged in userinfo: ', res))
 
-    this.socketService.onEvent('B_LOUT').subscribe(data => {
-    });
-
-    this.socketService.emit(SocketEvtNames.REQUEST_LOGGEDINUSERS, {});
     this.recipientList = [
       
       {
@@ -90,6 +88,14 @@ export class RecipientsComponent implements OnInit{
   createChatHistory(userInfo: any) : void {
     console.log('To create chat History: ', userInfo);
 
+  }
+
+  ngAfterContentInit(): void {
+    this.socketService.emit(SocketEvtNames.REQUEST_LOGGEDINUSERS, {});
+  }
+  
+
+  ngOnDestroy(): void {
   }
 
 }

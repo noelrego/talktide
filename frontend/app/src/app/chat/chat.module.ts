@@ -6,6 +6,7 @@ import { ChatWindowComponent } from './chat-window/chat-window.component';
 import { ChatBoxComponent } from './chat-box/chat-box.component';
 import { RecipientsComponent } from './recipients/recipients.component';
 import { ReactiveFormsModule } from '@angular/forms';
+import { SocketService } from './socket/socket.service';
 
 
 @NgModule({
@@ -18,6 +19,9 @@ import { ReactiveFormsModule } from '@angular/forms';
     CommonModule,
     ChatRoutingModule,
     ReactiveFormsModule,
+  ],
+  providers: [
+    SocketService
   ]
 })
 export class ChatModule { }

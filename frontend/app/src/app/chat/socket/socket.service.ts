@@ -9,15 +9,13 @@ import { CustomCookieService } from '../../service/cookie/cookie.service';
 })
 export class SocketService {
   socket!: Socket;
+  socketConnected: boolean = false;
 
   constructor(private myCookie: CustomCookieService) {
-
-    console.log(' SOME ONE CALLED MEEE... I AM INITIALTING');
-    this.connectSocket();
+    console.log(' [SOCKET SEVICE] Some one called me Initiating . . .');
   }
 
-  private connectSocket(): void {
-
+  connectSocket(): void {
     console.log(' S O C K E T   C O O N E C T I N G');
     const socketUrl = ENVS.WEBSOCKRT_URL;
     console.log('SOCKET URI: ', socketUrl);
@@ -35,6 +33,10 @@ export class SocketService {
     // Handle successful connection
     this.socket.on('connect', () => {
       console.log('Socket connected');
+      this.socketConnected = true;
+
+
+
     });
 
     // Handle connection errors
@@ -44,12 +46,8 @@ export class SocketService {
 
     // Handle disconnection
     this.socket.on('disconnect', (reason: string) => {
-      console.warn(`Socket disconnected: ${reason}`);
-
-      if (reason === 'io server disconnect') {
-        // Manually reconnect if the server disconnected the client
-        this.socket.connect();
-      }
+      console.log(`Socket disconnected:--------`);
+      this.socketConnected = false;
     });
 
     // Handle reconnection attempts
@@ -60,36 +58,43 @@ export class SocketService {
     // Handle successful reconnection
     this.socket.on('reconnect', () => {
       console.log('Socket reconnected');
+      this.socketConnected = true;
     });
 
     // Handle reconnection failure after all attempts
     this.socket.on('reconnect_failed', () => {
       console.error('Reconnection failed');
+      this.socketConnected = false;
     });
+    
   }
 
   // Generic: Listen for specific events
-  onEvent(event: string): Observable<any> {
-    return new Observable(observer => {
-      this.socket.on(event, (data: any) => {
-        observer.next(data);
+  onEvent(event: string, time = null): Observable<any> {
+    console.log('[NGRX] registering onEvent  ', event);
+      return new Observable(observer => {
+        this.socket.on(event, (data: any) => {
+          observer.next(data);
+        });
+
+        // On unsubscribe 
+        return () => this.socket.off(event);
       });
 
-      return () => {
-        this.socket.off(event);
-      };
-    });
+    
+    
   }
 
   // Generic: Emit events to the server
   emit(event: string, data: any): void {
-    console.log('Calling EMIT EVENT:  ', event);
+    console.log('[ngrx] Emit Event', event);
     this.socket.emit(event, data);
   }
 
   // Clean up the socket connection
   disconnect(): void {
-    this.socket.disconnect();
+    if(this.socketConnected)
+      this.socket.disconnect();
   }
 
 }

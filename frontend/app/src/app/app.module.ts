@@ -13,7 +13,7 @@ import { ApiDataService } from './service/api';
 import { CustomCookieService } from './service/cookie/cookie.service';
 import { provideState, provideStore, StoreModule } from '@ngrx/store';
 import { R_setUserLoggedin } from './STORE/chat.reducer';
-import { LocalStrgService } from './service/localstorage/ls.service';
+import { LocalStrgService } from './service/localstorage';
 
 @NgModule({
   declarations: [
@@ -30,10 +30,6 @@ import { LocalStrgService } from './service/localstorage/ls.service';
   ],
   providers: [
     provideHttpClient(),
-    // provideStore(),
-    // provideState(
-    //   { name: 'blah', reducer: R_setUserLoggedin},
-    // ),
     {
       provide: HTTP_INTERCEPTORS,
       useClass: HttpCustomInterceptor,

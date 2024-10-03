@@ -20,7 +20,8 @@ const activeLoggedinUsers: ClientUserData[] = [];
 })
 export class ChatSocketGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
 
-  @WebSocketServer() server: Server<any, any>;
+  @WebSocketServer()
+  server: Server;
 
   constructor() { }
 
@@ -29,14 +30,14 @@ export class ChatSocketGateway implements OnGatewayInit, OnGatewayConnection, On
    * @param client 
    */
   afterInit(client: Socket) {
-    //TO DO: Use middleware for JWT
     client.use(WsMiddleware() as any);
-    console.log('Inital User List: ', activeLoggedinUsers);
   }
 
   handleConnection(client: Socket, ...args: any[]) {
 
     const authData: ClientJwtData = client['user'] || {};
+    console.log('[Connected]: ', authData.authId, authData.userName);
+
     // Add to active users list
     if (authData) {
       const filterAuthData : ClientJwtData = {
@@ -45,40 +46,23 @@ export class ChatSocketGateway implements OnGatewayInit, OnGatewayConnection, On
         fullName: authData.fullName
       }
       this.addUserToList(filterAuthData);
+      const loggedInUser = this.getUserInfoByAuthId(authData.authId);
+      this.server.emit('USER_LOGGEDIN', loggedInUser);
     }
-
-    // Filter connected user from avilable list
-    // const connectAuthId: string = client['user'].authId;
-
-    // const filterUserInfo = activeLoggedinUsers.filter(
-    //   user => user.authId === connectAuthId
-    // );
-    // this.server.emit('B_LIN', filterUserInfo);
     
   }
 
   handleDisconnect(client: Socket) {
-    console.log('DIsconnected server: ', client['user'].authId);
-    const authData = client['user'] || {};
-  
-    // Add to active users list
+    const authData = client['user'];
+    console.log('[Disconnected]: ', authData.authId, authData.userName);
+    
+    // Remove from active users list
     if (authData) {
       this.removeUserFromList(authData.authId);
     }
 
-    // Filter the data for same user
-    const clientAuthId = client['user'].authId;
-    console.log('------------------------------------------')
-    console.log('COnnetd user: ', clientAuthId);
-    console.log('BREFORE LIST: ', activeLoggedinUsers);
-    const cleanedUserInfo = activeLoggedinUsers.filter(
-      user => user.authId !== clientAuthId
-    );
-    console.log('AFTER LIST: ', cleanedUserInfo);
-    console.log('------------------------------------------')
-
-    
-    // client.emit('B_LIN', cleanedUserInfo);
+    // Broadcast and inform all that this user logged out
+    this.server.emit('USER_LOGGEDOUT', authData.authId);
   }
 
 
@@ -88,38 +72,34 @@ export class ChatSocketGateway implements OnGatewayInit, OnGatewayConnection, On
 
     if (!isUserPresent) {
       const newUser: ClientUserData = {
-        ...authData, // spread the authData properties (authId, userName, fullName)
-        userStatus: 'available' // or some other default status
+        ...authData,
+        userStatus: 'available'
       };
       activeLoggedinUsers.push(newUser);
     }
   }
 
   private removeUserFromList(authId: string): void {
-    console.log('To remove auth id:', authId);
     const index = activeLoggedinUsers.findIndex(item => item.authId === authId);
     activeLoggedinUsers.splice(index, 1);
   }
 
 
+  private getUserInfoByAuthId(id: string) : ClientUserData {
+    const res = activeLoggedinUsers.find(user => user.authId === id);
+    return res;
+  }
+
+
   // Client asking for Logged in users
-  
   @SubscribeMessage(SocketEvtNames.REQUEST_LOGGEDINUSERS)
   handleRequestLoggedinUsers (@ConnectedSocket() client: Socket) {
     const clientAuthId = client['user'].authId;
-
-    // Filter out this client user info;
-    console.log('------------------------------------------')
-    console.log('COnnetd user: ', clientAuthId);
-    console.log('BREFORE LIST: ', activeLoggedinUsers);
     const cleanedUserInfo = activeLoggedinUsers.filter(
       user => user.authId !== clientAuthId
     );
-    console.log('AFTER LIST: ', cleanedUserInfo);
-    console.log('------------------------------------------')
-
-
     client.emit('B_LIN', cleanedUserInfo);
   }
+
 
 }

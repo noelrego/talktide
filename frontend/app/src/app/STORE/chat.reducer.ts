@@ -4,7 +4,7 @@
  */
 
 import { createReducer, on } from "@ngrx/store";
-import { A_deleteAvailableUser, A_insertAvailableUserList, A_setUserInfo, A_setUserState, A_updateAvilableUserState, A_userLoggedin } from "./chat.action";
+import { A_deleteAvailableUser, A_insertAvailableUser, A_insertAvailableUserList, A_resetAvailableUserList, A_setUserInfo, A_setUserState, A_updateAvilableUserState, A_userLoggedin } from "./chat.action";
 import { TalkTideState } from "./app.state";
 import { LocalStrgService } from "../service/localstorage/ls.service";
 
@@ -70,14 +70,30 @@ export const R_setUserLoggedin = createReducer(
     on(A_insertAvailableUserList, (state, {availableUsersList}) => ({
         ...state,
         availableUsersList: [
-            // ...availableUsersList
             ...state.availableUsersList,
             ...availableUsersList.filter(
-                oneUser => !state.availableUsersList!.some(
+                oneUser => !state.availableUsersList.some(
                     exisingUser => oneUser.authId === exisingUser.authId
                 )
             )
         ]
+    })),
+
+    on(A_insertAvailableUser, (state, { availableUser }) => ({
+        ...state,
+        availableUsersList: 
+            state.availableUsersList.some(
+                (user) => {
+                    user.authId === availableUser.authId
+                }
+            ) ?
+            state.availableUsersList :
+            [...state.availableUsersList, availableUser]
+    })),
+
+    on(A_resetAvailableUserList, (state) => ({
+        ...state,
+        availableUsersList: []
     }))
 
 )

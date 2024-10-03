@@ -19,6 +19,12 @@ export const A_insertAvailableUserList = createAction('[Recipient] Recipient avi
     props<{ availableUsersList: AvailableUserType[] }>()
 )
 
+export const A_insertAvailableUser = createAction('[Recipient] Insert one logged in user', 
+    props<{ availableUser: AvailableUserType }>()
+)
+
+export const A_resetAvailableUserList = createAction('[Recipient] To reset list on logout')
+
 
 export const A_deleteAvailableUser = createAction('[Recipient] To remove as he loggs out', 
     props<{ authId: string }>()

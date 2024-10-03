@@ -1,8 +1,8 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
-import { A_setUserState, S_loggedInstate, S_userInfo, S_userState, TalkTideState } from '../../STORE';
-import { ProvideReducerName, UserInfoType } from '../../common';
+import { A_resetAvailableUserList, A_setUserState, S_loggedInstate, S_userInfo, S_userState, TalkTideState } from '../../STORE';
+import { ProvideReducerName, SocketEvtNames, UserInfoType } from '../../common';
 import { CustomCookieService } from '../../service/cookie/cookie.service';
 import { Router } from '@angular/router';
 import { FormControl, ValueChangeEvent } from '@angular/forms';
@@ -70,6 +70,11 @@ export class ChatWindowComponent implements OnInit, OnDestroy{
 
   }
 
+  getloginInfo() {
+    console.log('Info: ');
+    this.socketService.emit(SocketEvtNames.REQUEST_LOGGEDINUSERS, {});
+  }
+
   toggleBurgerMenu() {
     this.isActive = !this.isActive;
   }
@@ -79,7 +84,10 @@ export class ChatWindowComponent implements OnInit, OnDestroy{
     console.log('Logging out...');
     this.myCookie.deleteCookie();
     this.lsService.deleteLocalStorage();
-    this.router.navigate(['/login'])
+
+    this.socketService.socket.disconnect();
+    
+    this.router.navigate(['/login']);
 
   }
 
@@ -95,6 +103,6 @@ export class ChatWindowComponent implements OnInit, OnDestroy{
 
 
   ngOnDestroy(): void {
-    this.socketService.disconnect();
+    this.store.dispatch(A_resetAvailableUserList());
   }
 }
