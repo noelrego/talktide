@@ -147,7 +147,7 @@ export class AppService {
         const accessToken = await this.helper.generateAuthToken(jwtPayload);
 
         const userInfo = {
-          authId: user.id,
+          authId: user.id.toString(),
           username: user.userName,
           fullName: `${user.firstName}${(user?.lastName)? ' ' +user.lastName : ''}`
         }
