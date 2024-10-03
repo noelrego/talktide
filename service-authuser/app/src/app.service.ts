@@ -2,7 +2,7 @@ import { HttpStatus, Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { N_GenericResType, N_SocketUpdateAction } from '@nn-rego/chatapp-common';
 import { AuthUserRepo } from './entity/auth-user.entity';
-import { Repository } from 'typeorm';
+import { Not, Repository } from 'typeorm';
 import { AuthLoginType, AuthTokenPayloadType, CheckUserNameType, RegisterUserType, SockerUpdateType, SystemStatus, UserStatus } from './common';
 import { HelperClass } from './helper/hash.helper';
 import { StatusInfoRepo } from './entity';
@@ -201,29 +201,22 @@ export class AppService {
         }
       });
 
-      console.log(statusInfo);
-
       if (!statusInfo) return;
-      
+
       switch(payload.action) {
         case N_SocketUpdateAction.CONNECTED:
-          
-          console.log('Connected');
           statusInfo.userStatus = UserStatus.AVAILABLE;
           statusInfo.systemStatus = SystemStatus.LOGIN;
           this.statusInfoRepo.save(statusInfo);
-
           break;
         
         case N_SocketUpdateAction.DISCONNECTED:
-          console.log('Disconced');
           statusInfo.userStatus = UserStatus.OFFLINE;
           statusInfo.systemStatus = SystemStatus.LOGOUT;
           this.statusInfoRepo.save(statusInfo);
           break;
 
         case N_SocketUpdateAction.STATUS_UPDATE:
-          console.log('Update status')
           if (payload.data.newStatus === UserStatus.AVAILABLE) {
             statusInfo.userStatus = UserStatus.AVAILABLE;
           } else if (payload.data.newStatus === UserStatus.AWAY) {
@@ -243,6 +236,41 @@ export class AppService {
     } catch (error) {
       console.log('err: ', error.toString());
       return;
+    }
+  }
+
+
+
+  /**
+   * Function to get list of available users
+   * @param payload authId
+   */
+  async getAvailableUserListService(authId: string) {
+    try {
+      
+      const users = await this.authUserRepo
+      .createQueryBuilder('auth_user')
+      .leftJoinAndSelect('auth_user.statusInfo', 'statusInfo')
+      .where('auth_user.id != :authId', { authId })
+      .andWhere('statusInfo.system_status = :systemStatus', { systemStatus: SystemStatus.LOGIN })
+      .getMany();
+
+      const list = users.map(user => ({
+        id: user.id,
+        userName: user.userName,
+        fullName: `${user.firstName} ${user.lastName || ''}`.trim(),
+        userStatus: user.statusInfo.userStatus,
+      }));
+
+      if (list.length > 0) {
+        return list;
+      } else {
+        return [];
+      }
+
+    } catch (error) {
+      console.error(error.toString())
+      return [];
     }
   }
 

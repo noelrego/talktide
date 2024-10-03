@@ -9,10 +9,6 @@ import { N_SocketUpdateAction } from '@nn-rego/chatapp-common';
 const config = new EnvConfig();
 const origin = config.getFrontendOrigin();
 
-// Redis mimic
-
-const activeLoggedinUsers: ClientUserData[] = [];
-
 @WebSocketGateway({
   namespace: '/chat',
   cors: {
@@ -56,8 +52,6 @@ export class ChatSocketGateway implements OnGatewayInit, OnGatewayConnection, On
         userName: authData.userName,
         fullName: authData.fullName
       }
-      this.addUserToList(filterAuthData);
-      const loggedInUser = this.getUserInfoByAuthId(authData.authId);
       // this.server.emit('USER_LOGGEDIN', loggedInUser);
     }
 
@@ -98,13 +92,12 @@ export class ChatSocketGateway implements OnGatewayInit, OnGatewayConnection, On
 
   // Client asking for Logged in users
   @SubscribeMessage(SocketEvtNames.REQUEST_LOGGEDINUSERS)
-  handleRequestLoggedinUsers(@ConnectedSocket() client: Socket) {
+  async handleRequestLoggedinUsers(@ConnectedSocket() client: Socket) {
     
     const clientAuthId = client['user'].authId;
-    const cleanedUserInfo = activeLoggedinUsers.filter(
-      user => user.authId !== clientAuthId
-    );
-    // client.emit('B_LIN', cleanedUserInfo);
+    const list = await this.socketService.requestAvailableUsers(clientAuthId);
+    console.log('LIST: ', list);
+    
   }
 
 
@@ -129,67 +122,7 @@ export class ChatSocketGateway implements OnGatewayInit, OnGatewayConnection, On
     const result = await this.socketService.getRecipientListService(clientinfo.authId);
 
     if (result.resData.length > 0) {
-
-      const filterMember = this.transformMembers(result.resData, clientinfo.authId);
-      console.log(filterMember);
     } else {}
   }
-
-
-
-  /**
-   * Helper functions
-   */
-  private addUserToList(authData: ClientJwtData): void {
-    const isUserPresent = activeLoggedinUsers.some(item => item.authId === authData.authId);
-    if (!isUserPresent) {
-      const newUser: ClientUserData = {
-        ...authData,
-        userStatus: 'available'
-      };
-      activeLoggedinUsers.push(newUser);
-    }
-  }
-
-
-  private removeUserFromList(authId: string): void {
-    const index = activeLoggedinUsers.findIndex(item => item.authId === authId);
-    activeLoggedinUsers.splice(index, 1);
-  }
-
-
-
-  private getUserInfoByAuthId(id: string): ClientUserData {
-    const res = activeLoggedinUsers.find(user => user.authId === id);
-    return res;
-  }
-
-
-  private updateUserState(id: string, newState: string) {
-    activeLoggedinUsers.map(
-      user => {
-        if (user.authId == id) {
-          user.userStatus = newState
-        }
-      }
-    )
-
-  }
-
-  /**
-  * Helper function
-  */
-  private transformMembers(arr: any, id: string) {
-    return arr.map(item => {
-      const removeSelfId = item.chatMembers.filter(member => member !== id);
-      return {
-        memberId: item.id.toString(),
-        chatMembers: removeSelfId.join(', '),
-        roomName: item.roomName
-      }
-    });
-  }
-
-
 
 }

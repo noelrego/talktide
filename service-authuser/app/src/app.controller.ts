@@ -38,4 +38,11 @@ export class AppController {
   payload: {action: N_SocketUpdateAction, data: SockerUpdateType} ) {
     return this.appService.updateSocketStatusToUserService(payload);
   }
+
+
+  // Get list of avilable users
+  @MessagePattern(N_MsgPatternAuthUserService.GET_AVAILABLE_LIST)
+  async getAvailableUserList(@Payload() payload: string) {
+    return this.appService.getAvailableUserListService(payload);
+  }
 }

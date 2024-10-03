@@ -44,4 +44,21 @@ export class ChatGatewayService {
         this.authServiceClient.emit(N_MsgPatternAuthUserService.SOCKET_UPDATE_USER_STATUS, {action, data}).subscribe();
     }
 
+
+
+
+    /**
+     * When user login in first time to request for Available users in the system
+     * @param clientAuthId 
+     * @returns 
+     */
+    async requestAvailableUsers(clientAuthId: string) {
+        const list = await firstValueFrom(
+            this.authServiceClient.send(N_MsgPatternAuthUserService.GET_AVAILABLE_LIST, clientAuthId)
+        );  
+        console.log(list);
+        return list;
+
+    }
+
 }
