@@ -1,13 +1,14 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { ClientProxy } from "@nestjs/microservices";
-import { N_GenericResType, N_MsgPatternMessageService } from "@nn-rego/chatapp-common";
+import { N_GenericResType, N_MsgPatternAuthUserService, N_MsgPatternMessageService, N_SocketUpdateAction } from "@nn-rego/chatapp-common";
 import { audit, firstValueFrom } from "rxjs";
-import { CreateMemberType, MicroServiceName, RecipientType } from "src/common";
+import { CreateMemberType, MicroServiceName, RecipientType, SockerUpdateType } from "src/common";
 
 @Injectable()
 export class ChatGatewayService {
 
     constructor (
+        @Inject(MicroServiceName.AUTH_SERVICE) private authServiceClient: ClientProxy,
         @Inject(MicroServiceName.MESSAGE_SERVICE) private messageClient: ClientProxy
     ) { }
 
@@ -31,6 +32,16 @@ export class ChatGatewayService {
         )
 
         return result;
+    }
+
+
+    /**
+     * Function to update the user status in db 
+     * for chnaging status [busy, offline, available, away]
+     * for socket connect & disconnect [login, logout]
+     */
+    async socketUpadteUserStatus(action: N_SocketUpdateAction, data: SockerUpdateType) {
+        this.authServiceClient.emit(N_MsgPatternAuthUserService.SOCKET_UPDATE_USER_STATUS, {action, data}).subscribe();
     }
 
 }

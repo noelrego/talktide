@@ -21,3 +21,8 @@ export type RecipientType = {
     newMessage: boolean;
     msgPreview: string;
 }
+
+export type SockerUpdateType = {
+    authId: string;
+    newStatus?: string;
+}

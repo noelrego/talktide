@@ -9,6 +9,22 @@ import { ChatGatewayService } from './chatgateway/chatgateway.service';
 
 @Module({
   imports: [
+    // Auth User service
+    ClientsModule.register([
+      {
+        name: MicroServiceName.AUTH_SERVICE,
+        transport: Transport.RMQ,
+        options: {
+          urls: [process.env.RABBITMQ_HOST_URL],
+          queue: process.env.QUEUE_AUTHUSER_SERVICE,
+          queueOptions: {
+            durable: false
+          }
+        }
+      }
+    ]),
+
+    // Message Service
     ClientsModule.register([
       {
         name: MicroServiceName.MESSAGE_SERVICE,
@@ -21,7 +37,8 @@ import { ChatGatewayService } from './chatgateway/chatgateway.service';
           }
         }
       }
-    ])
+    ]),
+
   ],
   controllers: [AppController],
   providers: [AppService, EnvConfig, ChatSocketGateway, ChatGatewayService],

@@ -1,9 +1,9 @@
 import { HttpStatus, Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { N_GenericResType } from '@nn-rego/chatapp-common';
+import { N_GenericResType, N_SocketUpdateAction } from '@nn-rego/chatapp-common';
 import { AuthUserRepo } from './entity/auth-user.entity';
 import { Repository } from 'typeorm';
-import { AuthLoginType, AuthTokenPayloadType, CheckUserNameType, RegisterUserType } from './common';
+import { AuthLoginType, AuthTokenPayloadType, CheckUserNameType, RegisterUserType, SockerUpdateType, SystemStatus, UserStatus } from './common';
 import { HelperClass } from './helper/hash.helper';
 import { StatusInfoRepo } from './entity';
 
@@ -185,4 +185,65 @@ export class AppService {
       }
     }
   }
+
+
+
+  /**
+   * Function to  update status of user
+   * @param payload 
+   */
+  async updateSocketStatusToUserService(payload: {action: N_SocketUpdateAction, data: SockerUpdateType}) {
+    try {
+      
+      const statusInfo = await this.statusInfoRepo.findOne({
+        where: {
+          authUser: { id: Number(payload.data.authId) }
+        }
+      });
+
+      console.log(statusInfo);
+
+      if (!statusInfo) return;
+      
+      switch(payload.action) {
+        case N_SocketUpdateAction.CONNECTED:
+          
+          console.log('Connected');
+          statusInfo.userStatus = UserStatus.AVAILABLE;
+          statusInfo.systemStatus = SystemStatus.LOGIN;
+          this.statusInfoRepo.save(statusInfo);
+
+          break;
+        
+        case N_SocketUpdateAction.DISCONNECTED:
+          console.log('Disconced');
+          statusInfo.userStatus = UserStatus.OFFLINE;
+          statusInfo.systemStatus = SystemStatus.LOGOUT;
+          this.statusInfoRepo.save(statusInfo);
+          break;
+
+        case N_SocketUpdateAction.STATUS_UPDATE:
+          console.log('Update status')
+          if (payload.data.newStatus === UserStatus.AVAILABLE) {
+            statusInfo.userStatus = UserStatus.AVAILABLE;
+          } else if (payload.data.newStatus === UserStatus.AWAY) {
+            statusInfo.userStatus = UserStatus.AWAY;
+          } else if (payload.data.newStatus === UserStatus.BUSY) {
+            statusInfo.userStatus = UserStatus.BUSY;
+          } else {
+            statusInfo.userStatus = UserStatus.OFFLINE;
+          }
+          this.statusInfoRepo.save(statusInfo);
+
+          break;
+      }
+      
+
+      return;
+    } catch (error) {
+      console.log('err: ', error.toString());
+      return;
+    }
+  }
+
 }

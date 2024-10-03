@@ -2,8 +2,9 @@ import { ConnectedSocket, MessageBody, OnGatewayConnection, OnGatewayDisconnect,
 import { Server, Socket } from 'socket.io';
 import { EnvConfig } from 'src/config';
 import { WsMiddleware } from './ws.middleware';
-import { ClientJwtData, ClientUserData, CreateMemberType, SocketEvtNames } from 'src/common';
+import { ClientJwtData, ClientUserData, CreateMemberType, SockerUpdateType, SocketEvtNames } from 'src/common';
 import { ChatGatewayService } from './chatgateway.service';
+import { N_SocketUpdateAction } from '@nn-rego/chatapp-common';
 
 const config = new EnvConfig();
 const origin = config.getFrontendOrigin();
@@ -28,18 +29,25 @@ export class ChatSocketGateway implements OnGatewayInit, OnGatewayConnection, On
     private socketService: ChatGatewayService
   ) { }
 
-  /**
-   * To validate Socker JWT token in Middleware.
-   * @param client 
-   */
+
   afterInit(client: Socket) {
+    
+    // Use JWT middleware
     client.use(WsMiddleware() as any);
+
   }
+
 
 
   handleConnection(client: Socket, ...args: any[]) {
 
     const authData: ClientJwtData = client['user'] || {};
+
+    //Update in DB with status [login & available]
+    const updatingData : SockerUpdateType = {
+      authId: authData.authId
+    }
+    this.socketService.socketUpadteUserStatus(N_SocketUpdateAction.CONNECTED, updatingData);
 
     // Add to active users list
     if (authData) {
@@ -50,22 +58,40 @@ export class ChatSocketGateway implements OnGatewayInit, OnGatewayConnection, On
       }
       this.addUserToList(filterAuthData);
       const loggedInUser = this.getUserInfoByAuthId(authData.authId);
-      this.server.emit('USER_LOGGEDIN', loggedInUser);
+      // this.server.emit('USER_LOGGEDIN', loggedInUser);
     }
 
   }
 
 
+
   handleDisconnect(client: Socket) {
-    const authData = client['user'];
 
-    // Remove from active users list
-    if (authData) {
-      this.removeUserFromList(authData.authId);
+    const authData : ClientJwtData = client['user'];
+
+    //Update in DB with status [logout & offline]
+    const updatingData : SockerUpdateType = {
+      authId: authData.authId
     }
-
+    this.socketService.socketUpadteUserStatus(N_SocketUpdateAction.DISCONNECTED, updatingData);
     // Broadcast and inform all that this user logged out
-    this.server.emit('USER_LOGGEDOUT', authData.authId);
+    // this.server.emit('USER_LOGGEDOUT', authData.authId);
+  }
+
+  
+
+  // Client is chnaging the status
+  @SubscribeMessage(SocketEvtNames.CHANGE_USER_STATE)
+  handleUserStateChange(@ConnectedSocket() client: Socket, @MessageBody() newState: string) {
+    
+    const clientAuth: ClientJwtData = client['user'];
+    //Update in DB with status [login & available]
+    const updatingData : SockerUpdateType = {
+      authId: clientAuth.authId,
+      newStatus: newState
+    }
+    this.socketService.socketUpadteUserStatus(N_SocketUpdateAction.STATUS_UPDATE, updatingData);
+  
   }
 
 
@@ -73,25 +99,17 @@ export class ChatSocketGateway implements OnGatewayInit, OnGatewayConnection, On
   // Client asking for Logged in users
   @SubscribeMessage(SocketEvtNames.REQUEST_LOGGEDINUSERS)
   handleRequestLoggedinUsers(@ConnectedSocket() client: Socket) {
+    
     const clientAuthId = client['user'].authId;
     const cleanedUserInfo = activeLoggedinUsers.filter(
       user => user.authId !== clientAuthId
     );
-    client.emit('B_LIN', cleanedUserInfo);
+    // client.emit('B_LIN', cleanedUserInfo);
   }
 
 
 
-  // Client is chnaging the status
-  @SubscribeMessage(SocketEvtNames.CHANGE_USER_STATE)
-  handleUserStateChange(@ConnectedSocket() client: Socket, @MessageBody() newState: string) {
-    const clientAuth: ClientJwtData = client['user'];
-    this.updateUserState(clientAuth.authId, newState);
-    this.server.emit('USER_CHANGED_STATE', {
-      authId: clientAuth.authId,
-      userStatus: newState
-    });
-  }
+  
 
 
 
