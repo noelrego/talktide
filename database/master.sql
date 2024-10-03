@@ -33,7 +33,7 @@ CREATE TABLE IF NOT EXISTS members (
 
 CREATE TABLE IF NOT EXISTS messages (
     id SERIAL PRIMARY KEY,
-    member_id INTEGER REFERENCES members(id),
+    member_id INTEGER REFERENCES members(id) NOT NULL,
     message_content TEXT NOT NULL,
     has_preview BOOLEAN DEFAULT false,
     replayed_by VARCHAR(32),
