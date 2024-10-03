@@ -25,11 +25,16 @@ export const A_insertAvailableUser = createAction('[Recipient] Insert one logged
 
 export const A_resetAvailableUserList = createAction('[Recipient] To reset list on logout')
 
+export const A_resetuserStatus = createAction('[User] to reset user state once he logs out or close the browser.')
 
 export const A_deleteAvailableUser = createAction('[Recipient] To remove as he loggs out', 
     props<{ authId: string }>()
 )
 
 export const A_updateAvilableUserState = createAction('[Recipient] To update user status as he chnages the state', 
+    props<{ authId: string, newState: string }>()
+)
+
+export const A_otherUserChangedState = createAction('[State Chnage] Other online user chnaged the status', 
     props<{ authId: string, newState: string }>()
 )

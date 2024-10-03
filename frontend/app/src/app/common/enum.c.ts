@@ -17,5 +17,6 @@ export enum UserStatus {
 }
 
 export enum SocketEvtNames {
-    REQUEST_LOGGEDINUSERS = 'requestLoggedUsers'
+    REQUEST_LOGGEDINUSERS = 'requestLoggedUsers',
+    CHANGE_USER_STATE = 'changeUserState'
 }

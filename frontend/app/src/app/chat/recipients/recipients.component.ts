@@ -3,7 +3,7 @@ import { SocketService } from '../socket/socket.service';
 import { Observable, Subscription } from 'rxjs';
 import { AvailableUserType, SocketEvtNames, UserInfoType } from '../../common';
 import { Store } from '@ngrx/store';
-import { A_deleteAvailableUser, A_insertAvailableUser, A_insertAvailableUserList, S_availableUserList, S_userInfo } from '../../STORE';
+import { A_deleteAvailableUser, A_insertAvailableUser, A_insertAvailableUserList, A_otherUserChangedState, S_availableUserList, S_userInfo, S_userState } from '../../STORE';
 
 @Component({
   selector: 'app-recipients',
@@ -18,10 +18,12 @@ export class RecipientsComponent implements OnInit, AfterContentInit, OnDestroy{
 
   availableUserList$ : Observable<AvailableUserType[]>;
   loggedInUser$ : Observable<UserInfoType | null>;
+  userStatus$ : Observable<string | null>;
 
   B_LIN$ : Subscription;
   USER_LOGGEDOUT$ : Subscription;
   USER_LOGGEDIN$ : Subscription;
+  USER_CHANGED_STATE$ : Subscription;
 
   constructor (
     private socketService: SocketService,
@@ -29,15 +31,32 @@ export class RecipientsComponent implements OnInit, AfterContentInit, OnDestroy{
   ) {
     this.availableUserList$ = this.store.select(S_availableUserList);
     this.loggedInUser$ = this.store.select(S_userInfo);
+    this.userStatus$ = this.store.select(S_userState);
   }
 
   ngOnInit(): void {
+
+     // Socket subscribe
 
     console.log('[SOCKET] Socket state: ', this.socketService.socketConnected);
     if(!this.socketService.socketConnected) {
       this.socketService.connectSocket();
     }
 
+    // Update Initial State to server on Page refresh!
+    this.userStatus$.subscribe(res => 
+      this.socketService.emit(SocketEvtNames.CHANGE_USER_STATE, res)
+    );
+
+
+    this.USER_CHANGED_STATE$ = this.socketService.onEvent('USER_CHANGED_STATE').subscribe(res => {
+      console.log('[SOCKET RECEIVE] Some one chnaged the status', res);
+      this.store.dispatch(A_otherUserChangedState({
+        authId: res.authId,
+        newState: res.userStatus
+      }))
+    })
+    
     // Subscribe to socket events;
     this.B_LIN$ = this.socketService.onEvent('B_LIN').subscribe(data => {
       console.log('[SOCKET RECEIVE] B_LIN: ', data);
@@ -144,6 +163,7 @@ export class RecipientsComponent implements OnInit, AfterContentInit, OnDestroy{
     this.B_LIN$.unsubscribe();
     this.USER_LOGGEDOUT$.unsubscribe();
     this.USER_LOGGEDIN$.unsubscribe();
+    this.USER_CHANGED_STATE$.unsubscribe();
   }
 
 }

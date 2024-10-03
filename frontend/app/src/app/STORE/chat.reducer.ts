@@ -4,9 +4,10 @@
  */
 
 import { createReducer, on } from "@ngrx/store";
-import { A_deleteAvailableUser, A_insertAvailableUser, A_insertAvailableUserList, A_resetAvailableUserList, A_setUserInfo, A_setUserState, A_updateAvilableUserState, A_userLoggedin } from "./chat.action";
+import { A_deleteAvailableUser, A_insertAvailableUser, A_insertAvailableUserList, A_otherUserChangedState, A_resetAvailableUserList, A_resetuserStatus, A_setUserInfo, A_setUserState, A_updateAvilableUserState, A_userLoggedin } from "./chat.action";
 import { TalkTideState } from "./app.state";
 import { LocalStrgService } from "../service/localstorage/ls.service";
+import { UserStatus } from "../common";
 
 const ls = new LocalStrgService();
 
@@ -94,6 +95,19 @@ export const R_setUserLoggedin = createReducer(
     on(A_resetAvailableUserList, (state) => ({
         ...state,
         availableUsersList: []
+    })),
+
+
+    on(A_otherUserChangedState, (state, {authId, newState}) => ({
+        ...state,
+        availableUsersList: state.availableUsersList.map(user =>
+            user.authId === authId ? { ...user, userStatus: newState } : user
+        )
+    })),
+
+    on(A_resetuserStatus, (state) => ({
+        ...state,
+        userState: UserStatus.AVAILABLE
     }))
 
 )

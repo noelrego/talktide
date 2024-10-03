@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable, Subscribable, Subscription } from 'rxjs';
-import { A_resetAvailableUserList, A_setUserState, S_loggedInstate, S_userInfo, S_userState, TalkTideState } from '../../STORE';
+import { A_resetAvailableUserList, A_resetuserStatus, A_setUserState, S_loggedInstate, S_userInfo, S_userState, TalkTideState } from '../../STORE';
 import { ProvideReducerName, SocketEvtNames, UserInfoType } from '../../common';
 import { CustomCookieService } from '../../service/cookie/cookie.service';
 import { Router } from '@angular/router';
@@ -39,7 +39,7 @@ export class ChatWindowComponent implements OnInit, OnDestroy{
   userStatus$ : Observable<string | null>;
 
   // Socket events
- 
+  
 
   constructor (
     private store: Store,
@@ -65,18 +65,17 @@ export class ChatWindowComponent implements OnInit, OnDestroy{
     // V18 Angular Documentation
    this.selectOption.events.subscribe(e => {
     if (e instanceof ValueChangeEvent) {
+      console.log('CHNAGEDING OPTIONS', this.selectOption.value)
       this.store.dispatch(A_setUserState({userState: e.source.value}));
       
+      // Emit socket event to update status
+      this.socketService.emit(SocketEvtNames.CHANGE_USER_STATE, e.source.value);
       // Update LocalStorage
       this.lsService.setUserStatus(e.source.value);
+      return;
     }
    })
 
-  }
-
-  getloginInfo() {
-    console.log('Info: ');
-    this.socketService.emit(SocketEvtNames.REQUEST_LOGGEDINUSERS, {});
   }
 
   toggleBurgerMenu() {
@@ -108,5 +107,6 @@ export class ChatWindowComponent implements OnInit, OnDestroy{
 
   ngOnDestroy(): void {
     this.store.dispatch(A_resetAvailableUserList());
+    this.store.dispatch(A_resetuserStatus());
   }
 }

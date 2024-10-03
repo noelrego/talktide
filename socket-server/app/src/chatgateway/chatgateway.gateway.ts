@@ -64,12 +64,35 @@ export class ChatSocketGateway implements OnGatewayInit, OnGatewayConnection, On
     // Broadcast and inform all that this user logged out
     this.server.emit('USER_LOGGEDOUT', authData.authId);
   }
+  // Client asking for Logged in users
+  @SubscribeMessage(SocketEvtNames.REQUEST_LOGGEDINUSERS)
+  handleRequestLoggedinUsers (@ConnectedSocket() client: Socket) {
+    const clientAuthId = client['user'].authId;
+    const cleanedUserInfo = activeLoggedinUsers.filter(
+      user => user.authId !== clientAuthId
+    );
+    client.emit('B_LIN', cleanedUserInfo);
+  }
 
+  // Client is chnaging the status
+  @SubscribeMessage(SocketEvtNames.CHANGE_USER_STATE)
+  handleUserStateChange(@ConnectedSocket() client: Socket, @MessageBody() newState: string) {
+    const clientAuth : ClientJwtData = client['user'];
+    console.log('CHANGE STATE: ', clientAuth, newState);
+    this.updateUserState(clientAuth.authId, newState);
+    this.server.emit('USER_CHANGED_STATE', {
+      authId: clientAuth.authId,
+      userStatus: newState
+    });
+  }
+
+
+  /**
+   * Helper functions
+   */
 
   private addUserToList(authData: ClientJwtData): void {
     const isUserPresent = activeLoggedinUsers.some(item => item.authId === authData.authId);
-
-
     if (!isUserPresent) {
       const newUser: ClientUserData = {
         ...authData,
@@ -90,16 +113,20 @@ export class ChatSocketGateway implements OnGatewayInit, OnGatewayConnection, On
     return res;
   }
 
+  private updateUserState(id: string,  newState: string) {
+    console.log('BEFORE STATE CHNAGE: ', activeLoggedinUsers);
+    activeLoggedinUsers.map(
+      user => {
+        if (user.authId == id) {
+          user.userStatus = newState
+        }
+      }
+    )
 
-  // Client asking for Logged in users
-  @SubscribeMessage(SocketEvtNames.REQUEST_LOGGEDINUSERS)
-  handleRequestLoggedinUsers (@ConnectedSocket() client: Socket) {
-    const clientAuthId = client['user'].authId;
-    const cleanedUserInfo = activeLoggedinUsers.filter(
-      user => user.authId !== clientAuthId
-    );
-    client.emit('B_LIN', cleanedUserInfo);
+    console.log('AFTER STATE CHNAGE: ', activeLoggedinUsers);
+
   }
+
 
 
 }
