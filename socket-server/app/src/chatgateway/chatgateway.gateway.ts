@@ -108,8 +108,13 @@ export class ChatSocketGateway implements OnGatewayInit, OnGatewayConnection, On
   async handleGetRecipientList(@ConnectedSocket() client: Socket) {
     const clientinfo: ClientJwtData = client['user'];
 
-    const result = await this.socketService.getRecipientListService(clientinfo.authId)
-    console.log(result);
+    const result = await this.socketService.getRecipientListService(clientinfo.authId);
+
+    if (result.resData.length > 0) {
+
+      const filterMember = this.transformMembers(result.resData, clientinfo.authId);
+      console.log(filterMember);
+    } else {}
   }
 
 
@@ -141,7 +146,7 @@ export class ChatSocketGateway implements OnGatewayInit, OnGatewayConnection, On
     return res;
   }
 
-  
+
   private updateUserState(id: string, newState: string) {
     activeLoggedinUsers.map(
       user => {
@@ -151,6 +156,20 @@ export class ChatSocketGateway implements OnGatewayInit, OnGatewayConnection, On
       }
     )
 
+  }
+
+  /**
+  * Helper function
+  */
+  private transformMembers(arr: any, id: string) {
+    return arr.map(item => {
+      const removeSelfId = item.chatMembers.filter(member => member !== id);
+      return {
+        memberId: item.id.toString(),
+        chatMembers: removeSelfId.join(', '),
+        roomName: item.roomName
+      }
+    });
   }
 
 

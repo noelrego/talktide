@@ -12,3 +12,12 @@ export type CreateMemberType = {
     firstRecipient: string;
     secondRecipient: string;
 }
+
+
+export type RecipientType = {
+    authId: string,
+    userStatus: string;
+    roomname: string;
+    newMessage: boolean;
+    msgPreview: string;
+}

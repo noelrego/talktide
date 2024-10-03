@@ -70,6 +70,11 @@ export class AppService {
 
 
 
+  /**
+   * Function to return Recipient lisy by logged in user
+   * @param authId 
+   * @returns 
+   */
   async getRecipientListService(authId: string): Promise<N_GenericResType> {
     console.log('GET RECEIPEINT LIST: ', authId);
 
@@ -80,16 +85,24 @@ export class AppService {
       const ifExists = await this.memberRepo.find({
         where : {
           chatMembers: Raw (alias => `${alias} && ARRAY[:...chatMembers]::text[]`, { chatMembers })
-        }
+        },
+        select: [ 'id', 'roomName', 'chatMembers']
       });
 
-      console.log(ifExists);
-      
-      return {
-        statusCode: HttpStatus.OK,
-        message: 'Available List',
-        resData: {authId}
+      if (ifExists) {
+        return {
+          statusCode: HttpStatus.OK,
+          message: 'Found list',
+          resData: ifExists
+        }
+      } else {
+        return {
+          statusCode: HttpStatus.NO_CONTENT,
+          message: 'No List',
+          resData: []
+        }
       }
+
     } catch (error) {
       return {
         statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
