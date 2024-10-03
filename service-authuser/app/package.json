@@ -26,7 +26,7 @@
     "@nestjs/microservices": "^10.4.4",
     "@nestjs/platform-express": "^10.0.0",
     "@nestjs/typeorm": "^10.0.2",
-    "@nn-rego/chatapp-common": "^1.0.1",
+    "@nn-rego/chatapp-common": "^1.0.2",
     "amqp-connection-manager": "^4.1.14",
     "amqplib": "^0.10.4",
     "pg": "^8.13.0",

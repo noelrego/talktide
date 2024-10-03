@@ -26,6 +26,8 @@ CREATE TABLE IF NOT EXISTS members (
     id SERIAL PRIMARY KEY,
     chat_members TEXT[],
     roomname VARCHAR(255),
+    create_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT member_room_unique UNIQUE(roomname)
 );
 
@@ -35,5 +37,7 @@ CREATE TABLE IF NOT EXISTS messages (
     message_content TEXT NOT NULL,
     has_preview BOOLEAN DEFAULT false,
     replayed_by VARCHAR(32),
-    replayed_msg_id INTEGER
-)
+    replayed_msg_id INTEGER,
+    create_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);

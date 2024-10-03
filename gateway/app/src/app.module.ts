@@ -3,9 +3,10 @@ import { ConfigService } from './config/env.config';
 import { UserModule } from './user/user.module';
 import { APP_GUARD } from '@nestjs/core';
 import { AtGuard, AtStrategy } from './jwt';
+import { MessageModule } from './message/message.module';
 
 @Module({
-  imports: [UserModule],
+  imports: [UserModule, MessageModule],
   controllers: [],
   providers: [
     AtStrategy,
