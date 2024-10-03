@@ -5,6 +5,7 @@ import { AuthUserRepo } from './entity/auth-user.entity';
 import { Repository } from 'typeorm';
 import { AuthLoginType, AuthTokenPayloadType, CheckUserNameType, RegisterUserType } from './common';
 import { HelperClass } from './helper/hash.helper';
+import { StatusInfoRepo } from './entity';
 
 @Injectable()
 export class AppService {
@@ -13,7 +14,9 @@ export class AppService {
 
   constructor (
     private helper : HelperClass,
-    @InjectRepository(AuthUserRepo) private authUserRepo : Repository<AuthUserRepo>
+    @InjectRepository(AuthUserRepo) private authUserRepo : Repository<AuthUserRepo>,
+    @InjectRepository(StatusInfoRepo) private statusInfoRepo : Repository<StatusInfoRepo>
+
   ) {}
 
 
@@ -100,6 +103,13 @@ export class AppService {
       });
 
       await this.authUserRepo.save(newUser);
+
+      const statusInfo = this.statusInfoRepo.create({
+        authUser: newUser,
+      });
+
+      await this.statusInfoRepo.save(statusInfo);
+      
       return {
         statusCode: HttpStatus.CREATED,
         message: 'User registered successfully'

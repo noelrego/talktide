@@ -1,6 +1,6 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { ClientProxy } from "@nestjs/microservices";
-import { N_GenericResType, N_MsgPatternmessageService } from "@nn-rego/chatapp-common";
+import { N_GenericResType, N_MsgPatternMessageService } from "@nn-rego/chatapp-common";
 import { audit, firstValueFrom } from "rxjs";
 import { CreateMemberType, MicroServiceName, RecipientType } from "src/common";
 
@@ -18,7 +18,7 @@ export class ChatGatewayService {
      */
     async createChatMembersService(members: CreateMemberType) {
         console.log(' IN SERVER: ', members);
-        this.messageClient.emit(N_MsgPatternmessageService.CREATE_CHAT_MEMBER, members).subscribe()
+        this.messageClient.emit(N_MsgPatternMessageService.CREATE_CHAT_MEMBER, members).subscribe()
     }
 
 
@@ -27,7 +27,7 @@ export class ChatGatewayService {
      */
     async getRecipientListService(authId: string) {
         const result : N_GenericResType = await firstValueFrom(
-            this.messageClient.send(N_MsgPatternmessageService.GET_CHAT_MEMBERS_LIST, authId)
+            this.messageClient.send(N_MsgPatternMessageService.GET_CHAT_MEMBERS_LIST, authId)
         )
 
         return result;

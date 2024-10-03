@@ -1,4 +1,5 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, OneToOne } from 'typeorm';
+import { StatusInfoRepo } from './status.entity';
 
 @Entity({ name: 'auth_user' })
 export class AuthUserRepo {
@@ -19,6 +20,9 @@ export class AuthUserRepo {
 
   @Column({ name: 'rh_token', type: 'text', nullable: true })
   rhToken?: string;
+
+  @OneToOne(() => StatusInfoRepo, (statusInfo) => statusInfo.authUser)
+  statusInfo: StatusInfoRepo;
 
   @CreateDateColumn({ name: 'create_at', default: new Date() })
   createAt: Date;
