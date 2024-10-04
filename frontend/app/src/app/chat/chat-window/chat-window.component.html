@@ -17,14 +17,14 @@
             </div>
         </div>
 
-  
+        <!-- Aailable List -->
         <div class="navbar-menu mr-3" [class.is-active]="isActive">
             <div class="navbar-end">
               <div class="navbar-item">
                 <img src="assets/profile-pic2.png" alt="User Profile">
               </div>
                 <div class="navbar-item" style="white-space: nowrap;">
-                    Hi, <strong>{{ (userInfo$ | async)?.fullName }}</strong>
+                    Hi, <strong>{{ (userInfo$ | async)?.fullName }} - {{(userInfo$ | async)?.authId}}</strong>
                 </div>
                 <div class="navbar-item">
                     <div class="select is-small">
@@ -52,55 +52,4 @@
         <app-chat-box></app-chat-box>
       </div>
     </section>
-    
-
-    <!-- Main layout 
-  <div class="columns is-gapless mt-6">
-    Left side (Recipient List) 
-    <div class="column is-3 recipient-list is-hidden-mobile">
-      <div class="box" *ngFor="let recipient of recipients">
-        <article class="media">
-          <figure class="media-left">
-            <p class="image is-64x64">
-              <img [src]="recipient.logo" alt="Recipient logo">
-            </p>
-          </figure>
-          <div class="media-content">
-            <p>{{ recipient.name }}</p>
-          </div>
-        </article>
-      </div>
-    </div>
-  
-     Responsive recipient list 
-    <div class="column is-1 is-hidden-desktop is-flex recipient-list-mobile">
-      <div *ngFor="let recipient of recipients">
-        <figure class="image is-48x48 m-2">
-          <img [src]="recipient.logo" alt="Recipient logo">
-        </figure>
-      </div>
-    </div>
-  
-     Right side (Chat window) 
-    <div class="column is-9 chat-window">
-      <div class="box chat-content">
-        <div class="message" *ngFor="let message of messages">
-          <p><strong>{{ message.sender }}:</strong> {{ message.text }}</p>
-        </div>
-      </div>
-  
-      Chat input
-      <div class="box">
-        <div class="field">
-          <div class="control">
-            <input class="input" placeholder="Type a message...">
-          </div>
-        </div>
-        <div class="field is-grouped">
-          <p class="control">
-            <button class="button is-primary" (click)="sendMessage()">Send</button>
-          </p>
-        </div>
-      </div>
-    </div> -->
 </div>

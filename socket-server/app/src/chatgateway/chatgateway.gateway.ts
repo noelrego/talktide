@@ -12,7 +12,7 @@ const origin = config.getFrontendOrigin();
 @WebSocketGateway({
   namespace: '/chat',
   cors: {
-    origin: '*',
+    origin: origin,
     method: ['GET', 'POST', 'OPTIONS']
   }
 })
@@ -47,9 +47,9 @@ export class ChatSocketGateway implements OnGatewayInit, OnGatewayConnection, On
     await this.socketService.socketUpadteUserStatus(N_SocketUpdateAction.CONNECTED, updatingData);
     
     // Update user logged in status to all other recipient
-    const loggedinMember = await this.socketService.getMemberInfo(authData.authId).catch(e => e);
-    console.log('[SOMEONE LOGIN ] memebr info: ', loggedinMember);
-    this.server.emit('SOMEONE_LOGGEDIN', loggedinMember);
+    // const loggedinMember = await this.socketService.getMemberInfo(authData.authId).catch(e => e);
+    // console.log('[SOMEONE LOGIN ] memebr info: ', loggedinMember);
+    this.server.emit('SOMEONE_LOGGEDIN', authData.authId);
 
   }
 

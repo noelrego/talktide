@@ -14,7 +14,9 @@ import { ApiDataService } from '../../service/api';
 export class RecipientsComponent implements OnInit, AfterContentInit, OnDestroy {
 
   selectedRecipient: string = '';
-  memberList: any = []
+  memberList: any = [];
+
+  loggedInUser : UserInfoType | null;
 
   availableUserList$: Observable<AvailableUserType[]>;
   loggedInUser$: Observable<UserInfoType | null>;
@@ -42,6 +44,10 @@ export class RecipientsComponent implements OnInit, AfterContentInit, OnDestroy 
       this.socketService.connectSocket();
     }
 
+    /* Update user info state */
+    this.loggedInUser$.subscribe(res => {
+      this.loggedInUser = (res?.authId) ? res: null;
+    })
 
     /* Update Initial State to server on Page refresh! */
     this.userStatus$.subscribe(res =>
@@ -52,13 +58,18 @@ export class RecipientsComponent implements OnInit, AfterContentInit, OnDestroy 
     this.fnGetMemberList();
 
     /* Regitser socket events */
-    this.socketSomeoneLoggedIn$ = this.socketService.onEvent(SocketEvtNames.SOMEONE_LOGGEDIN).subscribe(res =>
-      console.log('[SOCKET SOMEONE LOGIN] ', res)
+    this.socketSomeoneLoggedIn$ = this.socketService.onEvent(SocketEvtNames.SOMEONE_LOGGEDIN).subscribe(res => {
+      if (this.loggedInUser?.authId !== res) {
+        this.fnGetMemberList();
+      }
+    })
+
+    this.socketSomeoneLoggedIn$ = this.socketService.onEvent(SocketEvtNames.SOMEONE_LOGGEDOUT).subscribe(res => {
+      console.log('[SOCKET SOMEONE LOGOUT] ', res)
+      
+    }
     )
 
-    this.socketSomeoneLoggedIn$ = this.socketService.onEvent(SocketEvtNames.SOMEONE_LOGGEDOUT).subscribe(res =>
-      console.log('[SOCKET SOMEONE LOGOUT] ', res)
-    )
 
   }
 

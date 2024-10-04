@@ -15,7 +15,7 @@
                         <span class="status-icon" [ngClass]="member.recipientStatus"></span>
                     </div>
                     <div class="name-preview res-name-preview">
-                        <span class="name">{{ member.fullName }}</span>
+                        <span class="name">{{ member.fullName }} - {{member.memberId}}</span>
                         <span class="preview-message">{{ member.lastMessage }}</span>
                         <span class="preview-message">{{ member.clientId }}</span>
                     </div>
@@ -50,7 +50,7 @@
                         <span class="status-icon" [ngClass]="avilableUser.userStatus"></span>
                     </div>
                     <div class="name-preview res-name-preview">
-                        <span class="name">{{ avilableUser.fullName }} id : {{avilableUser.authId}}</span>
+                        <span class="name">{{ avilableUser.fullName }} - {{avilableUser.authId}}</span>
                         <span class="preview-message">{{ avilableUser.userName }} - {{avilableUser.clientId}}</span>
                     </div>
                 </div>

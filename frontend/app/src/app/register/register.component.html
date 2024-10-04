@@ -5,11 +5,11 @@
         <h1 class="title is-uppercase has-text-centered">Talk Tide</h1>
         <h3 class="subtitle has-text-centered mt-4">Register</h3>
         <div class="is-divider" data-content="OR"></div>
-        <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+        <form [formGroup]="registerForm">
           <div class="field">
             <label class="label">Username <span class="has-text-danger">*</span></label>
             <div class="control has-icons-left">
-              <input class="input" type="text" placeholder="Enter your username" formControlName="username"
+              <input class="input" type="text" placeholder="Enter your username" formControlName="username" autocomplete="off" id="reg-username"
                 (ngModelChange)="checkUserName($event)">
               <span class="icon is-small is-left">
                 <i class="fas fa-user"></i>
@@ -30,7 +30,7 @@
           <div class="field">
             <label class="label">First Name <span class="has-text-danger">*</span></label>
             <div class="control">
-              <input class="input" type="text" placeholder="Enter your first name" formControlName="firstName">
+              <input class="input" type="text" placeholder="Enter your first name" formControlName="firstName" autocomplete="off" id="reg-firstname">
             </div>
             <div *ngIf="registerForm.get('firstName')?.errors?.['required'] && registerForm.get('firstName')?.touched"
               class="help is-danger">
@@ -45,7 +45,7 @@
           <div class="field">
             <label class="label">Last Name</label>
             <div class="control">
-              <input class="input" type="text" placeholder="Enter your last name" formControlName="lastName">
+              <input class="input" type="text" placeholder="Enter your last name" formControlName="lastName" autocomplete="off" id="reg-lastname">
             </div>
             <div
               *ngIf="registerForm.get('lastName')?.errors?.['pattern']"
@@ -56,7 +56,7 @@
           <div class="field">
             <label class="label">Password <span class="has-text-danger">*</span></label>
             <div class="control">
-              <input class="input" placeholder="Enter your password" formControlName="password">
+              <input class="input" placeholder="Enter your password" formControlName="password" autocomplete="off" id="reg-password">
             </div>
             <div *ngIf="registerForm.get('password')?.errors && registerForm.get('password')?.touched"
               class="help is-danger">
@@ -68,7 +68,7 @@
           <div class="field">
             <label class="label">Re-enter Password <span class="has-text-danger">*</span></label>
             <div class="control">
-              <input class="input" type="password" placeholder="Re-enter your password"
+              <input class="input" type="password" placeholder="Re-enter your password" autocomplete="off" id="reg-repassword"
                 formControlName="confirmPassword">
             </div>
             <div *ngIf="registerForm.get('confirmPassword')?.errors && registerForm.get('confirmPassword')?.touched"
@@ -84,7 +84,7 @@
               <div class="field">
                 <div class="control">
                   <p class="buttons">
-                    <button class="button is-primary" type="submit" [disabled]="registerForm.invalid">Register
+                    <button class="button is-primary" type="button" (click)="onSubmit()" [disabled]="registerForm.invalid">Register
                       <span class="icons is-small"><i class="fas paper-plane"></i></span>
                     </button>
                   </p>

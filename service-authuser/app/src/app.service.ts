@@ -410,23 +410,26 @@ export class AppService {
 
 
   /**
-   * Function to return member info
+   * Function to return member info who is currenntly logged in.
    * @param authId string
    */
   async getMemberInfoService(authId: string) : Promise<object> {
     try {
-      
+      console.log('[SOMEONE LOGGEDIN] : ---------');
+      const chatMembers = [authId];
+
       const memebrInfo = await this.authUserRepo
       .createQueryBuilder('auth_user')
       .leftJoinAndSelect('auth_user.statusInfo', 'statusInfo')
       .where('auth_user.id = :authId', {authId})
       .getOne();
 
+      console.log('MEMBER: ', memebrInfo);
       if (!memebrInfo) return {};
 
       const memberInfoData : MemberListType = {
-        memberId: memebrInfo.statusInfo.id.toString(),
-        roomName: '',
+        memberId: '',
+        roomName:  '',
         recipientAuthId: memebrInfo.id.toString(),
         recipientStatus: memebrInfo.statusInfo.userStatus,
         fullName: `${memebrInfo.firstName} ${memebrInfo?.lastName || ''}`.trim(),

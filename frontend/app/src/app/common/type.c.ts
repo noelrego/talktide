@@ -35,3 +35,11 @@ export type CreateMemberType = {
     secondMember: string;
     clientId?: string;
 }
+
+export type LoggedInMemberInfo = {
+    authId: string;
+    userName: string;
+    fullName: string;
+    userStatus: string;
+    clientId: string;
+}
