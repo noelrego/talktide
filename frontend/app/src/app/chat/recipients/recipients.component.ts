@@ -11,23 +11,23 @@ import { ApiDataService } from '../../service/api';
   templateUrl: './recipients.component.html',
   styleUrl: './recipients.component.css'
 })
-export class RecipientsComponent implements OnInit, AfterContentInit, OnDestroy{
+export class RecipientsComponent implements OnInit, AfterContentInit, OnDestroy {
 
   selectedRecipient: string = '';
   memberList: any = []
 
-  availableUserList$ : Observable<AvailableUserType[]>;
-  loggedInUser$ : Observable<UserInfoType | null>;
-  userStatus$ : Observable<string | null>;
-  memberList$ : Observable<MemberListType[]>
+  availableUserList$: Observable<AvailableUserType[]>;
+  loggedInUser$: Observable<UserInfoType | null>;
+  userStatus$: Observable<string | null>;
+  memberList$: Observable<MemberListType[]>
 
-  B_LIN$ : Subscription;
-  USER_LOGGEDOUT$ : Subscription;
-  USER_LOGGEDIN$ : Subscription;
-  USER_CHANGED_STATE$ : Subscription;
+  B_LIN$: Subscription;
+  USER_LOGGEDOUT$: Subscription;
+  USER_LOGGEDIN$: Subscription;
+  USER_CHANGED_STATE$: Subscription;
 
 
-  constructor (
+  constructor(
     private socketService: SocketService,
     private store: Store,
     private apiData: ApiDataService
@@ -41,21 +41,21 @@ export class RecipientsComponent implements OnInit, AfterContentInit, OnDestroy{
   ngOnInit(): void {
 
 
-     // Connect to Socket if not connected
+    // Connect to Socket if not connected
     console.log('[SOCKET] Socket state: ', this.socketService.socketConnected);
-    if(!this.socketService.socketConnected) {
+    if (!this.socketService.socketConnected) {
       this.socketService.connectSocket();
     }
-    
+
 
     // Update Initial State to server on Page refresh!
-    this.userStatus$.subscribe(res => 
+    this.userStatus$.subscribe(res =>
       this.socketService.emit(SocketEvtNames.CHANGE_USER_STATE, res)
     );
 
     // API Initial call to get available user list
     this.fnGetMemberList();
-    this.fnGetAvailableList();
+    // this.fnGetAvailableList();
 
 
     // this.USER_CHANGED_STATE$ = this.socketService.onEvent('USER_CHANGED_STATE').subscribe(res => {
@@ -86,11 +86,11 @@ export class RecipientsComponent implements OnInit, AfterContentInit, OnDestroy{
     //       }))
     //     }
     //   });
-      
-      // this.availableUserList$.subscribe(item => console.log(item));
-      // this.store.dispatch(A_insertAvailableUser({
-      //   availableUser: data
-      // }))
+
+    // this.availableUserList$.subscribe(item => console.log(item));
+    // this.store.dispatch(A_insertAvailableUser({
+    //   availableUser: data
+    // }))
     // })
 
 
@@ -103,9 +103,9 @@ export class RecipientsComponent implements OnInit, AfterContentInit, OnDestroy{
   selectRecipient(recipientId: string): void {
   }
 
-  
+
   // To create a chat History from Selected Available list
-  createChatHistory(userInfo: any) : void {
+  createChatHistory(userInfo: any): void {
 
     this.loggedInUser$.subscribe((res) => {
 
@@ -113,17 +113,17 @@ export class RecipientsComponent implements OnInit, AfterContentInit, OnDestroy{
         firstMember: (res?.authId) ? res.authId : '', // Always id present
         secondMember: userInfo.authId,
         clientId: userInfo.clientId
-      } 
+      }
       this.socketService.emit(SocketEvtNames.CREATE_MEMBER_BY_AVAILABLE_LIST, payload);
     })
-    
+
 
     // this.loggedInUser$.subscribe(res => {
 
-      // const members: CreateMemberType = {
-      //   memebrToCreateWith: userInfo. // Alwayd ID present
-      //   clientId: userInfo.authId
-      // }
+    // const members: CreateMemberType = {
+    //   memebrToCreateWith: userInfo. // Alwayd ID present
+    //   clientId: userInfo.authId
+    // }
     //   console.log(members)
 
     //   this.store.dispatch(A_deleteAvailableUser({
@@ -131,28 +131,26 @@ export class RecipientsComponent implements OnInit, AfterContentInit, OnDestroy{
     //   }))
 
     // })
-    
+
   }
 
   /* ------------------ Functions ----------------------------*/
-  
+
   // API to get the member list
-  private fnGetMemberList() : void {
+  private fnGetMemberList(): void {
     this.apiData.getmemberList().subscribe({
       next: (response) => {
-        console.log('[API] Members list ',response.body);
+        console.log('[API] Members list ', response.body);
         const availableList = response.body.resData.memberInfo;
         if (availableList.length > 0) {
           console.log('[MEMBERS] : List found adding to store')
           this.store.dispatch(A_insertMembers({
             memberList: availableList
           }));
-        } else {
-          console.log('[MEMBERS] : Not adding')
-
         }
+        this.fnGetAvailableList();
 
-      }, 
+      },
       error: (err) => {
         console.error(err.toString());
       }
@@ -160,19 +158,19 @@ export class RecipientsComponent implements OnInit, AfterContentInit, OnDestroy{
   }
 
   // API to get the list of Available users and not in Member list
-  private fnGetAvailableList (): void {
+  private fnGetAvailableList(): void {
     this.apiData.getAvailableUserList().subscribe({
       next: (response) => {
         console.log('[API] Avilable users list ', response.body);
         const availableList: [] = response.body.resData;
         if (availableList.length > 0) {
-          
+
           this.store.dispatch(A_insertAvailableUserList({
             availableUsersList: availableList
           }))
         }
 
-      }, 
+      },
       error: (err) => {
         console.error(err.toString());
       }
@@ -180,14 +178,14 @@ export class RecipientsComponent implements OnInit, AfterContentInit, OnDestroy{
   }
 
   ngAfterContentInit(): void {
-    
+
     // Get the available Logged in users 
     // this.socketService.emit(SocketEvtNames.REQUEST_LOGGEDINUSERS, {});
 
     // Get the Chat History Recipient list
     // this.socketService.emit(SocketEvtNames.GET_RECIPIENT_LIST, {});
   }
-  
+
 
   ngOnDestroy(): void {
     // this.B_LIN$.unsubscribe();

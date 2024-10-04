@@ -66,13 +66,19 @@ export const R_setUserLoggedin = createReducer(
         }
     )),
 
-    /**
-     * On receiving socket events list of availabel list, make sure no duplicate entries
-     */
-    on(A_insertAvailableUserList, (state, {availableUsersList}) => ({
-        ...state,
-        availableUsersList: availableUsersList
-    })),
+    /* API call to receive the available user list, before adding it to avaiable list
+    * Check if they are in Members list
+    **/
+    on(A_insertAvailableUserList, (state, { availableUsersList }) => {
+
+        const checkAvailableList = availableUsersList.filter(user => 
+            !state.members.some(m => m.recipientAuthId === user.authId)
+        )
+        return {
+            ...state,
+            availableUsersList: checkAvailableList
+        }
+    }),
 
     on(A_insertAvailableUser, (state, { availableUser }) => ({
         ...state,
