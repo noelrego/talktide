@@ -259,7 +259,7 @@ export class AppService {
       .getMany();
 
       const list = users.map(user => ({
-        id: user.id.toString(),
+        authId: user.id.toString(),
         userName: user.userName,
         fullName: `${user.firstName} ${user.lastName || ''}`.trim(),
         userStatus: user.statusInfo.userStatus,

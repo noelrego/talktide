@@ -29,6 +29,7 @@ export type ReciepientListType = {
 }
 
 export type CreateMemberType = {
-    firstRecipient: string;
-    secondRecipient: string;
+    firstMember: string;
+    secondMember: string;
+    clientId?: string;
 }

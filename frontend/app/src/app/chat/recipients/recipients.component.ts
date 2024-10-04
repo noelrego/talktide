@@ -38,6 +38,7 @@ export class RecipientsComponent implements OnInit, AfterContentInit, OnDestroy{
 
   ngOnInit(): void {
 
+
      // Connect to Socket if not connected
     console.log('[SOCKET] Socket state: ', this.socketService.socketConnected);
     if(!this.socketService.socketConnected) {
@@ -147,20 +148,30 @@ export class RecipientsComponent implements OnInit, AfterContentInit, OnDestroy{
   // To create a chat History from Selected Available list
   createChatHistory(userInfo: any) : void {
 
-    this.loggedInUser$.subscribe(res => {
+    this.loggedInUser$.subscribe((res) => {
 
-      const members: CreateMemberType = {
-        firstRecipient: (res?.authId) ? res.authId : '', // Alwayd ID present
-        secondRecipient: userInfo.authId
-      }
-      console.log(members)
-      this.socketService.emit(SocketEvtNames.CREATE_MEMBER_BY_AVAILABLE_LIST, members);
-
-      this.store.dispatch(A_deleteAvailableUser({
-        authId: userInfo.authId
-      }))
-
+      const payload: CreateMemberType = {
+        firstMember: (res?.authId) ? res.authId : '', // Always id present
+        secondMember: userInfo.authId,
+        clientId: userInfo.clientId
+      } 
+      this.socketService.emit(SocketEvtNames.CREATE_MEMBER_BY_AVAILABLE_LIST, payload);
     })
+    
+
+    // this.loggedInUser$.subscribe(res => {
+
+      // const members: CreateMemberType = {
+      //   memebrToCreateWith: userInfo. // Alwayd ID present
+      //   clientId: userInfo.authId
+      // }
+    //   console.log(members)
+
+    //   this.store.dispatch(A_deleteAvailableUser({
+    //     authId: userInfo.authId
+    //   }))
+
+    // })
     
 
   }

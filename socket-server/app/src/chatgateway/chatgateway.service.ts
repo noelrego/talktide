@@ -18,8 +18,8 @@ export class ChatGatewayService {
      * @param members 
      */
     async createChatMembersService(members: CreateMemberType) {
-        console.log(' IN SERVER: ', members);
-        this.messageClient.emit(N_MsgPatternMessageService.CREATE_CHAT_MEMBER, members).subscribe()
+        console.log(' CREATE MEMEBR : ', members);
+        // this.messageClient.emit(N_MsgPatternMessageService.CREATE_CHAT_MEMBER, members).subscribe()
     }
 
 
@@ -28,9 +28,8 @@ export class ChatGatewayService {
      */
     async getRecipientListService(authId: string) {
         const result : N_GenericResType = await firstValueFrom(
-            this.messageClient.send(N_MsgPatternMessageService.GET_CHAT_MEMBERS_LIST, authId)
+            this.authServiceClient.send(N_MsgPatternMessageService.GET_CHAT_MEMBERS_LIST, authId)
         )
-
         return result;
     }
 
