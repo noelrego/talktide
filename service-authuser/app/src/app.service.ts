@@ -287,7 +287,8 @@ export class AppService {
 
   /**
    * Function to create Chat member, Before creating checking with 'array overlap'
-   * to make sure no two users create same chat memeber. Once a user creates then we can use that in Participient list
+   * to make sure no two users create same chat memeber. Once a user creates then we can use that in Participient list,
+   * Postgres array containement
    */
   async createChatMemberService(payload: CreateMemberType): Promise<N_GenericResType> {
     try {
@@ -301,7 +302,7 @@ export class AppService {
       // Array
       const ifExists = await this.memberRepo.findOne({
         where: {
-          chatMembers: Raw(alias => `${alias} && ARRAY[:...chatMembers]::text[]`, { chatMembers })
+          chatMembers: Raw(alias => `ARRAY[:...chatMembers] <@ ${alias}`, { chatMembers })
         }
       })
 
