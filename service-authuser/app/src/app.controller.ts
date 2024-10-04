@@ -2,7 +2,7 @@ import { Controller, Get } from '@nestjs/common';
 import { AppService } from './app.service';
 import { MessagePattern, Payload } from '@nestjs/microservices';
 import { N_MsgPatternAuthUserService, N_SocketUpdateAction } from '@nn-rego/chatapp-common';
-import { AuthLoginType, CheckUserNameType, RegisterUserType, SockerUpdateType } from './common';
+import { AuthLoginType, CheckUserNameType, CreateMemberType, RegisterUserType, SockerUpdateType } from './common';
 
 @Controller()
 export class AppController {
@@ -44,5 +44,12 @@ export class AppController {
   @MessagePattern(N_MsgPatternAuthUserService.GET_AVAILABLE_LIST)
   async getAvailableUserList(@Payload() payload: string) {
     return this.appService.getAvailableUserListService(payload);
+  }
+
+
+  // To create Chat members
+  @MessagePattern(N_MsgPatternAuthUserService.CREATE_MEMBER)
+  async createChatMember(@Payload() payload: CreateMemberType) {
+    return this.appService.createChatMemberService(payload);
   }
 }

@@ -9,12 +9,6 @@ export class AppController {
   constructor(private readonly appService: AppService) {}
 
 
-  @MessagePattern(N_MsgPatternmessageService.CREATE_CHAT_MEMBER)
-  async createChatMember(@Payload() payload: CreateMemberType) {
-    return this.appService.createChatMemberService(payload);
-  }
-
-
   @MessagePattern(N_MsgPatternmessageService.GET_CHAT_MEMBERS_LIST)
   async getRecipientList(@Payload() authId: string) {
     return this.appService.getRecipientListService(authId);

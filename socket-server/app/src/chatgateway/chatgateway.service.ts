@@ -19,7 +19,11 @@ export class ChatGatewayService {
      */
     async createChatMembersService(members: CreateMemberType) {
         console.log(' CREATE MEMEBR : ', members);
-        // this.messageClient.emit(N_MsgPatternMessageService.CREATE_CHAT_MEMBER, members).subscribe()
+        const response : N_GenericResType = await firstValueFrom(
+            this.authServiceClient.send(N_MsgPatternAuthUserService.CREATE_MEMBER, members)
+        )
+
+        console.log(response);
     }
 
 

@@ -2,10 +2,10 @@ import { HttpStatus, Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { N_GenericResType, N_SocketUpdateAction } from '@nn-rego/chatapp-common';
 import { AuthUserRepo } from './entity/auth-user.entity';
-import { Not, Repository } from 'typeorm';
-import { AuthLoginType, AuthTokenPayloadType, CheckUserNameType, RegisterUserType, SockerUpdateType, SystemStatus, UserStatus } from './common';
+import { Not, Raw, Repository } from 'typeorm';
+import { AuthLoginType, AuthTokenPayloadType, CheckUserNameType, CreateMemberType, RegisterUserType, SockerUpdateType, SystemStatus, UserStatus } from './common';
 import { HelperClass } from './helper/hash.helper';
-import { StatusInfoRepo } from './entity';
+import { MembersRepo, StatusInfoRepo } from './entity';
 
 @Injectable()
 export class AppService {
@@ -15,7 +15,8 @@ export class AppService {
   constructor (
     private helper : HelperClass,
     @InjectRepository(AuthUserRepo) private authUserRepo : Repository<AuthUserRepo>,
-    @InjectRepository(StatusInfoRepo) private statusInfoRepo : Repository<StatusInfoRepo>
+    @InjectRepository(StatusInfoRepo) private statusInfoRepo : Repository<StatusInfoRepo>,
+    @InjectRepository(MembersRepo) private memberRepo : Repository<MembersRepo>
 
   ) {}
 
@@ -274,6 +275,60 @@ export class AppService {
 
     } catch (error) {
       console.error(error.toString());
+      return {
+        statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
+        message: 'Something went wrong',
+        errors: error.toString()
+      }
+    }
+  }
+
+
+
+  /**
+   * Function to create Chat member, Before creating checking with 'array overlap'
+   * to make sure no two users create same chat memeber. Once a user creates then we can use that in Participient list
+   */
+  async createChatMemberService(payload: CreateMemberType) : Promise<N_GenericResType> {
+    try {
+      console.log('In Servce: ', payload);
+
+      const chatMembers = [payload.firstMember.toString(), payload.secondMember.toString()];
+      const roomName: string = `chat_room_${payload.firstMember}_${payload.secondMember}`;
+      
+      console.log(chatMembers, roomName);
+
+      // Array
+      const ifExists = await this.memberRepo.findOne({
+        where : {
+          chatMembers: Raw (alias => `${alias} && ARRAY[:...chatMembers]::text[]`, { chatMembers })
+        }
+      })
+
+      if (!ifExists) {
+        const newRecord = this.memberRepo.create({
+          chatMembers: chatMembers,
+          roomName: roomName
+        });
+        const savedData = await this.memberRepo.save(newRecord);
+
+        return {
+          statusCode: HttpStatus.CREATED,
+          message: 'Created Chat history',
+          resData: savedData
+        }
+
+      } else {
+        return {
+          statusCode: HttpStatus.CONFLICT,
+          message: 'Already have a chat room',
+          resData: ifExists
+        }
+      }
+
+    } catch (error) {
+      console.log(error);
+
       return {
         statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
         message: 'Something went wrong',

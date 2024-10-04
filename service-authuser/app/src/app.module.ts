@@ -5,7 +5,7 @@ import { CustomConfigService } from './config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { HelperClass } from './helper/hash.helper';
 import { JwtService } from '@nestjs/jwt';
-import { AuthUserRepo, StatusInfoRepo } from './entity';
+import { AuthUserRepo, MembersRepo, StatusInfoRepo } from './entity';
 
 const conf = new CustomConfigService();
 
@@ -19,14 +19,14 @@ const conf = new CustomConfigService();
         username: conf.getDbUser(),
         password: conf.getDbPass(),
         database: conf.getDbNameforService(),
-        entities: [AuthUserRepo, StatusInfoRepo],
+        entities: [AuthUserRepo, StatusInfoRepo, MembersRepo],
         synchronize: false,  // DB alter should not
         migrationsRun: false,
       }),
     }),
 
     TypeOrmModule.forFeature([
-      AuthUserRepo, StatusInfoRepo
+      AuthUserRepo, StatusInfoRepo, MembersRepo
     ])
   ],
   controllers: [AppController],

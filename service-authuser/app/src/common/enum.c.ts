@@ -20,3 +20,10 @@ export type SockerUpdateType = {
   authId: string;
   newStatus?: string;
 }
+
+
+export type CreateMemberType = {
+  firstMember: string;
+  secondMember: string;
+  clientId?: string;
+}

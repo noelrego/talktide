@@ -18,59 +18,6 @@ export class AppService {
 
 
   /**
-   * Function to create Chat member, Before creating checking with 'array overlap'
-   * to make sure no two users create same chat memeber. Once a user creates then we can use that in Participient list
-   */
-  async createChatMemberService(payload: CreateMemberType) : Promise<N_GenericResType> {
-    try {
-      console.log('In Servce: ', payload);
-
-      const chatMembers = [payload.firstRecipient.toString(), payload.secondRecipient.toString()];
-      const roomName: string = `chat_room_${payload.firstRecipient}_${payload.secondRecipient}`;
-      
-      console.log(chatMembers, roomName);
-
-      const ifExists = await this.memberRepo.findOne({
-        where : {
-          chatMembers: Raw (alias => `${alias} && ARRAY[:...chatMembers]::text[]`, { chatMembers })
-        }
-      })
-
-      if (!ifExists) {
-        const newRecord = this.memberRepo.create({
-          chatMembers: chatMembers,
-          roomName: roomName
-        });
-        const savedData = await this.memberRepo.save(newRecord);
-
-        return {
-          statusCode: HttpStatus.CREATED,
-          message: 'Created Chat history',
-          resData: savedData
-        }
-
-      } else {
-        return {
-          statusCode: HttpStatus.CONFLICT,
-          message: 'Already have a chat room',
-          resData: ifExists
-        }
-      }
-
-    } catch (error) {
-      console.log(error);
-
-      return {
-        statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
-        message: 'Something went wrong',
-        errors: error.toString()
-      }
-    }
-  }
-
-
-
-  /**
    * Function to return Recipient lisy by logged in user
    * @param authId 
    * @returns 
