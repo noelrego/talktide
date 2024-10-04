@@ -207,12 +207,14 @@ export class AppService {
         case N_SocketUpdateAction.CONNECTED:
           statusInfo.userStatus = UserStatus.AVAILABLE;
           statusInfo.systemStatus = SystemStatus.LOGIN;
+          statusInfo.clientId = payload.data.clientId;
           this.statusInfoRepo.save(statusInfo);
           break;
         
         case N_SocketUpdateAction.DISCONNECTED:
           statusInfo.userStatus = UserStatus.OFFLINE;
           statusInfo.systemStatus = SystemStatus.LOGOUT;
+          statusInfo.clientId = '';
           this.statusInfoRepo.save(statusInfo);
           break;
 
@@ -245,9 +247,9 @@ export class AppService {
    * Function to get list of available users
    * @param payload authId
    */
-  async getAvailableUserListService(authId: string) {
+  async getAvailableUserListService(authId: string): Promise<N_GenericResType> {
     try {
-      
+      console.log('AVAILABLE LIST: ', authId);
       const users = await this.authUserRepo
       .createQueryBuilder('auth_user')
       .leftJoinAndSelect('auth_user.statusInfo', 'statusInfo')
@@ -262,15 +264,19 @@ export class AppService {
         userStatus: user.statusInfo.userStatus,
       }));
 
-      if (list.length > 0) {
-        return list;
-      } else {
-        return [];
+      return {
+        statusCode: HttpStatus.OK,
+        message: 'Available user list',
+        resData: list
       }
 
     } catch (error) {
-      console.error(error.toString())
-      return [];
+      console.error(error.toString());
+      return {
+        statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
+        message: 'Something went wrong',
+        errors: error.toString()
+      }
     }
   }
 

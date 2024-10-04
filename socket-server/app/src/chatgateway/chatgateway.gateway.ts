@@ -41,6 +41,7 @@ export class ChatSocketGateway implements OnGatewayInit, OnGatewayConnection, On
 
     //Update in DB with status [login & available]
     const updatingData : SockerUpdateType = {
+      clientId: client.id,
       authId: authData.authId
     }
     this.socketService.socketUpadteUserStatus(N_SocketUpdateAction.CONNECTED, updatingData);
@@ -65,6 +66,7 @@ export class ChatSocketGateway implements OnGatewayInit, OnGatewayConnection, On
 
     //Update in DB with status [logout & offline]
     const updatingData : SockerUpdateType = {
+      clientId: client.id,
       authId: authData.authId
     }
     this.socketService.socketUpadteUserStatus(N_SocketUpdateAction.DISCONNECTED, updatingData);
@@ -81,6 +83,7 @@ export class ChatSocketGateway implements OnGatewayInit, OnGatewayConnection, On
     const clientAuth: ClientJwtData = client['user'];
     //Update in DB with status [login & available]
     const updatingData : SockerUpdateType = {
+      clientId: client.id,
       authId: clientAuth.authId,
       newStatus: newState
     }
@@ -90,20 +93,15 @@ export class ChatSocketGateway implements OnGatewayInit, OnGatewayConnection, On
 
 
 
-  // Client asking for Logged in users
-  @SubscribeMessage(SocketEvtNames.REQUEST_LOGGEDINUSERS)
-  async handleRequestLoggedinUsers(@ConnectedSocket() client: Socket) {
+  // // Client asking for Logged in users
+  // @SubscribeMessage(SocketEvtNames.REQUEST_LOGGEDINUSERS)
+  // async handleRequestLoggedinUsers(@ConnectedSocket() client: Socket) {
     
-    const clientAuthId = client['user'].authId;
-    const list = await this.socketService.requestAvailableUsers(clientAuthId);
-    console.log('LIST: ', list);
+  //   const clientAuthId = client['user'].authId;
+  //   const list = await this.socketService.requestAvailableUsers(clientAuthId);
+  //   console.log('LIST: ', list);
     
-  }
-
-
-
-  
-
+  // }
 
 
   // To create members like chat history

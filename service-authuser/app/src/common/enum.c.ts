@@ -16,6 +16,7 @@ export enum SystemStatus {
 
 
 export type SockerUpdateType = {
+  clientId: string;
   authId: string;
   newStatus?: string;
 }

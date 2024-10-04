@@ -11,6 +11,9 @@ export class StatusInfoRepo {
     @JoinColumn({ name: 'auth_id' })
     authUser: AuthUserRepo;
 
+    @Column({ name: 'client_id', type: 'text',nullable: true })
+    clientId: string;
+
     @Column({ name: 'user_status', type: 'enum', enum: UserStatus, default: UserStatus.OFFLINE })
     userStatus: UserStatus;
 

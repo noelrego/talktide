@@ -25,6 +25,7 @@ CREATE TYPE enum_system_status AS ENUM ('login', 'logout');
 CREATE TABLE IF NOT EXISTS status_info (
     id SERIAL PRIMARY KEY,
     auth_id INTEGER REFERENCES auth_user(id) NOT NULL UNIQUE,
+    client_id VARCHAR(255),
     user_status enum_user_status NOT NULL DEFAULT 'offline',
     system_status enum_system_status NOT NULL DEFAULT 'logout',
     create_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,

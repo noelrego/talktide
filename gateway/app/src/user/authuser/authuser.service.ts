@@ -96,4 +96,24 @@ export class AuthuserService {
         
         return response;
     }
+
+
+    /**
+     * Function get Available user list
+     */
+    async getAvailableList(authId: string) : Promise<N_GenericResType> {
+        const response : N_GenericResType = await firstValueFrom(
+            this.authUserClient.send(N_MsgPatternAuthUserService.GET_AVAILABLE_LIST, authId)
+        );
+
+        if (response?.errors) {
+            this.logger.error(response.errors);
+            return {
+                statusCode: response.statusCode,
+                message: response.message
+            }
+        }
+        
+        return response;
+    }
 }

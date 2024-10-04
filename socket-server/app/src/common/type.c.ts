@@ -23,6 +23,7 @@ export type RecipientType = {
 }
 
 export type SockerUpdateType = {
+    clientId: string;
     authId: string;
     newStatus?: string;
 }
