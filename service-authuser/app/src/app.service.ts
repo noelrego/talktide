@@ -3,22 +3,22 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { N_GenericResType, N_SocketUpdateAction } from '@nn-rego/chatapp-common';
 import { AuthUserRepo } from './entity/auth-user.entity';
 import { Not, Raw, Repository } from 'typeorm';
-import { AuthLoginType, AuthTokenPayloadType, CheckUserNameType, CreateMemberType, RegisterUserType, SockerUpdateType, SystemStatus, UserStatus } from './common';
+import { AuthLoginType, AuthTokenPayloadType, CheckUserNameType, CreateMemberType, MemberListType, ReduceMemberTye, RegisterUserType, SockerUpdateType, SystemStatus, UserStatus } from './common';
 import { HelperClass } from './helper/hash.helper';
 import { MembersRepo, StatusInfoRepo } from './entity';
 
 @Injectable()
 export class AppService {
-  
+
   private logger = new Logger(AppService.name);
 
-  constructor (
-    private helper : HelperClass,
-    @InjectRepository(AuthUserRepo) private authUserRepo : Repository<AuthUserRepo>,
-    @InjectRepository(StatusInfoRepo) private statusInfoRepo : Repository<StatusInfoRepo>,
-    @InjectRepository(MembersRepo) private memberRepo : Repository<MembersRepo>
+  constructor(
+    private helper: HelperClass,
+    @InjectRepository(AuthUserRepo) private authUserRepo: Repository<AuthUserRepo>,
+    @InjectRepository(StatusInfoRepo) private statusInfoRepo: Repository<StatusInfoRepo>,
+    @InjectRepository(MembersRepo) private memberRepo: Repository<MembersRepo>
 
-  ) {}
+  ) { }
 
 
   /**
@@ -26,11 +26,11 @@ export class AppService {
    * @param payload 
    * @returns 
    */
-  async checkUserNameService(payload: CheckUserNameType) : Promise<N_GenericResType> {
+  async checkUserNameService(payload: CheckUserNameType): Promise<N_GenericResType> {
     try {
-      
+
       const user = await this.authUserRepo.findOne({
-        where: {userName: payload.userName}
+        where: { userName: payload.userName }
       });
 
       if (!user) {
@@ -59,13 +59,13 @@ export class AppService {
    * Function to list all the users in the system
    * @returns N_GenericResType
    */
-  async getAllUserService() : Promise<N_GenericResType> {
+  async getAllUserService(): Promise<N_GenericResType> {
     try {
       const result = await this.authUserRepo.find({
         select: ['id', 'userName', 'firstName', 'lastName'],
         order: { createAt: 'DESC' }
       });
-      
+
       if (result.length <= 0) {
         return {
           statusCode: 204,
@@ -84,7 +84,7 @@ export class AppService {
         errors: error.toString()
       }
     }
-    
+
   }
 
 
@@ -93,9 +93,9 @@ export class AppService {
    * @param payload 
    * @returns 
    */
-  async registerUserService(payload: RegisterUserType) : Promise<N_GenericResType> {
+  async registerUserService(payload: RegisterUserType): Promise<N_GenericResType> {
     try {
-      
+
       const newUser = this.authUserRepo.create({
         userName: payload.userName,
         firstName: payload.firstName,
@@ -110,7 +110,7 @@ export class AppService {
       });
 
       await this.statusInfoRepo.save(statusInfo);
-      
+
       return {
         statusCode: HttpStatus.CREATED,
         message: 'User registered successfully'
@@ -131,9 +131,9 @@ export class AppService {
    * @param payload AuthLoginType
    * @returns 
    */
-  async loginAuthUserService(payload: AuthLoginType) : Promise<N_GenericResType> {
+  async loginAuthUserService(payload: AuthLoginType): Promise<N_GenericResType> {
     try {
-      
+
       const user = await this.authUserRepo.findOne({
         where: { userName: payload.userName }
       });
@@ -152,14 +152,14 @@ export class AppService {
         const jwtPayload: AuthTokenPayloadType = {
           id: user.id.toString(),
           userName: user.userName,
-          fullName: `${user.firstName}${(user?.lastName)? ' ' +user.lastName : ''}`
+          fullName: `${user.firstName}${(user?.lastName) ? ' ' + user.lastName : ''}`
         };
         const accessToken = await this.helper.generateAuthToken(jwtPayload);
 
         const userInfo = {
           authId: user.id.toString(),
           username: user.userName,
-          fullName: `${user.firstName}${(user?.lastName)? ' ' +user.lastName : ''}`
+          fullName: `${user.firstName}${(user?.lastName) ? ' ' + user.lastName : ''}`
         }
         return {
           statusCode: HttpStatus.OK,
@@ -171,10 +171,10 @@ export class AppService {
         }
 
       } else {
-          return {
-            statusCode: HttpStatus.UNAUTHORIZED,
-            message: 'Unauthorized access'
-          }
+        return {
+          statusCode: HttpStatus.UNAUTHORIZED,
+          message: 'Unauthorized access'
+        }
       }
 
     } catch (error) {
@@ -193,9 +193,9 @@ export class AppService {
    * Function to  update status of user
    * @param payload 
    */
-  async updateSocketStatusToUserService(payload: {action: N_SocketUpdateAction, data: SockerUpdateType}) {
+  async updateSocketStatusToUserService(payload: { action: N_SocketUpdateAction, data: SockerUpdateType }) {
     try {
-      
+
       const statusInfo = await this.statusInfoRepo.findOne({
         where: {
           authUser: { id: Number(payload.data.authId) }
@@ -204,14 +204,14 @@ export class AppService {
 
       if (!statusInfo) return;
 
-      switch(payload.action) {
+      switch (payload.action) {
         case N_SocketUpdateAction.CONNECTED:
           statusInfo.userStatus = UserStatus.AVAILABLE;
           statusInfo.systemStatus = SystemStatus.LOGIN;
           statusInfo.clientId = payload.data.clientId;
           this.statusInfoRepo.save(statusInfo);
           break;
-        
+
         case N_SocketUpdateAction.DISCONNECTED:
           statusInfo.userStatus = UserStatus.OFFLINE;
           statusInfo.systemStatus = SystemStatus.LOGOUT;
@@ -234,7 +234,7 @@ export class AppService {
 
           break;
       }
-      
+
 
       return;
     } catch (error) {
@@ -253,11 +253,11 @@ export class AppService {
     try {
       console.log('AVAILABLE LIST: ', authId);
       const users = await this.authUserRepo
-      .createQueryBuilder('auth_user')
-      .leftJoinAndSelect('auth_user.statusInfo', 'statusInfo')
-      .where('auth_user.id != :authId', { authId })
-      .andWhere('statusInfo.system_status = :systemStatus', { systemStatus: SystemStatus.LOGIN })
-      .getMany();
+        .createQueryBuilder('auth_user')
+        .leftJoinAndSelect('auth_user.statusInfo', 'statusInfo')
+        .where('auth_user.id != :authId', { authId })
+        .andWhere('statusInfo.system_status = :systemStatus', { systemStatus: SystemStatus.LOGIN })
+        .getMany();
 
       const list = users.map(user => ({
         authId: user.id.toString(),
@@ -289,19 +289,19 @@ export class AppService {
    * Function to create Chat member, Before creating checking with 'array overlap'
    * to make sure no two users create same chat memeber. Once a user creates then we can use that in Participient list
    */
-  async createChatMemberService(payload: CreateMemberType) : Promise<N_GenericResType> {
+  async createChatMemberService(payload: CreateMemberType): Promise<N_GenericResType> {
     try {
       console.log('In Servce: ', payload);
 
       const chatMembers = [payload.firstMember.toString(), payload.secondMember.toString()];
       const roomName: string = `chat_room_${payload.firstMember}_${payload.secondMember}`;
-      
+
       console.log(chatMembers, roomName);
 
       // Array
       const ifExists = await this.memberRepo.findOne({
-        where : {
-          chatMembers: Raw (alias => `${alias} && ARRAY[:...chatMembers]::text[]`, { chatMembers })
+        where: {
+          chatMembers: Raw(alias => `${alias} && ARRAY[:...chatMembers]::text[]`, { chatMembers })
         }
       })
 
@@ -346,28 +346,67 @@ export class AppService {
   async getMemberListService(authId: string): Promise<N_GenericResType> {
 
     try {
-      
+
       const chatMembers = [authId];
 
-      const ifExists = await this.memberRepo.find({
-        where : {
-          chatMembers: Raw (alias => `${alias} && ARRAY[:...chatMembers]::text[]`, { chatMembers })
+      const memberExist = await this.memberRepo.find({
+        where: {
+          chatMembers: Raw(alias => `${alias} && ARRAY[:...chatMembers]::text[]`, { chatMembers })
         },
-        select: [ 'id', 'roomName', 'chatMembers']
+        select: ['id', 'roomName', 'chatMembers']
       });
 
-      if (ifExists) {
-        return {
-          statusCode: HttpStatus.OK,
-          message: 'Found list',
-          resData: ifExists
-        }
-      } else {
+      if (!memberExist) {
         return {
           statusCode: HttpStatus.NO_CONTENT,
           message: 'No List',
           resData: []
         }
+      }
+
+      console.log(' REQUESTER : ', authId);
+
+      const memebrInfo = await this.authUserRepo
+      .createQueryBuilder('auth_user')
+      .leftJoinAndSelect('auth_user.statusInfo', 'statusInfo')
+      .where('auth_user.id = :authId', {authId})
+      .getOne();
+
+
+      
+      const tofetchMemberInfo = await memberExist.reduce<Promise<ReduceMemberTye>>(async (acc, item) => {
+        const onlyrecipient = item.chatMembers.filter(ids => ids !== authId).join(',')
+        // const memberInfo = await this.authUserRepo.find
+        const accpromise = await acc;
+
+        const memebrInfo = await this.authUserRepo
+        .createQueryBuilder('auth_user')
+        .leftJoinAndSelect('auth_user.statusInfo', 'statusInfo')
+        .where('auth_user.id = :onlyrecipient', { onlyrecipient })
+        .getOne();
+
+        console.log('MEMBER INFO INSIDE REDUCE: ', memebrInfo);
+
+        accpromise.memberInfo.push({
+          memberId: item.id.toString(), 
+          roomName: item.roomName,
+          recipientAuthId: onlyrecipient,
+          recipientStatus: memebrInfo.statusInfo.userStatus,
+          fullName: `${memebrInfo.firstName} ${memebrInfo.lastName || ''}`.trim(),
+          lastMessage: 'Click to star the conversation . . .',
+          newMessage: false,
+          clientId: memebrInfo.statusInfo?.clientId || ''
+        });
+        return acc;
+      }, Promise.resolve({memberInfo: []}));
+
+      console.log('Transform memebr info', tofetchMemberInfo);
+
+
+      return {
+        statusCode: HttpStatus.OK,
+        message: 'member List',
+        resData: tofetchMemberInfo
       }
 
     } catch (error) {

@@ -18,7 +18,7 @@ export type AvailableUserType = {
     clientId: string;
 }
 
-export type ReciepientListType = {
+export type MemberListType = {
     memberId: string;
     roomName: string;
     recipientAuthId: string;
@@ -26,6 +26,7 @@ export type ReciepientListType = {
     fullName: string;
     lastMessage: string | null;
     newMessage: boolean;
+    clientId: string;
 }
 
 export type CreateMemberType = {

@@ -27,7 +27,7 @@
     "@nestjs/platform-express": "^10.0.0",
     "@nestjs/platform-socket.io": "^10.4.4",
     "@nestjs/websockets": "^10.4.4",
-    "@nn-rego/chatapp-common": "^1.0.3",
+    "@nn-rego/chatapp-common": "^1.0.5",
     "amqp-connection-manager": "^4.1.14",
     "amqplib": "^0.10.4",
     "reflect-metadata": "^0.2.0",

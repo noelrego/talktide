@@ -1,6 +1,6 @@
 // Global state
 
-import { AvailableUserType, ReciepientListType, SelectedRecipienttoChatType, UserInfoType } from "../common";
+import { AvailableUserType, MemberListType, SelectedRecipienttoChatType, UserInfoType } from "../common";
 
 export interface TalkTideState {
     isLoggedIn: boolean;
@@ -8,5 +8,5 @@ export interface TalkTideState {
     userInfo: UserInfoType | null;
     selectedRecipient: SelectedRecipienttoChatType | null;
     availableUsersList: AvailableUserType[];
-    recipientList: ReciepientListType[];
+    recipientList: MemberListType[];
 }
