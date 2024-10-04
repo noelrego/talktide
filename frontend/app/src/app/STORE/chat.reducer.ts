@@ -4,7 +4,7 @@
  */
 
 import { createReducer, on } from "@ngrx/store";
-import { A_deleteAvailableUser, A_insertAvailableUser, A_insertAvailableUserList, A_otherUserChangedState, A_resetAvailableUserList, A_resetuserStatus, A_setUserInfo, A_setUserState, A_updateAvilableUserState, A_userLoggedin } from "./chat.action";
+import { A_deleteAvailableUser, A_insertAvailableUser, A_insertAvailableUserList, A_insertMembers, A_otherUserChangedState, A_resetAvailableUserList, A_resetuserStatus, A_setUserInfo, A_setUserState, A_updateAvilableUserState, A_userLoggedin } from "./chat.action";
 import { TalkTideState } from "./app.state";
 import { LocalStrgService } from "../service/localstorage/ls.service";
 import { UserStatus } from "../common";
@@ -17,7 +17,7 @@ export const initialGlobalState : TalkTideState = {
     userInfo : ls.getUserInfo(),
     selectedRecipient: null,
     availableUsersList: [],
-    recipientList: []
+    members: []
 }; // Inital State
 
 export const R_setUserLoggedin = createReducer(
@@ -102,6 +102,12 @@ export const R_setUserLoggedin = createReducer(
     on(A_resetuserStatus, (state) => ({
         ...state,
         userState: UserStatus.AVAILABLE
+    })),
+
+    /* To insert all members */
+    on(A_insertMembers, (state, { memberList }) => ({
+        ...state,
+        members: memberList
     }))
 
 )

@@ -6,20 +6,21 @@
         </div>
 
         <div class="recipient-list">
-            <div class="recipient-row card" *ngFor="let receipient of memberList"
-                (click)="selectRecipient(receipient.id)"
-                [ngClass]="(selectedRecipient === receipient.id)? 'has-background-primary-20 has-text-white': ''">
+            <div class="recipient-row card" *ngFor="let member of memberList$ | async"
+                (click)="selectRecipient(member.recipientAuthId)"
+                [ngClass]="(selectedRecipient === member.recipientAuthId)? 'has-background-primary-20 has-text-white': ''">
                 <div class="group">
-                    <div class="profile-pic" [title]="receipient.status" style="cursor: pointer;">
+                    <div class="profile-pic" [title]="member.recipientStatus" style="cursor: pointer;">
                         <img src="assets/profile-pic.png" alt="Profie Pic">
-                        <span class="status-icon" [ngClass]="receipient.status"></span>
+                        <span class="status-icon" [ngClass]="member.recipientStatus"></span>
                     </div>
                     <div class="name-preview res-name-preview">
-                        <span class="name">{{ receipient.fullName }}</span>
-                        <span class="preview-message">{{ receipient.msgPreview }}</span>
+                        <span class="name">{{ member.fullName }}</span>
+                        <span class="preview-message">{{ member.lastMessage }}</span>
+                        <span class="preview-message">{{ member.clientId }}</span>
                     </div>
                 </div>
-                <div class="date">{{ receipient.time }}</div>
+                <div class="new-msg has-text-white has-text-weight-bold has-text-centered">new</div>
                 <!-- <div class="name-responsive is-size-7">{{ receipient.fullName }}</div> -->
             </div>
         </div>

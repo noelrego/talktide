@@ -1,5 +1,5 @@
 import { createAction, props } from "@ngrx/store";
-import { UserInfoType, AvailableUserType } from "../common";
+import { UserInfoType, AvailableUserType, MemberListType } from "../common";
 
 
 export const A_userLoggedin = createAction('[Auth] User Logged in status', 
@@ -37,4 +37,8 @@ export const A_updateAvilableUserState = createAction('[Recipient] To update use
 
 export const A_otherUserChangedState = createAction('[State Chnage] Other online user chnaged the status', 
     props<{ authId: string, newState: string }>()
+)
+
+export const A_insertMembers = createAction('[Members] The insert all members', 
+    props<{ memberList: MemberListType[] }>()
 )

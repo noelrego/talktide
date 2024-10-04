@@ -29,6 +29,7 @@ export type MemberListType = {
     clientId: string;
 }
 
+
 export type CreateMemberType = {
     firstMember: string;
     secondMember: string;

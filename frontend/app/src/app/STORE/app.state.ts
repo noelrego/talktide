@@ -8,5 +8,5 @@ export interface TalkTideState {
     userInfo: UserInfoType | null;
     selectedRecipient: SelectedRecipienttoChatType | null;
     availableUsersList: AvailableUserType[];
-    recipientList: MemberListType[];
+    members: MemberListType[];
 }

@@ -1,9 +1,9 @@
 import { AfterContentInit, Component, ElementRef, OnDestroy, OnInit } from '@angular/core';
 import { SocketService } from '../socket/socket.service';
 import { Observable, Subscription } from 'rxjs';
-import { AvailableUserType, CreateMemberType, SocketEvtNames, UserInfoType } from '../../common';
+import { AvailableUserType, CreateMemberType, MemberListType, SocketEvtNames, UserInfoType } from '../../common';
 import { Store } from '@ngrx/store';
-import { A_deleteAvailableUser, A_insertAvailableUser, A_insertAvailableUserList, A_otherUserChangedState, S_availableUserList, S_userInfo, S_userState } from '../../STORE';
+import { A_deleteAvailableUser, A_insertAvailableUser, A_insertAvailableUserList, A_insertMembers, A_otherUserChangedState, S_availableUserList, S_membersList, S_userInfo, S_userState } from '../../STORE';
 import { ApiDataService } from '../../service/api';
 
 @Component({
@@ -19,11 +19,13 @@ export class RecipientsComponent implements OnInit, AfterContentInit, OnDestroy{
   availableUserList$ : Observable<AvailableUserType[]>;
   loggedInUser$ : Observable<UserInfoType | null>;
   userStatus$ : Observable<string | null>;
+  memberList$ : Observable<MemberListType[]>
 
   B_LIN$ : Subscription;
   USER_LOGGEDOUT$ : Subscription;
   USER_LOGGEDIN$ : Subscription;
   USER_CHANGED_STATE$ : Subscription;
+
 
   constructor (
     private socketService: SocketService,
@@ -33,6 +35,7 @@ export class RecipientsComponent implements OnInit, AfterContentInit, OnDestroy{
     this.availableUserList$ = this.store.select(S_availableUserList);
     this.loggedInUser$ = this.store.select(S_userInfo);
     this.userStatus$ = this.store.select(S_userState);
+    this.memberList$ = this.store.select(S_membersList);
   }
 
   ngOnInit(): void {
@@ -97,7 +100,7 @@ export class RecipientsComponent implements OnInit, AfterContentInit, OnDestroy{
   }
 
   // To set in state for Selected user
-  selectRecipient(recipientId: number): void {
+  selectRecipient(recipientId: string): void {
   }
 
   
@@ -138,11 +141,15 @@ export class RecipientsComponent implements OnInit, AfterContentInit, OnDestroy{
     this.apiData.getmemberList().subscribe({
       next: (response) => {
         console.log('[API] Members list ',response.body);
-        const availableList: [] = response.body.resData;
+        const availableList = response.body.resData.memberInfo;
         if (availableList.length > 0) {
-          this.store.dispatch(A_insertAvailableUserList({
-            availableUsersList: availableList
-          }))
+          console.log('[MEMBERS] : List found adding to store')
+          this.store.dispatch(A_insertMembers({
+            memberList: availableList
+          }));
+        } else {
+          console.log('[MEMBERS] : Not adding')
+
         }
 
       }, 
