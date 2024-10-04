@@ -79,7 +79,7 @@ export class ChatSocketGateway implements OnGatewayInit, OnGatewayConnection, On
   // Client is chnaging the status
   @SubscribeMessage(SocketEvtNames.CHANGE_USER_STATE)
   handleUserStateChange(@ConnectedSocket() client: Socket, @MessageBody() newState: string) {
-    
+    console.log('CHNAGE USER STATE ---------------->', newState);
     const clientAuth: ClientJwtData = client['user'];
     //Update in DB with status [login & available]
     const updatingData : SockerUpdateType = {

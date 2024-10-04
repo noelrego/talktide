@@ -219,6 +219,7 @@ export class AppService {
           break;
 
         case N_SocketUpdateAction.STATUS_UPDATE:
+          statusInfo.systemStatus = SystemStatus.LOGIN;
           if (payload.data.newStatus === UserStatus.AVAILABLE) {
             statusInfo.userStatus = UserStatus.AVAILABLE;
           } else if (payload.data.newStatus === UserStatus.AWAY) {

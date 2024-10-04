@@ -57,6 +57,9 @@ export class RecipientsComponent implements OnInit, AfterContentInit, OnDestroy{
         const availableList: [] = response.body.resData;
         if (availableList.length > 0) {
           console.log('API RESPONSE: ', availableList);
+          this.store.dispatch(A_insertAvailableUserList({
+            availableUsersList: availableList
+          }))
         }
 
       }, 
@@ -102,8 +105,8 @@ export class RecipientsComponent implements OnInit, AfterContentInit, OnDestroy{
     // })
 
 
-    this.availableUserList$.subscribe(res => console.log(' [STATE] available user list: ', res))
-    this.loggedInUser$.subscribe(res => console.log(' [STATE] logged in userinfo: ', res))
+    // this.availableUserList$.subscribe(res => console.log(' [STATE] available user list: ', res))
+    // this.loggedInUser$.subscribe(res => console.log(' [STATE] logged in userinfo: ', res))
 
     this.recipientList = [
       
