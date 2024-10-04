@@ -37,7 +37,8 @@ export class HttpCustomInterceptor implements HttpInterceptor {
             return next.handle(req).pipe(
                 catchError((error: HttpErrorResponse) => {
                     //  Invalid JWT Token
-                    if ( error.status === 403) {
+                    if ( error.status === 401) {
+                        this.myCookie.deleteCookie();
                         this.router.navigate(['/login']);
                     }
                     return throwError(() => error); // Rethrow the error
