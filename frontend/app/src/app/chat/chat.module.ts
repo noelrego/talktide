@@ -7,6 +7,8 @@ import { ChatBoxComponent } from './chat-box/chat-box.component';
 import { RecipientsComponent } from './recipients/recipients.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { SocketService } from './socket/socket.service';
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { HttpCustomInterceptor } from '../config/http-intercepter.cofig';
 
 
 @NgModule({
@@ -21,7 +23,12 @@ import { SocketService } from './socket/socket.service';
     ReactiveFormsModule,
   ],
   providers: [
-    SocketService
+    SocketService,
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: HttpCustomInterceptor,
+      multi: true
+    }
   ]
 })
 export class ChatModule { }

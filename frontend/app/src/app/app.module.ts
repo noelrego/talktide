@@ -7,11 +7,11 @@ import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { NotFoundComponent } from './not-found/not-found.component';
-import { HTTP_INTERCEPTORS, provideHttpClient } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { HttpCustomInterceptor } from './config/http-intercepter.cofig';
 import { ApiDataService } from './service/api';
 import { CustomCookieService } from './service/cookie/cookie.service';
-import { provideState, provideStore, StoreModule } from '@ngrx/store';
+import { StoreModule } from '@ngrx/store';
 import { R_setUserLoggedin } from './STORE/chat.reducer';
 import { LocalStrgService } from './service/localstorage';
 
@@ -29,12 +29,10 @@ import { LocalStrgService } from './service/localstorage';
     StoreModule.forRoot({'chatapp': R_setUserLoggedin})
   ],
   providers: [
-    provideHttpClient(),
-    {
-      provide: HTTP_INTERCEPTORS,
-      useClass: HttpCustomInterceptor,
-      multi: true
-    },
+    provideHttpClient(
+      withInterceptorsFromDi()
+    ),
+    { provide: HTTP_INTERCEPTORS, useClass: HttpCustomInterceptor, multi: true },
     ApiDataService,
     CustomCookieService,
     LocalStrgService

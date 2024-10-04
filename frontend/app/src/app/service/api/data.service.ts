@@ -34,4 +34,10 @@ export class ApiDataService {
     getAllUsers() : Observable<HttpResponse<any>> {
         return this.http.post<any>(API_ENDPOINT.CHECK_USER, { observe: 'response' })
     }
+
+
+    // Get available userList
+    getAvailableUserList() : Observable<HttpResponse<any>> {
+        return this.http.get<any>(API_ENDPOINT.GET_AVAILABLEUSER_LIST, { observe: 'response' })
+    }
 } 
