@@ -13,9 +13,8 @@ import { ApiDataService } from '../../service/api';
 })
 export class RecipientsComponent implements OnInit, AfterContentInit, OnDestroy{
 
-  recipientList : any;
-  selectedRecipient: number = -1;
-  avilableUsersList : any;
+  selectedRecipient: string = '';
+  memberList: any = []
 
   availableUserList$ : Observable<AvailableUserType[]>;
   loggedInUser$ : Observable<UserInfoType | null>;
@@ -52,6 +51,7 @@ export class RecipientsComponent implements OnInit, AfterContentInit, OnDestroy{
     );
 
     // API Initial call to get available user list
+    this.fnGetMemberList();
     this.fnGetAvailableList();
 
 
@@ -94,39 +94,10 @@ export class RecipientsComponent implements OnInit, AfterContentInit, OnDestroy{
     // this.availableUserList$.subscribe(res => console.log(' [STATE] available user list: ', res))
     // this.loggedInUser$.subscribe(res => console.log(' [STATE] logged in userinfo: ', res))
 
-    this.recipientList = [
-      
-      {
-        id: 7,
-        fullName: 'Posh',
-        status: 'available',
-        msgPreview: 'Hi oklk.',
-        time: '11:00 AM'
-      },
-      {
-        id: 8,
-        fullName: 'Marray',
-        status: 'busy',
-        msgPreview: 'Hi Hellow Dollay . . . .',
-        time: '11:00 AM'
-      },
-
-    ] ;
-
-
-    this.avilableUsersList = [
-          {
-              "id": 10,
-              "userName": "two",
-              "fullName": "Two do",
-              "userStatus": "available"
-          }
-    ]
   }
 
   // To set in state for Selected user
   selectRecipient(recipientId: number): void {
-    this.selectedRecipient = recipientId;
   }
 
   
@@ -166,10 +137,9 @@ export class RecipientsComponent implements OnInit, AfterContentInit, OnDestroy{
   private fnGetMemberList() : void {
     this.apiData.getmemberList().subscribe({
       next: (response) => {
-
+        console.log('[API] Members list ',response.body);
         const availableList: [] = response.body.resData;
         if (availableList.length > 0) {
-          console.log('Member List ', availableList);
           this.store.dispatch(A_insertAvailableUserList({
             availableUsersList: availableList
           }))
@@ -186,10 +156,10 @@ export class RecipientsComponent implements OnInit, AfterContentInit, OnDestroy{
   private fnGetAvailableList (): void {
     this.apiData.getAvailableUserList().subscribe({
       next: (response) => {
-
+        console.log('[API] Avilable users list ', response.body);
         const availableList: [] = response.body.resData;
         if (availableList.length > 0) {
-          console.log('Online users list ', availableList);
+          
           this.store.dispatch(A_insertAvailableUserList({
             availableUsersList: availableList
           }))

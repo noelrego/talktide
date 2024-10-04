@@ -6,7 +6,7 @@
         </div>
 
         <div class="recipient-list">
-            <div class="recipient-row card" *ngFor="let receipient of recipientList"
+            <div class="recipient-row card" *ngFor="let receipient of memberList"
                 (click)="selectRecipient(receipient.id)"
                 [ngClass]="(selectedRecipient === receipient.id)? 'has-background-primary-20 has-text-white': ''">
                 <div class="group">
@@ -24,6 +24,8 @@
             </div>
         </div>
 
+        <hr>
+
         <!-- Available User where chat history not yet create -->
         <div class="list-headding has-text-white">
             <h5 class="is-size-7 is-uppercase has-text-centered has-text-weight-bold" style="color: var(--theme-color);"
@@ -31,12 +33,12 @@
                 Available Users
             </h5>
             <ng-template #noAvilableUsers>
-                <div class="card px-2 py-2 mt-2 mb-2 has-text-centered is-size-7 is-uppercase has-text-centered has-text-weight-bold">No Available users</div>  
+                <div class="px-2 py-2 mt-2 mb-2 has-text-centered is-size-7 is-uppercase has-text-warning has-text-weight-bold">No Available users</div>  
             </ng-template>
 
         </div>
 
-        <div class="recipient-list">
+        <div class="recipient-list" style="cursor: pointer;">
             <div class="recipient-row card" *ngFor="let avilableUser of availableUserList$ | async"
                 (click)="createChatHistory(avilableUser)">
                 <div class="group">
