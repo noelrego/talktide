@@ -51,23 +51,8 @@ export class RecipientsComponent implements OnInit, AfterContentInit, OnDestroy{
       this.socketService.emit(SocketEvtNames.CHANGE_USER_STATE, res)
     );
 
-    // API call to get available user list
-    this.apiData.getAvailableUserList().subscribe({
-      next: (response) => {
-
-        const availableList: [] = response.body.resData;
-        if (availableList.length > 0) {
-          console.log('API RESPONSE: ', availableList);
-          this.store.dispatch(A_insertAvailableUserList({
-            availableUsersList: availableList
-          }))
-        }
-
-      }, 
-      error: (err) => {
-        console.error(err.toString());
-      }
-    })
+    // API Initial call to get available user list
+    this.fnGetAvailableList();
 
 
     // this.USER_CHANGED_STATE$ = this.socketService.onEvent('USER_CHANGED_STATE').subscribe(res => {
@@ -173,7 +158,48 @@ export class RecipientsComponent implements OnInit, AfterContentInit, OnDestroy{
 
     // })
     
+  }
 
+  /* ------------------ Functions ----------------------------*/
+  
+  // API to get the member list
+  private fnGetMemberList() : void {
+    this.apiData.getmemberList().subscribe({
+      next: (response) => {
+
+        const availableList: [] = response.body.resData;
+        if (availableList.length > 0) {
+          console.log('Member List ', availableList);
+          this.store.dispatch(A_insertAvailableUserList({
+            availableUsersList: availableList
+          }))
+        }
+
+      }, 
+      error: (err) => {
+        console.error(err.toString());
+      }
+    });
+  }
+
+  // API to get the list of Available users and not in Member list
+  private fnGetAvailableList (): void {
+    this.apiData.getAvailableUserList().subscribe({
+      next: (response) => {
+
+        const availableList: [] = response.body.resData;
+        if (availableList.length > 0) {
+          console.log('Online users list ', availableList);
+          this.store.dispatch(A_insertAvailableUserList({
+            availableUsersList: availableList
+          }))
+        }
+
+      }, 
+      error: (err) => {
+        console.error(err.toString());
+      }
+    });
   }
 
   ngAfterContentInit(): void {

@@ -8,4 +8,5 @@ export const API_ENDPOINT = {
     CHECK_USER: `${BASEURL}/user/check-username`,
     GET_ALL_USERS : `${BASEURL}/user`,
     GET_AVAILABLEUSER_LIST : `${BASEURL}/user/available-list`,
+    GET_MEMBER_LIST: `${BASEURL}/user/member-list`,
 }

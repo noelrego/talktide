@@ -337,4 +337,45 @@ export class AppService {
     }
   }
 
+
+  /**
+   * Function to return Recipient lisy by logged in user
+   * @param authId 
+   * @returns 
+   */
+  async getMemberListService(authId: string): Promise<N_GenericResType> {
+
+    try {
+      
+      const chatMembers = [authId];
+
+      const ifExists = await this.memberRepo.find({
+        where : {
+          chatMembers: Raw (alias => `${alias} && ARRAY[:...chatMembers]::text[]`, { chatMembers })
+        },
+        select: [ 'id', 'roomName', 'chatMembers']
+      });
+
+      if (ifExists) {
+        return {
+          statusCode: HttpStatus.OK,
+          message: 'Found list',
+          resData: ifExists
+        }
+      } else {
+        return {
+          statusCode: HttpStatus.NO_CONTENT,
+          message: 'No List',
+          resData: []
+        }
+      }
+
+    } catch (error) {
+      return {
+        statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
+        message: 'Could not fetch list'
+      }
+    }
+  }
+
 }

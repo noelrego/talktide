@@ -52,4 +52,11 @@ export class AppController {
   async createChatMember(@Payload() payload: CreateMemberType) {
     return this.appService.createChatMemberService(payload);
   }
+
+
+  // TO get the member list to the logged in user
+  @MessagePattern(N_MsgPatternAuthUserService.GET_MEMBER)
+  async getMemberList(@Payload() authId: string) {
+    return this.appService.getMemberListService(authId);
+  }
 }

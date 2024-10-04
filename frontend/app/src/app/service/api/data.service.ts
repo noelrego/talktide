@@ -40,4 +40,9 @@ export class ApiDataService {
     getAvailableUserList() : Observable<HttpResponse<any>> {
         return this.http.get<any>(API_ENDPOINT.GET_AVAILABLEUSER_LIST, { observe: 'response' })
     }
+
+    // Get available member list
+    getmemberList() : Observable<HttpResponse<any>> {
+        return this.http.get<any>(API_ENDPOINT.GET_AVAILABLEUSER_LIST, { observe: 'response' })
+    }
 } 

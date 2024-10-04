@@ -62,11 +62,18 @@ export class AuthuserController {
     @Get('available-list')
     async getAvailableList(@Res() res: Response, @GetAuthIdFromToken() authId: string ) {
         const response = await this.userService.getAvailableList(authId);
-        console.log("Available List:   -----",authId);
         return res.status(response.statusCode).json(response);
     }
 
 
-    
+    /**
+     * 
+     */
+    @Get('member-list')
+    async getMemberList(@Res() res: Response, @GetAuthIdFromToken() authId: string ) {
+        const response = await this.userService.getMemberListService(authId);
+        return res.status(response.statusCode).json(response);
+    }
+
     
 }
