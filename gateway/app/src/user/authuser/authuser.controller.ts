@@ -66,5 +66,7 @@ export class AuthuserController {
         return res.status(response.statusCode).json(response);
     }
 
+
+    
     
 }

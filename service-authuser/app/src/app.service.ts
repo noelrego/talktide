@@ -263,6 +263,7 @@ export class AppService {
         userName: user.userName,
         fullName: `${user.firstName} ${user.lastName || ''}`.trim(),
         userStatus: user.statusInfo.userStatus,
+        clientId: user.statusInfo.clientId
       }));
 
       return {

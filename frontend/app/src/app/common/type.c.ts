@@ -15,6 +15,7 @@ export type AvailableUserType = {
     userName: string;
     fullName: string;
     userStatus: string;
+    clientId: string;
 }
 
 export type ReciepientListType = {
