@@ -43,8 +43,11 @@ export class ChatGatewayService {
      * for chnaging status [busy, offline, available, away]
      * for socket connect & disconnect [login, logout]
      */
-    async socketUpadteUserStatus(action: N_SocketUpdateAction, data: SockerUpdateType) {
-        this.authServiceClient.emit(N_MsgPatternAuthUserService.SOCKET_UPDATE_USER_STATUS, {action, data}).subscribe();
+    async socketUpadteUserStatus(action: N_SocketUpdateAction, data: SockerUpdateType): Promise<boolean> {
+        const update = await firstValueFrom(
+            this.authServiceClient.send(N_MsgPatternAuthUserService.SOCKET_UPDATE_USER_STATUS, {action, data})
+        );
+        return update;
     }
 
 
@@ -61,6 +64,21 @@ export class ChatGatewayService {
         );  
         console.log(list);
         return list;
+
+    }
+
+
+
+    /**
+     * To fetch indivisual user info as he logs in
+     * @param clientAuthId 
+     * @returns 
+     */
+    async getMemberInfo(authId: string) {
+        const info = await firstValueFrom(
+            this.authServiceClient.send(N_MsgPatternAuthUserService.GET_MEMBER_INFO, authId)
+        ); 
+        return info;
 
     }
 

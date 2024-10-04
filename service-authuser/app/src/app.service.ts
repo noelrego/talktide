@@ -193,9 +193,8 @@ export class AppService {
    * Function to  update status of user
    * @param payload 
    */
-  async updateSocketStatusToUserService(payload: { action: N_SocketUpdateAction, data: SockerUpdateType }) {
+  async updateSocketStatusToUserService(payload: { action: N_SocketUpdateAction, data: SockerUpdateType }) : Promise<boolean> {
     try {
-
       const statusInfo = await this.statusInfoRepo.findOne({
         where: {
           authUser: { id: Number(payload.data.authId) }
@@ -234,12 +233,10 @@ export class AppService {
 
           break;
       }
-
-
-      return;
+      return true;
     } catch (error) {
       console.log('err: ', error.toString());
-      return;
+      return false;
     }
   }
 
@@ -367,14 +364,6 @@ export class AppService {
 
       console.log(' REQUESTER : ', authId);
 
-      const memebrInfo = await this.authUserRepo
-      .createQueryBuilder('auth_user')
-      .leftJoinAndSelect('auth_user.statusInfo', 'statusInfo')
-      .where('auth_user.id = :authId', {authId})
-      .getOne();
-
-
-      
       const tofetchMemberInfo = await memberExist.reduce<Promise<ReduceMemberTye>>(async (acc, item) => {
         const onlyrecipient = item.chatMembers.filter(ids => ids !== authId).join(',')
         // const memberInfo = await this.authUserRepo.find
@@ -415,6 +404,42 @@ export class AppService {
         statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
         message: 'Could not fetch list'
       }
+    }
+  }
+
+
+
+  /**
+   * Function to return member info
+   * @param authId string
+   */
+  async getMemberInfoService(authId: string) : Promise<object> {
+    try {
+      
+      const memebrInfo = await this.authUserRepo
+      .createQueryBuilder('auth_user')
+      .leftJoinAndSelect('auth_user.statusInfo', 'statusInfo')
+      .where('auth_user.id = :authId', {authId})
+      .getOne();
+
+      if (!memebrInfo) return {};
+
+      const memberInfoData : MemberListType = {
+        memberId: memebrInfo.statusInfo.id.toString(),
+        roomName: '',
+        recipientAuthId: memebrInfo.id.toString(),
+        recipientStatus: memebrInfo.statusInfo.userStatus,
+        fullName: `${memebrInfo.firstName} ${memebrInfo?.lastName || ''}`.trim(),
+        lastMessage: 'Click here to start the conversation ...',
+        newMessage: false,
+        clientId: memebrInfo.statusInfo.clientId
+      }
+
+      return memberInfoData;
+
+    } catch (error) {
+      console.log(error.toString());
+      return {};
     }
   }
 

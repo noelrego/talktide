@@ -59,4 +59,11 @@ export class AppController {
   async getMemberList(@Payload() authId: string) {
     return this.appService.getMemberListService(authId);
   }
+
+
+  // TO get the member info of logged in user
+  @MessagePattern(N_MsgPatternAuthUserService.GET_MEMBER_INFO)
+  async getmemberInfo(@Payload() authId: string) {
+    return this.appService.getMemberInfoService(authId);
+  }
 }

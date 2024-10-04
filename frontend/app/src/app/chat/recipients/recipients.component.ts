@@ -21,11 +21,7 @@ export class RecipientsComponent implements OnInit, AfterContentInit, OnDestroy 
   userStatus$: Observable<string | null>;
   memberList$: Observable<MemberListType[]>
 
-  B_LIN$: Subscription;
-  USER_LOGGEDOUT$: Subscription;
-  USER_LOGGEDIN$: Subscription;
-  USER_CHANGED_STATE$: Subscription;
-
+  socketSomeoneLoggedIn$: Subscription;
 
   constructor(
     private socketService: SocketService,
@@ -40,71 +36,39 @@ export class RecipientsComponent implements OnInit, AfterContentInit, OnDestroy 
 
   ngOnInit(): void {
 
-
-    // Connect to Socket if not connected
+    /* Connect to Socket if not connected */
     console.log('[SOCKET] Socket state: ', this.socketService.socketConnected);
     if (!this.socketService.socketConnected) {
       this.socketService.connectSocket();
     }
 
 
-    // Update Initial State to server on Page refresh!
+    /* Update Initial State to server on Page refresh! */
     this.userStatus$.subscribe(res =>
       this.socketService.emit(SocketEvtNames.CHANGE_USER_STATE, res)
     );
 
-    // API Initial call to get available user list
+    /* API Initial call to get available user list */
     this.fnGetMemberList();
-    // this.fnGetAvailableList();
 
+    /* Regitser socket events */
+    this.socketSomeoneLoggedIn$ = this.socketService.onEvent(SocketEvtNames.SOMEONE_LOGGEDIN).subscribe(res =>
+      console.log('[SOCKET SOMEONE LOGIN] ', res)
+    )
 
-    // this.USER_CHANGED_STATE$ = this.socketService.onEvent('USER_CHANGED_STATE').subscribe(res => {
-    //   console.log('[SOCKET RECEIVE] Some one chnaged the status', res);
-    //   this.store.dispatch(A_otherUserChangedState({
-    //     authId: res.authId,
-    //     newState: res.userStatus
-    //   }))
-    // })
-
-    //Subscribe to user who logs out
-    // this.USER_LOGGEDOUT$ = this.socketService.onEvent('USER_LOGGEDOUT').subscribe(data => {
-    //   console.log('[SOCKET RECEIVE] USER_LOGGEDOUT: ', data);
-
-    //   this.store.dispatch(A_deleteAvailableUser({
-    //     authId: data
-    //   }))
-    // });
-
-    //Subscribe to socket event
-    // this.USER_LOGGEDIN$ = this.socketService.onEvent('USER_LOGGEDIN').subscribe(data => {
-    //   console.log('[SOKET RECEIVE]------ Some one logged in: ', data);
-
-    //   const loggedInUser = this.loggedInUser$.subscribe(item =>  { 
-    //     if (item?.authId !== data.authId) {
-    //       this.store.dispatch(A_insertAvailableUser({
-    //         availableUser: data
-    //       }))
-    //     }
-    //   });
-
-    // this.availableUserList$.subscribe(item => console.log(item));
-    // this.store.dispatch(A_insertAvailableUser({
-    //   availableUser: data
-    // }))
-    // })
-
-
-    // this.availableUserList$.subscribe(res => console.log(' [STATE] available user list: ', res))
-    // this.loggedInUser$.subscribe(res => console.log(' [STATE] logged in userinfo: ', res))
+    this.socketSomeoneLoggedIn$ = this.socketService.onEvent(SocketEvtNames.SOMEONE_LOGGEDOUT).subscribe(res =>
+      console.log('[SOCKET SOMEONE LOGOUT] ', res)
+    )
 
   }
 
-  // To set in state for Selected user
+
+  /* To set in state for Selected user for chat */
   selectRecipient(recipientId: string): void {
   }
 
 
-  // To create a chat History from Selected Available list
+  /* To create a chat History from Selected Available list */
   createChatHistory(userInfo: any): void {
 
     this.loggedInUser$.subscribe((res) => {
@@ -188,10 +152,7 @@ export class RecipientsComponent implements OnInit, AfterContentInit, OnDestroy 
 
 
   ngOnDestroy(): void {
-    // this.B_LIN$.unsubscribe();
-    // this.USER_LOGGEDOUT$.unsubscribe();
-    // this.USER_LOGGEDIN$.unsubscribe();
-    // this.USER_CHANGED_STATE$.unsubscribe();
+    this.socketSomeoneLoggedIn$.unsubscribe();
   }
 
 }

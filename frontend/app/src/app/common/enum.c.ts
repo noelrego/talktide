@@ -20,5 +20,7 @@ export enum SocketEvtNames {
     REQUEST_LOGGEDINUSERS = 'requestLoggedUsers',
     CHANGE_USER_STATE = 'changeUserState',
     CREATE_MEMBER_BY_AVAILABLE_LIST = 'createMemberByAvailableList',
-    GET_RECIPIENT_LIST = 'getRecipientList'
+    GET_RECIPIENT_LIST = 'getRecipientList',
+    SOMEONE_LOGGEDIN = 'SOMEONE_LOGGEDIN',
+    SOMEONE_LOGGEDOUT = 'SOMEONE_LOGGEDOUT'
 }

@@ -35,7 +35,7 @@ export class ChatSocketGateway implements OnGatewayInit, OnGatewayConnection, On
 
 
 
-  handleConnection(client: Socket, ...args: any[]) {
+  async handleConnection(client: Socket, ...args: any[]) {
 
     const authData: ClientJwtData = client['user'] || {};
 
@@ -44,17 +44,12 @@ export class ChatSocketGateway implements OnGatewayInit, OnGatewayConnection, On
       clientId: client.id,
       authId: authData.authId
     }
-    this.socketService.socketUpadteUserStatus(N_SocketUpdateAction.CONNECTED, updatingData);
-
-    // Add to active users list
-    if (authData) {
-      const filterAuthData: ClientJwtData = {
-        authId: authData.authId,
-        userName: authData.userName,
-        fullName: authData.fullName
-      }
-      // this.server.emit('USER_LOGGEDIN', loggedInUser);
-    }
+    await this.socketService.socketUpadteUserStatus(N_SocketUpdateAction.CONNECTED, updatingData);
+    
+    // Update user logged in status to all other recipient
+    const loggedinMember = await this.socketService.getMemberInfo(authData.authId).catch(e => e);
+    console.log('[SOMEONE LOGIN ] memebr info: ', loggedinMember);
+    this.server.emit('SOMEONE_LOGGEDIN', loggedinMember);
 
   }
 
@@ -64,14 +59,14 @@ export class ChatSocketGateway implements OnGatewayInit, OnGatewayConnection, On
 
     const authData : ClientJwtData = client['user'];
 
-    //Update in DB with status [logout & offline]
+    //Update in DB with status [logout & offline
     const updatingData : SockerUpdateType = {
       clientId: client.id,
       authId: authData.authId
     }
     this.socketService.socketUpadteUserStatus(N_SocketUpdateAction.DISCONNECTED, updatingData);
     // Broadcast and inform all that this user logged out
-    // this.server.emit('USER_LOGGEDOUT', authData.authId);
+    this.server.emit('SOMEONE_LOGGEDOUT', authData.authId);
   }
 
   
