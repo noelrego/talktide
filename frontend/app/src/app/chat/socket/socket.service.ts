@@ -87,7 +87,6 @@ export class SocketService {
 
   // Generic: Emit events to the server
   emit(event: string, data: any): void {
-    console.log('[ngrx] Emit Event', event);
     this.socket.emit(event, data);
   }
 

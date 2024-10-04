@@ -63,17 +63,15 @@ export class ChatWindowComponent implements OnInit, OnDestroy{
     })
 
     // V18 Angular Documentation
-   this.selectOption.events.subscribe(e => {
-    if (e instanceof ValueChangeEvent) {
-      console.log('CHNAGEDING OPTIONS', this.selectOption.value)
-      this.store.dispatch(A_setUserState({userState: e.source.value}));
+   this.selectOption.valueChanges.subscribe(val => {
+    console.log('<OPTION>-----------', val);
+      const stateVal = (val) ? val : '';  // Val not null at valuechange event
+      this.store.dispatch(A_setUserState({userState: stateVal}));
       
       // Emit socket event to update status
-      this.socketService.emit(SocketEvtNames.CHANGE_USER_STATE, e.source.value);
+      this.socketService.emit(SocketEvtNames.CHANGE_USER_STATE, stateVal);
       // Update LocalStorage
-      this.lsService.setUserStatus(e.source.value);
-      return;
-    }
+      this.lsService.setUserStatus(stateVal);
    })
 
   }

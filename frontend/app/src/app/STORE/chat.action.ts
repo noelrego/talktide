@@ -42,3 +42,7 @@ export const A_otherUserChangedState = createAction('[State Chnage] Other online
 export const A_insertMembers = createAction('[Members] The insert all members', 
     props<{ memberList: MemberListType[] }>()
 )
+
+export const A_updateRemoteUserStatus = createAction('[Update Status] To update the status in recipient list', 
+    props<{ authId: string, newStatus: string }>()
+)

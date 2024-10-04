@@ -73,7 +73,7 @@ export class ChatSocketGateway implements OnGatewayInit, OnGatewayConnection, On
 
   // Client is chnaging the status
   @SubscribeMessage(SocketEvtNames.CHANGE_USER_STATE)
-  handleUserStateChange(@ConnectedSocket() client: Socket, @MessageBody() newState: string) {
+  async handleUserStateChange(@ConnectedSocket() client: Socket, @MessageBody() newState: string) {
     const clientAuth: ClientJwtData = client['user'];
     //Update in DB with status [login & available]
     const updatingData : SockerUpdateType = {
@@ -81,7 +81,9 @@ export class ChatSocketGateway implements OnGatewayInit, OnGatewayConnection, On
       authId: clientAuth.authId,
       newStatus: newState
     }
-    this.socketService.socketUpadteUserStatus(N_SocketUpdateAction.STATUS_UPDATE, updatingData);
+    await this.socketService.socketUpadteUserStatus(N_SocketUpdateAction.STATUS_UPDATE, updatingData);
+
+    this.server.emit('USER_CHANGED_STATUS', { authId: clientAuth.authId, newStatus: newState});
   
   }
 

@@ -3,7 +3,7 @@ import { SocketService } from '../socket/socket.service';
 import { Observable, Subscription } from 'rxjs';
 import { AvailableUserType, CreateMemberType, MemberListType, SocketEvtNames, UserInfoType } from '../../common';
 import { Store } from '@ngrx/store';
-import { A_particularUserLoggedout, A_insertAvailableUserList, A_insertMembers, S_availableUserList, S_membersList, S_userInfo, S_userState } from '../../STORE';
+import { A_particularUserLoggedout, A_insertAvailableUserList, A_insertMembers, S_availableUserList, S_membersList, S_userInfo, S_userState, A_updateRemoteUserStatus } from '../../STORE';
 import { ApiDataService } from '../../service/api';
 
 @Component({
@@ -27,6 +27,7 @@ export class RecipientsComponent implements OnInit, AfterContentInit, OnDestroy 
   socketSomeoneLoggedOut$: Subscription;
   socketCreatedChatMember$: Subscription;
   socketCreatedChatMemberSelf$: Subscription;
+  sockerUserChangedStatus$ : Subscription;
 
   constructor(
     private socketService: SocketService,
@@ -53,9 +54,9 @@ export class RecipientsComponent implements OnInit, AfterContentInit, OnDestroy 
     })
 
     /* Update Initial State to server on Page refresh! */
-    this.userStatus$.subscribe(res =>
-      this.socketService.emit(SocketEvtNames.CHANGE_USER_STATE, res)
-    );
+    // this.userStatus$.subscribe(res =>
+    //   this.socketService.emit(SocketEvtNames.CHANGE_USER_STATE, res)
+    // );
 
     /* - - - - - - - - - Regitser socket events - - - - - - - - - - -  */
     this.socketSomeoneLoggedIn$ = this.socketService.onEvent(SocketEvtNames.SOMEONE_LOGGEDIN).subscribe(res => {
@@ -80,7 +81,14 @@ export class RecipientsComponent implements OnInit, AfterContentInit, OnDestroy 
       this.fnGetMemberList();
     });
 
-    /* API Initial call to get available user list */
+    this.sockerUserChangedStatus$ = this.socketService.onEvent(SocketEvtNames.USER_CHANGED_STATUS).subscribe(res => {
+      this.store.dispatch(A_updateRemoteUserStatus({
+        authId: res.authId,
+        newStatus: res.newStatus
+      }))
+    })
+
+    /* - - - -  - - - - - API Initial call to get available user list - - - - - -*/
     this.fnGetMemberList();
 
 
@@ -181,6 +189,7 @@ export class RecipientsComponent implements OnInit, AfterContentInit, OnDestroy 
     this.socketSomeoneLoggedIn$.unsubscribe();
     this.socketSomeoneLoggedOut$.unsubscribe();
     this.socketCreatedChatMemberSelf$.unsubscribe();
+    this.sockerUserChangedStatus$.unsubscribe();
   }
 
 }
