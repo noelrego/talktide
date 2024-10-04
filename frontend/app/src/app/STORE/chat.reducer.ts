@@ -4,7 +4,7 @@
  */
 
 import { createReducer, on } from "@ngrx/store";
-import { A_deleteAvailableUser, A_insertAvailableUser, A_insertAvailableUserList, A_insertMembers, A_otherUserChangedState, A_resetAvailableUserList, A_resetuserStatus, A_setUserInfo, A_setUserState, A_updateAvilableUserState, A_userLoggedin } from "./chat.action";
+import { A_particularUserLoggedout, A_insertAvailableUser, A_insertAvailableUserList, A_insertMembers, A_otherUserChangedState, A_resetAvailableUserList, A_resetuserStatus, A_setUserInfo, A_setUserState, A_updateAvilableUserState, A_userLoggedin } from "./chat.action";
 import { TalkTideState } from "./app.state";
 import { LocalStrgService } from "../service/localstorage/ls.service";
 import { UserStatus } from "../common";
@@ -45,11 +45,17 @@ export const R_setUserLoggedin = createReducer(
         }
     )),
 
-    on(A_deleteAvailableUser, (state, { authId }) => (
+    on(A_particularUserLoggedout, (state, { authId }) => (
         {
             ...state,
             availableUsersList: state.availableUsersList.filter(
                 user => user.authId !== authId
+            ),
+            members: state.members.map(item =>
+                item.recipientAuthId === authId ?
+                {...item, recipientStatus: 'offline', lastMessage: 'User logged out', newMessage: false}
+                :
+                item
             )
         }
     )),

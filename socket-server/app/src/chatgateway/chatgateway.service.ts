@@ -17,13 +17,12 @@ export class ChatGatewayService {
      * Function to create Members on clikc on Available list
      * @param members 
      */
-    async createChatMembersService(members: CreateMemberType) {
+    async createChatMembersService(members: CreateMemberType) : Promise<N_GenericResType> {
         console.log(' CREATE MEMEBR : ', members);
         const response : N_GenericResType = await firstValueFrom(
             this.authServiceClient.send(N_MsgPatternAuthUserService.CREATE_MEMBER, members)
         )
-
-        console.log(response);
+        return response;
     }
 
 

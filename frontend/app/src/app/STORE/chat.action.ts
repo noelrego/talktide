@@ -27,7 +27,7 @@ export const A_resetAvailableUserList = createAction('[Recipient] To reset list 
 
 export const A_resetuserStatus = createAction('[User] to reset user state once he logs out or close the browser.')
 
-export const A_deleteAvailableUser = createAction('[Recipient] To remove as he loggs out', 
+export const A_particularUserLoggedout = createAction('[LOGOUT] To remove / offline the user who Loggedout', 
     props<{ authId: string }>()
 )
 

@@ -100,8 +100,10 @@ export class ChatSocketGateway implements OnGatewayInit, OnGatewayConnection, On
 
   // To create members like chat history
   @SubscribeMessage(SocketEvtNames.CREATE_MEMBER_BY_AVAILABLE_LIST)
-  handleCreateMember(@ConnectedSocket() client: Socket, @MessageBody() members: CreateMemberType) {
-    this.socketService.createChatMembersService(members);
+  async handleCreateMember(@ConnectedSocket() client: Socket, @MessageBody() members: CreateMemberType) {
+    const r = await this.socketService.createChatMembersService(members);
+    this.server.to(members.clientId).emit('CREATED_CHAT_MEMBER');
+    this.server.to(client.id).emit('CREATED_CHAT_MEMBER_SELF');
   }
 
 

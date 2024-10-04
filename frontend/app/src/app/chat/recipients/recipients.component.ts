@@ -3,7 +3,7 @@ import { SocketService } from '../socket/socket.service';
 import { Observable, Subscription } from 'rxjs';
 import { AvailableUserType, CreateMemberType, MemberListType, SocketEvtNames, UserInfoType } from '../../common';
 import { Store } from '@ngrx/store';
-import { A_deleteAvailableUser, A_insertAvailableUser, A_insertAvailableUserList, A_insertMembers, A_otherUserChangedState, S_availableUserList, S_membersList, S_userInfo, S_userState } from '../../STORE';
+import { A_particularUserLoggedout, A_insertAvailableUserList, A_insertMembers, S_availableUserList, S_membersList, S_userInfo, S_userState } from '../../STORE';
 import { ApiDataService } from '../../service/api';
 
 @Component({
@@ -24,6 +24,9 @@ export class RecipientsComponent implements OnInit, AfterContentInit, OnDestroy 
   memberList$: Observable<MemberListType[]>
 
   socketSomeoneLoggedIn$: Subscription;
+  socketSomeoneLoggedOut$: Subscription;
+  socketCreatedChatMember$: Subscription;
+  socketCreatedChatMemberSelf$: Subscription;
 
   constructor(
     private socketService: SocketService,
@@ -54,21 +57,33 @@ export class RecipientsComponent implements OnInit, AfterContentInit, OnDestroy 
       this.socketService.emit(SocketEvtNames.CHANGE_USER_STATE, res)
     );
 
-    /* API Initial call to get available user list */
-    this.fnGetMemberList();
-
-    /* Regitser socket events */
+    /* - - - - - - - - - Regitser socket events - - - - - - - - - - -  */
     this.socketSomeoneLoggedIn$ = this.socketService.onEvent(SocketEvtNames.SOMEONE_LOGGEDIN).subscribe(res => {
       if (this.loggedInUser?.authId !== res) {
         this.fnGetMemberList();
       }
-    })
+    });
 
-    this.socketSomeoneLoggedIn$ = this.socketService.onEvent(SocketEvtNames.SOMEONE_LOGGEDOUT).subscribe(res => {
-      console.log('[SOCKET SOMEONE LOGOUT] ', res)
-      
-    }
-    )
+    this.socketSomeoneLoggedOut$ = this.socketService.onEvent(SocketEvtNames.SOMEONE_LOGGEDOUT).subscribe(res => {
+      this.store.dispatch(A_particularUserLoggedout({
+        authId: res
+      }));
+    });
+
+    this.socketCreatedChatMember$ = this.socketService.onEvent(SocketEvtNames.CREATED_CHAT_MEMBER).subscribe(res => {
+      console.log('[CREATED_CHAT_MEMBER] ---------------')
+      this.fnGetMemberList();
+    });
+
+    this.socketCreatedChatMemberSelf$ = this.socketService.onEvent(SocketEvtNames.CREATED_CHAT_MEMBER_SELF).subscribe(res => {
+      console.log('[CREATED_CHAT_MEMBER_SELF] ---------------')
+      this.fnGetMemberList();
+    });
+
+    /* API Initial call to get available user list */
+    this.fnGetMemberList();
+
+
 
 
   }
@@ -164,6 +179,8 @@ export class RecipientsComponent implements OnInit, AfterContentInit, OnDestroy 
 
   ngOnDestroy(): void {
     this.socketSomeoneLoggedIn$.unsubscribe();
+    this.socketSomeoneLoggedOut$.unsubscribe();
+    this.socketCreatedChatMemberSelf$.unsubscribe();
   }
 
 }
