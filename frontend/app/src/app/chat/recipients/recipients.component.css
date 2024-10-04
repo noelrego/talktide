@@ -82,9 +82,13 @@
 
 .new-msg {
     font-size: 0.9rem;
-    padding: 0 .2rem;
+    padding: .2rem;
+    width: 18px;
+    height: 20px;
     background: var(--status-available);
-    border-radius: 25%;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
 }
 
 .name-responsive {
