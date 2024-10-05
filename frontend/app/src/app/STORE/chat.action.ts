@@ -58,3 +58,5 @@ export const A_updateChatHistory = createAction('[CHAT HISTORY] On new recipient
 export const A_pushNewChatContent = createAction('[CHAT HISTORY] On user creates new message', 
     props<{ chatContent: ChatHistoryType }>()
 )
+
+export const A_resetGlobalState = createAction('[RESET] Reset global state');
