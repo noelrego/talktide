@@ -377,13 +377,16 @@ export class AppService {
 
         console.log('MEMBER INFO INSIDE REDUCE: ', memebrInfo);
 
+        const tempLastMsg : string = (memebrInfo.statusInfo.systemStatus === SystemStatus.LOGIN) ?
+        '. . .' : 'User logged out'
+
         accpromise.memberInfo.push({
           memberId: item.id.toString(), 
           roomName: item.roomName,
           recipientAuthId: onlyrecipient,
           recipientStatus: memebrInfo.statusInfo.userStatus,
           fullName: `${memebrInfo.firstName} ${memebrInfo.lastName || ''}`.trim(),
-          lastMessage: 'Click to star the conversation . . .',
+          lastMessage: tempLastMsg,
           newMessage: false,
           clientId: memebrInfo.statusInfo?.clientId || ''
         });
