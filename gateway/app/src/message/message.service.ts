@@ -20,13 +20,12 @@ export class MessageService {
      * @param dto 
      * @returns 
      */
-    async createMemberService(dto: CreateMemberDto) : Promise<N_GenericResType> {
+    async getChatHistoryList(member: number) : Promise<N_GenericResType> {
 
-        console.log('IN Service', dto)
+        console.log('[MEMBER]', member);
         const response : N_GenericResType = await firstValueFrom(
-            this.messageClient.send(N_MsgPatternMessageService.CREATE_CHAT_MEMBER, dto)
+            this.messageClient.send(N_MsgPatternMessageService.GET_LISTOF_MESSAGES, member)
         );
-
         if (response?.errors) {
             this.logger.error(response.errors);
             return {

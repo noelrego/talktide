@@ -1,7 +1,7 @@
-import { Body, Controller, Post, Res } from '@nestjs/common';
+import { Controller, Get, Param, Res } from '@nestjs/common';
 import { MessageService } from './message.service';
 import { Response } from 'express';
-import { CreateMemberDto } from 'src/dto';
+import { Public } from 'src/decorator';
 
 @Controller('message')
 export class MessageController {
@@ -14,9 +14,10 @@ export class MessageController {
     /**
      * POST /api/message/create-member
      */
-    @Post('create-member')
-    async createmember(@Res() res: Response, @Body() dto: CreateMemberDto) {
-        const response = await this.messageService.createMemberService(dto);
+    @Get('chat-history/:id')
+    async getChatHistory(@Res() res: Response, @Param('id') memberId: string) {
+        const member = Number(memberId);
+        const response = await this.messageService.getChatHistoryList(member);
         return res.status(response.statusCode).json(response);
     }
 }

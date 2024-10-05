@@ -9,9 +9,16 @@ export class AppController {
   constructor(private readonly appService: AppService) {}
 
 
+  // To create chat
   @MessagePattern(N_MsgPatternMessageService.CREATE_MESSAGE)
   async createChat(@Payload() payload: ChatHistoryType) {
-    return this.appService.getRecipientListService(payload);
+    return this.appService.createChatHistoryService(payload);
+  }
+
+  // To get chat list
+  @MessagePattern(N_MsgPatternMessageService.GET_LISTOF_MESSAGES)
+  async getChatHistory(@Payload() payload: number) {
+    return this.appService.getChatHistoryListService(payload);
   }
 
 }
