@@ -20,9 +20,7 @@
                         <span class="preview-message">{{ member.clientId }}</span>
                     </div>
                 </div>
-                <!-- <div class="new-msg">
-                    <p class="has-text-white">new</p>
-                </div> -->
+                <span *ngIf="member.newMessage" class="tag is-small is-success">new</span>
             </div>
         </div>
 

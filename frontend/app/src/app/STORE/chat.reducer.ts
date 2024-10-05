@@ -152,12 +152,19 @@ export const R_setUserLoggedin = createReducer(
 
 
     // To set the selected Recipient
-    on(A_setSelectedRecipient, (state, {selectedRecipient}) => (
-        {
+    on(A_setSelectedRecipient, (state, {selectedRecipient}) => {
+        
+        const removeNewMsg = state.members.map(usr => 
+            (usr.recipientAuthId === selectedRecipient.recipientAuthId) ? 
+            {...usr, newMessage: false } : usr
+            
+        )
+        return {
             ...state,
-            selectedRecipient: selectedRecipient
+            selectedRecipient: selectedRecipient,
+            members: removeNewMsg
         }
-    )),
+    }),
 
     // To upadte chat as new recipient is selected
     on(A_updateChatHistory, (state, { chatContents }) => (
@@ -180,9 +187,18 @@ export const R_setUserLoggedin = createReducer(
         const msgContent = (state.selectedRecipient?.recipientAuthId === chatContent.senderId) ?
             [chatContent, ...state.chatMessages] : state.chatMessages
         
+        // Is sender is not selcted then notify 
+        const tempMembers = state.members.map(usr =>
+            (usr.recipientAuthId !== state.selectedRecipient?.recipientAuthId
+                && usr.recipientAuthId === chatContent.senderId
+            ) ? 
+            {...usr, newMessage: true } : usr
+        )
+
         return {
             ...state,
-            chatMessages: msgContent
+            chatMessages: msgContent,
+            members: tempMembers
         }
     }),
 
