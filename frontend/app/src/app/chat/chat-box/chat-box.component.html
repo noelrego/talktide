@@ -23,8 +23,14 @@
   </section>
   <!-- Chat Body -->
   <ng-template #myChatbox>
+
+    <div class="hero has-text-centered" *ngIf="(chatHistoryList$ | async)?.length === 0">
+      <span class="tag is-success is-light is-medium">No Conversation yet</span>
+    </div>
+
     <div class="chat-body" #chatBoxArea>
       <!-- Loop through messages -->
+
       <div *ngFor="let chat of chatHistoryList$ | async" class="chat-message"
         [ngClass]="(chat.senderId === loggedInUser?.authId) ? 'right': 'left'">
 

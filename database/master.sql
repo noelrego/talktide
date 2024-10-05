@@ -55,6 +55,7 @@ CREATE TABLE IF NOT EXISTS chat_history (
     sender_id INTEGER NOT NULL,
     content TEXT NOT NULL,
     has_preview BOOLEAN DEFAULT false,
+    preview_content TEXT,
     replayed_by VARCHAR(32),
     replayed_msg_id INTEGER,
     create_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,

@@ -1,28 +1,29 @@
 import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, OneToMany, JoinColumn, ManyToMany, ManyToOne } from 'typeorm';
-import { MembersRepo } from './members.entity';
 
-@Entity({ name: 'messages' })
+@Entity({ name: 'chat_history' })
 export class MessageRepo {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ManyToOne(() => MembersRepo, {nullable: false})
-  @JoinColumn({name: 'member_id'})
-  memberId: MembersRepo;
+  @Column({ name: 'member_id', type: 'integer', nullable: false })
+  memberId: number;
 
-  @Column({ name: 'roomname', type: 'text', unique: true })
-  roomName: string;
+  @Column({ name: 'sender_id', type: 'integer', nullable: false })
+  senderId: number;
 
-  @Column({ name: 'message_content', type: 'text', nullable: false })
-  messageContent: string;
+  @Column({ name: 'content', type: 'text' })
+  content: string;
 
   @Column({ name: 'has_preview', type: 'boolean', default: false })
   hasPreview: boolean;
 
-  @Column({ name: 'replayed_by', type: 'text' })
+  @Column({ name: 'preview_content', type: 'text' })
+  previewContent: string;
+
+  @Column({ name: 'replayed_by', type: 'varchar' })
   replayedBy: string;
 
-  @Column({ name: 'replayed_msg_id', type: 'text', nullable: false })
+  @Column({ name: 'replayed_msg_id', type: 'integer' })
   replayedMsgId: number;
 
   @CreateDateColumn({ name: 'create_at', default: new Date() })

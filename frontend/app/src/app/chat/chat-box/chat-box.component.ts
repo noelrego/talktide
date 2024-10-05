@@ -2,7 +2,7 @@ import { AfterContentInit, Component, ElementRef, OnDestroy, OnInit, ViewChild }
 import { SocketService } from '../socket/socket.service';
 import { Observable } from 'rxjs';
 import { Store } from '@ngrx/store';
-import { ChatHistoryType, SelectedRecipientChatType, UserInfoType } from '../../common';
+import { ChatHistoryType, SelectedRecipientChatType, SocketEvtNames, UserInfoType } from '../../common';
 import { A_pushNewChatContent, S_chatHistoryList, S_selectedRecipient, S_userInfo } from '../../STORE';
 import { FormControl, Validators } from '@angular/forms';
 
@@ -77,6 +77,9 @@ export class ChatBoxComponent implements OnInit, AfterContentInit, OnDestroy {
     this.store.dispatch(A_pushNewChatContent({
       chatContent: tempChat
     }));
+
+    this.socketService.emit(SocketEvtNames.CHAT_SENT, tempChat);
+    
     console.table(tempChat);
 
     this.showPreviewMessage = false;
