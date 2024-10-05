@@ -80,3 +80,7 @@
     grid-template-columns: 4fr 1fr;
     gap: 1rem;
 }
+
+.has-err {
+    outline: 1px solid red !important;
+}

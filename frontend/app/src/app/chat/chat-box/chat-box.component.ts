@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { ChatHistoryType, SelectedRecipientChatType, UserInfoType } from '../../common';
 import { S_chatHistoryList, S_selectedRecipient, S_userInfo } from '../../STORE';
+import { FormControl, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-chat-box',
@@ -22,6 +23,10 @@ export class ChatBoxComponent implements OnInit, AfterContentInit, OnDestroy {
   selectedRecipient$ : Observable<SelectedRecipientChatType | null>;
   chatHistoryList$: Observable<ChatHistoryType[]>;
 
+  // Form control
+  inputTextBox = new FormControl('', [Validators.required]);
+  inputTextInValid : boolean = false;
+
   constructor(
     private socketService: SocketService,
     private store: Store,
@@ -32,15 +37,26 @@ export class ChatBoxComponent implements OnInit, AfterContentInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.loggedInUser$.subscribe(res => this.loggedInUser = res)
-  }
+    this.loggedInUser$.subscribe(res => this.loggedInUser = res);
+
+    this.inputTextBox.valueChanges.subscribe((res) => {
+        this.inputTextInValid = false;
+      }
+    )}
 
   ngAfterContentInit(): void {
     
   }
 
   sendMessage() {
+    if (!this.inputTextBox.valid) {
+      this.inputTextInValid = true
+      return;
+    } else {
+      this.inputTextInValid = false;
+    }
     console.log(' [SEND MESSAGE] to be constructed new chat: ');
+    console.log(this.inputTextBox.value);
   }
 
   clickReplayMessage(chatInfo: ChatHistoryType) {

@@ -70,14 +70,16 @@
     <!-- Chat Footer -->
     <div class="bottom-control">
       <div class="control mx-2 my-2 pl-2 pr-2">
-        <textarea rows="1"
-          class="textarea has-fixed-size"
-          placeholder="Fixed size textarea"
+       
+        <textarea rows="1" [formControl]="inputTextBox" name="input-chat" id="input-chat"
+          class="textarea has-fixed-size" [ngClass]="(inputTextInValid)? 'has-err': ''"
+          placeholder="Type your message here . . ."
         ></textarea>
       </div>
       <!-- <input type="text" class="input mx-2 my-2" role="text" placeholder="Enter your message here. . ." /> -->
       <p class="buttons">
-        <button class="button has-text-white mx-2 my-2 pl-2 pr-2" style=" background: var(--theme-color);">
+        <button class="button has-text-white mx-2 my-2 pl-2 pr-2" style=" background: var(--theme-color);"
+        (click)="sendMessage()">
           <span class="icon is-small" >
             <i class="fas fa-paper-plane"></i>
           </span>
