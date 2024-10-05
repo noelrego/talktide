@@ -3,7 +3,7 @@ import { SocketService } from '../socket/socket.service';
 import { Observable } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { ChatHistoryType, SelectedRecipientChatType, UserInfoType } from '../../common';
-import { S_chatHistoryList, S_selectedRecipient, S_userInfo } from '../../STORE';
+import { A_pushNewChatContent, S_chatHistoryList, S_selectedRecipient, S_userInfo } from '../../STORE';
 import { FormControl, Validators } from '@angular/forms';
 
 @Component({
@@ -20,6 +20,7 @@ export class ChatBoxComponent implements OnInit, AfterContentInit, OnDestroy {
 
   showPreviewMessage: boolean = false;
   replayingToPreviewMsg: string = '';
+  previewMsgId: string = '';
 
   loggedInUser$: Observable<UserInfoType | null>;
   loggedInUser : UserInfoType | null;
@@ -60,25 +61,60 @@ export class ChatBoxComponent implements OnInit, AfterContentInit, OnDestroy {
       this.inputTextInValid = true
       return;
     }
+    
+    const tempChat : ChatHistoryType = {
+      msgId: `tempmsg_id${this.tempMsgId++}`,
+      memberId: this.selectedRecipient.memberId || '',
+      content: this.inputTextBox.value?.trim() || '',
+      hasPreview: this.showPreviewMessage,
+      replayedBy: this.loggedInUser?.fullName,
+      previewContent: this.replayingToPreviewMsg || '',
+      senderId: this.loggedInUser?.authId || '',
+      msgTime: this.getFormattedTime(),
+      replayedMsgId: this.previewMsgId,
+    };
+
+    this.store.dispatch(A_pushNewChatContent({
+      chatContent: tempChat
+    }));
+    console.table(tempChat);
+
     this.showPreviewMessage = false;
     this.replayingToPreviewMsg = '';
+    this.previewMsgId = '';
+
     this.inputTextBox.setValue('');
     this.inputTextInValid = false;
-
-    // Construct message 
-    // const tempChat : ChatHistoryType = {
-    //   msgId: `tempmsg_id${this.tempMsgId++}`,
-    //   memberId: 
-    // }
-    
-    console.log(' [SEND MESSAGE] to be constructed new chat: ');
-    console.log(this.inputTextBox.value);
+    this.scrollToBottom();
   }
 
-  clickReplayMessage(chatContent: string) {
+  clickReplayMessage(chatContent: string, msgId: string) {
     this.showPreviewMessage = true;
     this.replayingToPreviewMsg = (chatContent.length > 20) ? 
       `${chatContent.slice(0, 20)} . . .` : chatContent;
+    this.previewMsgId = msgId;
+    this.scrollToBottom();
+  }
+
+  closePreview() {
+    this.showPreviewMessage = false;
+    this.replayingToPreviewMsg = '';
+    this.previewMsgId = '';
+  }
+
+  private getFormattedTime(): string {
+    const date = new Date();
+    let hours = date.getHours();
+    const minutes = date.getMinutes().toString().padStart(2, '0');
+    const ampm = hours >= 12 ? 'PM' : 'AM';
+    
+    // Convert to 12-hour format
+    hours = hours % 12 || 12;
+  
+    return `${hours}:${minutes} ${ampm}`;
+  }
+
+  private scrollToBottom () : void {
     try {
       this.chatboxlistarea.nativeElement.scrollTo({
         top: this.chatboxlistarea.nativeElement.scrollHeight,
@@ -87,11 +123,6 @@ export class ChatBoxComponent implements OnInit, AfterContentInit, OnDestroy {
     } catch (err) {
       console.error('Error scrolling to bottom:', err);
     }
-  }
-
-  closePreview() {
-    this.showPreviewMessage = false;
-    this.replayingToPreviewMsg = '';
   }
 
   ngOnDestroy(): void {

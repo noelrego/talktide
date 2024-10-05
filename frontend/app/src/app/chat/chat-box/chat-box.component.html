@@ -32,7 +32,7 @@
 
         <div class="content chat-shape"
           [ngClass]="{'has-background-primary has-text-dark': chat.senderId == loggedInUser?.authId}">
-          <button class="button is-small is-text" (click)="clickReplayMessage(chat.content)">
+          <button class="button is-small is-text" (click)="clickReplayMessage(chat.content, chat.msgId)">
             <span class="icon pr-1" title="Replay">
               <i class="fas fa-reply"></i>
             </span>

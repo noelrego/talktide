@@ -23,7 +23,7 @@ export const initialGlobalState : TalkTideState = {
             msgId: '1',
             memberId: '10',
             senderId: '10',
-            content: 'Hi! How are you doing?',
+            content: 'FIRST MESSAEG',
             hasPreview: false,
             replayedBy: 'Me',
             replayedMsgId: '1',
@@ -85,7 +85,7 @@ export const initialGlobalState : TalkTideState = {
             msgId: '2',
             memberId: '10',
             senderId: '11',
-            content: 'I am Good thanks how do you do?',
+            content: 'LAST MESSAGE',
             hasPreview: true,
             previewContent: 'has some here ...',
             replayedBy: 'chrome',
@@ -244,7 +244,7 @@ export const R_setUserLoggedin = createReducer(
     on(A_pushNewChatContent, (state, { chatContent }) => (
         {
             ...state,
-            chatMessages: [...state.chatMessages, chatContent]
+            chatMessages: [chatContent, ...state.chatMessages]
         }
     )),
 
