@@ -1,10 +1,8 @@
 
-@media screen and (max-width: 895px) {
-    .chat-window {
-        height: 75svh !important;
-        min-height: 50svh !important;
-    }
+.chat-shape {
+    border-radius: 0 1.5rem 0 .9rem !important;
 }
+
 .selected-name {
     box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
 }
@@ -83,4 +81,12 @@
 
 .has-err {
     outline: 1px solid red !important;
+}
+
+
+@media screen and (max-width: 895px) {
+    .chat-window {
+        height: 75svh !important;
+        min-height: 50svh !important;
+    }
 }

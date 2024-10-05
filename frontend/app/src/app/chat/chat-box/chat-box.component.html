@@ -30,8 +30,8 @@
 
         <img src="assets/profile-pic.png" class="mr-2 ml-2" alt="profile" style="height: 24px; width: auto;">
 
-        <div class="content"
-          [ngClass]="{'has-background-primary has-text-white': chat.senderId == loggedInUser?.authId}">
+        <div class="content chat-shape"
+          [ngClass]="{'has-background-primary has-text-dark': chat.senderId == loggedInUser?.authId}">
           <button class="button is-small is-text" (click)="clickReplayMessage(chat.content)">
             <span class="icon pr-1" title="Replay">
               <i class="fas fa-reply"></i>
