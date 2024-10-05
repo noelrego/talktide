@@ -2,7 +2,7 @@ import { Inject, Injectable } from "@nestjs/common";
 import { ClientProxy } from "@nestjs/microservices";
 import { N_GenericResType, N_MsgPatternAuthUserService, N_MsgPatternMessageService, N_SocketUpdateAction } from "@nn-rego/chatapp-common";
 import { audit, firstValueFrom } from "rxjs";
-import { CreateMemberType, MicroServiceName, RecipientType, SockerUpdateType } from "src/common";
+import { ChatHistoryType, CreateMemberType, MicroServiceName, RecipientType, SockerUpdateType } from "src/common";
 
 @Injectable()
 export class ChatGatewayService {
@@ -79,6 +79,16 @@ export class ChatGatewayService {
         ); 
         return info;
 
+    }
+
+
+    /**
+     * To fetch create chat History
+     * @param clientAuthId 
+     * @returns 
+     */
+    async createChatHistory(chatInfo: ChatHistoryType) {
+        this.messageClient.send(N_MsgPatternMessageService.CREATE_MESSAGE, chatInfo).subscribe(); 
     }
 
 }

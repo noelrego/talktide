@@ -2,7 +2,7 @@ import { ConnectedSocket, MessageBody, OnGatewayConnection, OnGatewayDisconnect,
 import { Server, Socket } from 'socket.io';
 import { EnvConfig } from 'src/config';
 import { WsMiddleware } from './ws.middleware';
-import { ClientJwtData, ClientUserData, CreateMemberType, SockerUpdateType, SocketEvtNames } from 'src/common';
+import { ChatHistoryType, ClientJwtData, ClientUserData, CreateMemberType, SockerUpdateType, SocketEvtNames } from 'src/common';
 import { ChatGatewayService } from './chatgateway.service';
 import { N_SocketUpdateAction } from '@nn-rego/chatapp-common';
 
@@ -119,6 +119,14 @@ export class ChatSocketGateway implements OnGatewayInit, OnGatewayConnection, On
 
     if (result.resData.length > 0) {
     } else {}
+  }
+
+
+  // To create a chat 
+  @SubscribeMessage(SocketEvtNames.CHAT_SENT)
+  handleChatSent(@ConnectedSocket() client: Socket, @MessageBody() chatHistory: ChatHistoryType) {
+    console.log('[CHAT HISTORY] ', chatHistory);
+    this.socketService.createChatHistory(chatHistory);
   }
 
 }
