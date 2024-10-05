@@ -51,6 +51,37 @@ export const initialGlobalState : TalkTideState = {
             msgTime: '10:00 AM'
         },
         {
+            msgId: '1',
+            memberId: '10',
+            senderId: '10',
+            content: 'Hi! How are you doing?',
+            hasPreview: false,
+            replayedBy: 'Me',
+            replayedMsgId: '1',
+            msgTime: '10:00 AM'
+        },
+        {
+            msgId: '2',
+            memberId: '10',
+            senderId: '10',
+            content: 'I am Good thanks how do you do?',
+            hasPreview: true,
+            previewContent: 'preview of msg ....',
+            replayedBy: 'chrome',
+            replayedMsgId: '1',
+            msgTime: '10:00 AM'
+        },
+        {
+            msgId: '3',
+            memberId: '10',
+            senderId: '9',
+            content: 'Better than never',
+            hasPreview: false,
+            replayedBy: '',
+            replayedMsgId: '',
+            msgTime: '10:00 AM'
+        },
+        {
             msgId: '2',
             memberId: '10',
             senderId: '11',
@@ -161,10 +192,20 @@ export const R_setUserLoggedin = createReducer(
     })),
 
     /* To insert all members */
-    on(A_insertMembers, (state, { memberList }) => ({
-        ...state,
-        members: memberList
-    })),
+    on(A_insertMembers, (state, { memberList }) => {
+
+        // In case of Selected member update clinetId
+        const hasInSelectedRecipient = state.selectedRecipient ?
+            memberList.find(member => member.recipientAuthId === state.selectedRecipient?.recipientAuthId) : null
+        return {
+            ...state,
+            members: memberList,
+            selectedRecipient: hasInSelectedRecipient ?
+                {...state.selectedRecipient, clientId: hasInSelectedRecipient.clientId } 
+                :
+                state.selectedRecipient
+        }
+    }),
 
     /* To update remote user status in Recipient list */
     on(A_updateRemoteUserStatus, (state, {authId, newStatus}) => {

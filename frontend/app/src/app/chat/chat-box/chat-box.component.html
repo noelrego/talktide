@@ -1,93 +1,91 @@
 <!-- chat-app.component.html -->
 <div class="chat-window">
-    <!-- Chat Header -->
-    <div class="has-text-centered px-3 py-3 card" style="border-bottom: 1px solid var(--theme-color);">
-      <h5 class="title is-5 has-text-dark"
-      *ngIf="(selectedRecipient$ | async)?.recipientFullName; else noUserSelected">{{ (selectedRecipient$ | async)?.recipientFullName }}</h5>
-      <ng-template #noUserSelected>
-        <h5 class="title is-5 has-text-dark">Select the recipient</h5>
-      </ng-template>
-    </div>
-  
-    <section class="hero has-text-centered"
-    *ngIf="(selectedRecipient$ | async) === null; else myChatbox">
-      <div class="hero-body">
-        <div class="container">
-          <h1 class="title is-size-3 has-text-danger is-uppercase">Talk Tide</h1>
-          
-          <h2 class="subtitle is-size-5">Your personal messages are appeared here</h2>
+  <!-- Chat Header -->
+  <div class="has-text-centered px-3 py-3 card" style="border-bottom: 1px solid var(--theme-color);">
+    <h5 class="title is-5 has-text-dark" *ngIf="selectedRecipient.recipientFullName; else noUserSelected">{{
+      (selectedRecipient$ | async)?.recipientFullName }} - {{selectedRecipient.memberId}} - {{selectedRecipient.clientId}}</h5>
+    <ng-template #noUserSelected>
+      <h5 class="title is-5 has-text-dark">Select the recipient</h5>
+    </ng-template>
+  </div>
 
-          <span class="tag is-success is-light is-medium">Web chat</span>
+  <section class="hero has-text-centered" *ngIf="(selectedRecipient$ | async) === null; else myChatbox">
+    <div class="hero-body">
+      <div class="container">
+        <h1 class="title is-size-3 has-text-danger is-uppercase">Talk Tide</h1>
 
-        </div>
+        <h2 class="subtitle is-size-5">Your personal messages are appeared here</h2>
+
+        <span class="tag is-success is-light is-medium">Web chat</span>
+
       </div>
-    </section>
-    <!-- Chat Body -->
-     <ng-template #myChatbox>
+    </div>
+  </section>
+  <!-- Chat Body -->
+  <ng-template #myChatbox>
     <div class="chat-body">
       <!-- Loop through messages -->
       <div *ngFor="let chat of chatHistoryList$ | async" class="chat-message"
-      [ngClass]="(chat.senderId === loggedInUser?.authId) ? 'right': 'left'">
-        
-          <img src="assets/profile-pic.png" class="mr-2 ml-2" alt="profile" style="height: 24px; width: auto;">
-     
-        <div class="content" [ngClass]="{'has-background-primary has-text-white': chat.senderId == loggedInUser?.authId}">
-          <button class="button is-small is-text" (click)="clickReplayMessage(chat)">
+        [ngClass]="(chat.senderId === loggedInUser?.authId) ? 'right': 'left'">
+
+        <img src="assets/profile-pic.png" class="mr-2 ml-2" alt="profile" style="height: 24px; width: auto;">
+
+        <div class="content"
+          [ngClass]="{'has-background-primary has-text-white': chat.senderId == loggedInUser?.authId}">
+          <button class="button is-small is-text" (click)="clickReplayMessage(chat.content)">
             <span class="icon pr-1" title="Replay">
               <i class="fas fa-reply"></i>
             </span>
             <!-- <span>Replay</span> -->
           </button>
           <!-- If preview is there -->
-           <div class="preview-msg px-1 py-1" *ngIf="chat.hasPreview">
+          <div class="preview-msg px-1 py-1" *ngIf="chat.hasPreview">
             <div class="is-size-6 has-text-primary-20 has-text-weight-bold">{{chat.replayedBy}}</div>
             <div class="has-text-dark">{{chat.previewContent}}</div>
-           </div>
+          </div>
           <p>
             <span>{{ chat.content }}</span>
           </p>
         </div>
-        <time>{{ chat.msgTime }}</time>
+        <time>{{ chat.msgTime }} - {{chat.memberId}}</time>
       </div>
     </div>
 
     <!-- Preview of the reply message -->
-  <div class="box" *ngIf="showPreviewMessage">
-    <article class="media">
-      <div class="media-content">
-        <div class="content">
-          <p>
-            <span><strong>Replying to: </strong> {{replayingToPreviewMsg}}</span>
-          </p>
+    <div class="box" *ngIf="showPreviewMessage">
+      <article class="media">
+        <div class="media-content">
+          <div class="content">
+            <p>
+              <span><strong>Replying to: </strong> {{replayingToPreviewMsg}}</span>
+            </p>
+          </div>
         </div>
-      </div>
-      <div class="media-right">
-        <button class="delete" (click)="closePreview()"></button>
-      </div>
-    </article>
-  </div>
-  
+        <div class="media-right">
+          <button class="delete" (click)="closePreview()"></button>
+        </div>
+      </article>
+    </div>
+
     <!-- Chat Footer -->
     <div class="bottom-control">
       <div class="control mx-2 my-2 pl-2 pr-2">
-       
+
         <textarea rows="1" [formControl]="inputTextBox" name="input-chat" id="input-chat"
           class="textarea has-fixed-size" [ngClass]="(inputTextInValid)? 'has-err': ''"
-          placeholder="Type your message here . . ."
-        ></textarea>
+          placeholder="Type your message here . . ."></textarea>
       </div>
       <!-- <input type="text" class="input mx-2 my-2" role="text" placeholder="Enter your message here. . ." /> -->
       <p class="buttons">
         <button class="button has-text-white mx-2 my-2 pl-2 pr-2" style=" background: var(--theme-color);"
-        (click)="sendMessage()">
-          <span class="icon is-small" >
+          (click)="sendMessage()">
+          <span class="icon is-small">
             <i class="fas fa-paper-plane"></i>
           </span>
           <span>Send</span>
         </button>
       </p>
-   </div>
+    </div>
   </ng-template>
 
-  </div>
-  
+</div>
