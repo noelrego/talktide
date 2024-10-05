@@ -26,27 +26,28 @@
      <ng-template #myChatbox>
     <div class="chat-body">
       <!-- Loop through messages -->
-      <div *ngFor="let message of messages" [ngClass]="{'chat-message': true, 'left': message.side === 'left', 'right': message.side === 'right'}">
+      <div *ngFor="let chat of chatHistoryList$ | async" class="chat-message"
+      [ngClass]="(chat.senderId === loggedInUser?.authId) ? 'right': 'left'">
         
           <img src="assets/profile-pic.png" class="mr-2 ml-2" alt="profile" style="height: 24px; width: auto;">
      
-        <div class="content" [ngClass]="{'has-background-primary has-text-white': message.side === 'right'}">
-          <button class="button is-small is-text" (click)="clickReplayMessage(message.msgId, message.text)">
+        <div class="content" [ngClass]="{'has-background-primary has-text-white': chat.senderId == loggedInUser?.authId}">
+          <button class="button is-small is-text" (click)="clickReplayMessage(chat)">
             <span class="icon pr-1" title="Replay">
               <i class="fas fa-reply"></i>
             </span>
             <!-- <span>Replay</span> -->
           </button>
           <!-- If preview is there -->
-           <div class="preview-msg px-2 py-2" *ngIf="message.hasPreview">
-            <h6 class="is-size-7 has-text-info has-text-weight-bold">{{message.replayedBy}}</h6>
-            <p class="has-text-dark">{{message.replayedContent}}</p>
+           <div class="preview-msg px-1 py-1" *ngIf="chat.hasPreview">
+            <div class="is-size-6 has-text-primary-20 has-text-weight-bold">{{chat.replayedBy}}</div>
+            <div class="has-text-dark">{{chat.previewContent}}</div>
            </div>
           <p>
-            <span>{{ message.text }}</span>
+            <span>{{ chat.content }}</span>
           </p>
         </div>
-        <time>{{ message.time }}</time>
+        <time>{{ chat.msgTime }}</time>
       </div>
     </div>
 

@@ -30,7 +30,7 @@
 .chat-message {
     display: flex;
     align-items: flex-start;
-    margin-bottom: 15px;
+    margin-bottom: 1rem;
 }
 
 .chat-message.left {

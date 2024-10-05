@@ -1,5 +1,5 @@
 import { createAction, props } from "@ngrx/store";
-import { UserInfoType, AvailableUserType, MemberListType, SelectedRecipientChatType } from "../common";
+import { UserInfoType, AvailableUserType, MemberListType, SelectedRecipientChatType, ChatHistoryType } from "../common";
 
 
 export const A_userLoggedin = createAction('[Auth] User Logged in status', 
@@ -49,4 +49,12 @@ export const A_updateRemoteUserStatus = createAction('[Update Status] To update 
 
 export const A_setSelectedRecipient = createAction('[SELECTED] Selected recipient', 
     props<{ selectedRecipient: SelectedRecipientChatType }>()
+)
+
+export const A_updateChatHistory = createAction('[CHAT HISTORY] On new recipient select update messages',
+    props<{ chatContents: ChatHistoryType[] }>()
+)
+
+export const A_pushNewChatContent = createAction('[CHAT HISTORY] On user creates new message', 
+    props<{ chatContent: ChatHistoryType }>()
 )

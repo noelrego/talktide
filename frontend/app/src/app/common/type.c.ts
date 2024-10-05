@@ -44,3 +44,16 @@ export type LoggedInMemberInfo = {
     userStatus: string;
     clientId: string;
 }
+
+
+export type ChatHistoryType = {
+    msgId: string;
+    memberId: string;
+    senderId: string;
+    content: string;
+    hasPreview: boolean;
+    previewContent?: string;
+    replayedBy?: string;
+    replayedMsgId?: string;
+    msgTime: string;
+}

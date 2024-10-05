@@ -1,149 +1,60 @@
-import { Component } from '@angular/core';
+import { AfterContentInit, Component, OnDestroy, OnInit } from '@angular/core';
 import { SocketService } from '../socket/socket.service';
 import { Observable } from 'rxjs';
 import { Store } from '@ngrx/store';
-import { SelectedRecipientChatType } from '../../common';
-import { S_selectedRecipient } from '../../STORE';
+import { ChatHistoryType, SelectedRecipientChatType, UserInfoType } from '../../common';
+import { S_chatHistoryList, S_selectedRecipient, S_userInfo } from '../../STORE';
 
 @Component({
   selector: 'app-chat-box',
   templateUrl: './chat-box.component.html',
   styleUrl: './chat-box.component.css'
 })
-export class ChatBoxComponent {
+export class ChatBoxComponent implements OnInit, AfterContentInit, OnDestroy {
 
   newMessage: string = '';
   showPreviewMessage: boolean = false;
   replayingToPreviewMsg: string = '';
 
+  loggedInUser : UserInfoType | null;
+  loggedInUser$: Observable<UserInfoType | null>;
+
   selectedRecipient$ : Observable<SelectedRecipientChatType | null>;
+  chatHistoryList$: Observable<ChatHistoryType[]>;
 
   constructor(
     private socketService: SocketService,
     private store: Store,
   ) {
+    this.loggedInUser$ = this.store.select(S_userInfo);
     this.selectedRecipient$ = this.store.select(S_selectedRecipient);
+    this.chatHistoryList$ = this.store.select(S_chatHistoryList);
   }
 
-  // Example messages for demonstration
-  messages = [
-    {
-      msgId: 1,
-      text: 'First Msg asiudaisu aisdiuasdu iausdiausgdiuasdas auisdiuagsdiasudliaa asiduagisudgasiudg',
-      hasPreview: false,
-      replayedBy: 'Noel',
-      replayedContent: 'ok',
-      replayedToMessageId: 10,
-      time: '10:01 AM',
-      side: 'left'
-    },
-    {
-      msgId: 2,
-      text: 'I\'m good, thank you! How about you?',
-      hasPreview: false,
-      replayedBy: 'Noel',
-      replayedContent: 'ok',
-      replayedToMessageId: 10,
-      time: '10:02 AM',
-      side: 'right'
-    },
-    {
-      msgId: 3,
-      text: 'I\'m doing well too, thanks for asking.',
-      hasPreview: true,
-      replayedBy: 'Noel',
-      replayedContent: 'ok',
-      replayedToMessageId: 10,
-      time: '10:03 AM',
-      side: 'left'
-    },
-    {
-      msgId: 4,
-      text: 'Hello! How are you doing today?',
-      hasPreview: false,
-      replayedBy: 'Noel',
-      replayedContent: 'ok',
-      replayedToMessageId: 10,
-      time: '10:01 AM',
-      side: 'left'
-    },
-    {
-      msgId: 5,
-      text: 'I\'m good, thank you! How about you?',
-      hasPreview: false,
-      replayedBy: 'Noel',
-      replayedContent: 'ok',
-      replayedToMessageId: 10,
-      time: '10:02 AM',
-      side: 'right'
-    },
-    {
-      msgId: 6,
-      text: 'I\'m doing well too, thanks for asking.',
-      hasPreview: true,
-      replayedBy: 'Noel',
-      replayedContent: 'ok',
-      replayedToMessageId: 10,
-      time: '10:03 AM',
-      side: 'left'
-    },
-    {
-      msgId: 17,
-      text: 'Hello! How are you doing today?',
-      hasPreview: false,
-      replayedBy: 'Noel',
-      replayedContent: 'ok',
-      replayedToMessageId: 10,
-      time: '10:01 AM',
-      side: 'left'
-    },
-    {
-      msgId: 8,
-      text: 'I\'m good, thank you! How about you? asiauhsiuahsiuhdaisuhdiuhahsu',
-      hasPreview: true,
-      replayedBy: 'Noel',
-      replayedContent: 'Blah Blah',
-      replayedToMessageId: 10,
-      time: '10:02 AM',
-      side: 'right'
-    },
-    {
-      msgId: 9,
-      text: 'Last Msg',
-      hasPreview: true,
-      replayedBy: 'Noel',
-      replayedContent: 'ok',
-      replayedToMessageId: 10,
-      time: '10:03 AM',
-      side: 'left'
-    }
-  ];
+  ngOnInit(): void {
+    this.loggedInUser$.subscribe(res => this.loggedInUser = res)
+  }
+
+  ngAfterContentInit(): void {
+    
+  }
 
   sendMessage() {
-    if (this.newMessage.trim()) {
-      this.messages.push({
-        msgId: 1,
-        text: this.newMessage,
-        hasPreview: false,
-        replayedBy: 'Noel',
-        replayedContent: 'Some msg',
-        replayedToMessageId: 13,
-        time: new Date().toLocaleTimeString(),
-        side: 'right'
-      });
-      this.newMessage = ''; // Clear input
-    }
+    console.log(' [SEND MESSAGE] to be constructed new chat: ');
   }
 
-  clickReplayMessage(msgId: number, msg: string) {
-    console.log('Clicked Replay', msgId, msg);
-    this.showPreviewMessage = true;
-    this.replayingToPreviewMsg = msg.slice(0, 40) + ' . . .';
+  clickReplayMessage(chatInfo: ChatHistoryType) {
+    console.table(chatInfo);
+    this.replayingToPreviewMsg = 'TO DO BOY SO CLOSE' + ' . . .';
   }
 
   closePreview() {
     this.showPreviewMessage = false;
     this.replayingToPreviewMsg = '';
+  }
+
+  ngOnDestroy(): void {
+    
   }
 
 }

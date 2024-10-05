@@ -33,3 +33,8 @@ export const S_selectedRecipient = createSelector(
     myState,
     (state) => state.selectedRecipient
 )
+
+export const S_chatHistoryList = createSelector(
+    myState,
+    (state) => state.chatMessages
+)

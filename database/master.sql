@@ -49,13 +49,17 @@ CREATE DATABASE message_service;
 
 \c message_service;
 
-CREATE TABLE IF NOT EXISTS messages (
+CREATE TABLE IF NOT EXISTS chat_history (
     id SERIAL PRIMARY KEY,
     member_id INTEGER NOT NULL,
-    message_content TEXT NOT NULL,
+    sender_id INTEGER NOT NULL,
+    content TEXT NOT NULL,
     has_preview BOOLEAN DEFAULT false,
     replayed_by VARCHAR(32),
     replayed_msg_id INTEGER,
     create_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
+CREATE INDEX idx_member_id ON chat_history (member_id);
+CREATE INDEX idx_sender_id ON chat_history (sender_id);

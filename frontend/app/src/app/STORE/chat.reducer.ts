@@ -4,7 +4,7 @@
  */
 
 import { createReducer, on } from "@ngrx/store";
-import { A_particularUserLoggedout, A_insertAvailableUser, A_insertAvailableUserList, A_insertMembers, A_otherUserChangedState, A_resetAvailableUserList, A_resetuserStatus, A_setUserInfo, A_setUserState, A_updateAvilableUserState, A_userLoggedin, A_updateRemoteUserStatus, A_setSelectedRecipient } from "./chat.action";
+import { A_particularUserLoggedout, A_insertAvailableUser, A_insertAvailableUserList, A_insertMembers, A_otherUserChangedState, A_resetAvailableUserList, A_resetuserStatus, A_setUserInfo, A_setUserState, A_updateAvilableUserState, A_userLoggedin, A_updateRemoteUserStatus, A_setSelectedRecipient, A_updateChatHistory, A_pushNewChatContent } from "./chat.action";
 import { TalkTideState } from "./app.state";
 import { LocalStrgService } from "../service/localstorage/ls.service";
 import { UserStatus } from "../common";
@@ -17,7 +17,51 @@ export const initialGlobalState : TalkTideState = {
     userInfo : ls.getUserInfo(),
     selectedRecipient: null,
     availableUsersList: [],
-    members: []
+    members: [],
+    chatMessages: [
+        {
+            msgId: '1',
+            memberId: '10',
+            senderId: '10',
+            content: 'Hi! How are you doing?',
+            hasPreview: false,
+            replayedBy: 'Me',
+            replayedMsgId: '1',
+            msgTime: '10:00 AM'
+        },
+        {
+            msgId: '2',
+            memberId: '10',
+            senderId: '10',
+            content: 'I am Good thanks how do you do?',
+            hasPreview: true,
+            previewContent: 'preview of msg ....',
+            replayedBy: 'chrome',
+            replayedMsgId: '1',
+            msgTime: '10:00 AM'
+        },
+        {
+            msgId: '3',
+            memberId: '10',
+            senderId: '9',
+            content: 'Better than never',
+            hasPreview: false,
+            replayedBy: '',
+            replayedMsgId: '',
+            msgTime: '10:00 AM'
+        },
+        {
+            msgId: '2',
+            memberId: '10',
+            senderId: '11',
+            content: 'I am Good thanks how do you do?',
+            hasPreview: true,
+            previewContent: 'has some here ...',
+            replayedBy: 'chrome',
+            replayedMsgId: '1',
+            msgTime: '10:00 AM'
+        },
+    ]
 }; // Inital State
 
 export const R_setUserLoggedin = createReducer(
@@ -145,6 +189,21 @@ export const R_setUserLoggedin = createReducer(
         {
             ...state,
             selectedRecipient: selectedRecipient
+        }
+    )),
+
+    // To upadte chat as new recipient is selected
+    on(A_updateChatHistory, (state, { chatContents }) => (
+        {
+            ...state,
+            chatMessages: chatContents
+        }
+    )),
+
+    on(A_pushNewChatContent, (state, { chatContent }) => (
+        {
+            ...state,
+            chatMessages: [...state.chatMessages, chatContent]
         }
     ))
 
