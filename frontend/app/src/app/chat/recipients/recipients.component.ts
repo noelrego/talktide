@@ -3,7 +3,7 @@ import { SocketService } from '../socket/socket.service';
 import { Observable, Subscription } from 'rxjs';
 import { AvailableUserType, CreateMemberType, MemberListType, SelectedRecipientChatType, SocketEvtNames, UserInfoType } from '../../common';
 import { Store } from '@ngrx/store';
-import { A_particularUserLoggedout, A_insertAvailableUserList, A_insertMembers, S_availableUserList, S_membersList, S_userInfo, S_userState, A_updateRemoteUserStatus, A_setSelectedRecipient, S_selectedRecipient, A_updateChatHistory, A_resetChatHistory, A_pushNewChatContent } from '../../STORE';
+import { A_particularUserLoggedout, A_insertAvailableUserList, A_insertMembers, S_availableUserList, S_membersList, S_userInfo, S_userState, A_updateRemoteUserStatus, A_setSelectedRecipient, S_selectedRecipient, A_updateChatHistory, A_resetChatHistory, A_pushNewChatContent, A_chatNotify } from '../../STORE';
 import { ApiDataService } from '../../service/api';
 
 @Component({
@@ -90,7 +90,9 @@ export class RecipientsComponent implements OnInit, AfterContentInit, OnDestroy 
 
     this.socketChatNotification$ = this.socketService.onEvent(SocketEvtNames.CHAT_NOTIFY).subscribe(res => {
       console.log('[NOTIFY MESSAGE]');
-      this.store.dispatch(A_pushNewChatContent({
+
+      // Check if selected participant is same
+      this.store.dispatch(A_chatNotify({
         chatContent: res
       }))
     })
