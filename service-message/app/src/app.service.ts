@@ -29,14 +29,14 @@ export class AppService {
         hasPreview: payload.hasPreview,
         previewContent: payload?.previewContent || '',
         replayedBy: payload?.replayedBy || '',
-        replayedMsgId: Number(payload?.replayedMsgId)
+        replayedMsgId: 0
       });
 
       await this.messageRepo.save(newChat);
 
       return;
     } catch (error) {
-      this.logger.error(error.toString());
+      this.logger.error(error);
       return;
     }
   }

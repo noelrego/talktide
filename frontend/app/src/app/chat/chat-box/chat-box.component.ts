@@ -88,7 +88,9 @@ export class ChatBoxComponent implements OnInit, AfterContentInit, OnDestroy {
 
     this.inputTextBox.setValue('');
     this.inputTextInValid = false;
-    this.scrollToBottom();
+    setTimeout(() => {
+      this.scrollToBottom();
+    }, 500);
   }
 
   clickReplayMessage(chatContent: string, msgId: string) {
