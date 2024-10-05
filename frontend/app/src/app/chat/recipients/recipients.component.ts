@@ -3,7 +3,7 @@ import { SocketService } from '../socket/socket.service';
 import { Observable, Subscription } from 'rxjs';
 import { AvailableUserType, CreateMemberType, MemberListType, SelectedRecipientChatType, SocketEvtNames, UserInfoType } from '../../common';
 import { Store } from '@ngrx/store';
-import { A_particularUserLoggedout, A_insertAvailableUserList, A_insertMembers, S_availableUserList, S_membersList, S_userInfo, S_userState, A_updateRemoteUserStatus, A_setSelectedRecipient, S_selectedRecipient, A_updateChatHistory, A_resetChatHistory } from '../../STORE';
+import { A_particularUserLoggedout, A_insertAvailableUserList, A_insertMembers, S_availableUserList, S_membersList, S_userInfo, S_userState, A_updateRemoteUserStatus, A_setSelectedRecipient, S_selectedRecipient, A_updateChatHistory, A_resetChatHistory, A_pushNewChatContent } from '../../STORE';
 import { ApiDataService } from '../../service/api';
 
 @Component({
@@ -29,6 +29,7 @@ export class RecipientsComponent implements OnInit, AfterContentInit, OnDestroy 
   socketCreatedChatMember$: Subscription;
   socketCreatedChatMemberSelf$: Subscription;
   sockerUserChangedStatus$: Subscription;
+  socketChatNotification$: Subscription;
 
   constructor(
     private socketService: SocketService,
@@ -84,6 +85,13 @@ export class RecipientsComponent implements OnInit, AfterContentInit, OnDestroy 
       this.store.dispatch(A_updateRemoteUserStatus({
         authId: res.authId,
         newStatus: res.newStatus
+      }))
+    });
+
+    this.socketChatNotification$ = this.socketService.onEvent(SocketEvtNames.CHAT_NOTIFY).subscribe(res => {
+      console.log('[NOTIFY MESSAGE]');
+      this.store.dispatch(A_pushNewChatContent({
+        chatContent: res
       }))
     })
 
@@ -207,6 +215,7 @@ export class RecipientsComponent implements OnInit, AfterContentInit, OnDestroy 
     this.socketSomeoneLoggedOut$.unsubscribe();
     this.socketCreatedChatMemberSelf$.unsubscribe();
     this.sockerUserChangedStatus$.unsubscribe();
+    this.socketChatNotification$.unsubscribe();
   }
 
 }

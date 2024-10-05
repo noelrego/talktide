@@ -17,12 +17,17 @@ export enum UserStatus {
 }
 
 export enum SocketEvtNames {
+    
+    // emit
     CHANGE_USER_STATE = 'changeUserState',
     CREATE_MEMBER_BY_AVAILABLE_LIST = 'createMemberByAvailableList',
+    CHAT_SENT = 'chatSent',
+
+    // on
     SOMEONE_LOGGEDIN = 'SOMEONE_LOGGEDIN',
     SOMEONE_LOGGEDOUT = 'SOMEONE_LOGGEDOUT',
     CREATED_CHAT_MEMBER = 'CREATED_CHAT_MEMBER',
     CREATED_CHAT_MEMBER_SELF = 'CREATED_CHAT_MEMBER_SELF',
     USER_CHANGED_STATUS = 'USER_CHANGED_STATUS',
-    CHAT_SENT = 'chatSent'
+    CHAT_NOTIFY = 'CHAT_NOTIFY'
 }

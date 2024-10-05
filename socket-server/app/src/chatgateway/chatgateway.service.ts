@@ -88,7 +88,7 @@ export class ChatGatewayService {
      * @returns 
      */
     async createChatHistory(chatInfo: ChatHistoryType) {
-        this.messageClient.send(N_MsgPatternMessageService.CREATE_MESSAGE, chatInfo).subscribe(); 
+        return this.messageClient.send(N_MsgPatternMessageService.CREATE_MESSAGE, chatInfo).subscribe(); 
     }
 
 }

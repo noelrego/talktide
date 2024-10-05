@@ -72,6 +72,7 @@ export class ChatBoxComponent implements OnInit, AfterContentInit, OnDestroy {
       senderId: this.loggedInUser?.authId || '',
       msgTime: this.getFormattedTime(),
       replayedMsgId: this.previewMsgId,
+      clientId: this.selectedRecipient?.clientId || ''
     };
 
     this.store.dispatch(A_pushNewChatContent({

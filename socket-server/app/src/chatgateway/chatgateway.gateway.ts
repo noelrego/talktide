@@ -126,7 +126,8 @@ export class ChatSocketGateway implements OnGatewayInit, OnGatewayConnection, On
   @SubscribeMessage(SocketEvtNames.CHAT_SENT)
   handleChatSent(@ConnectedSocket() client: Socket, @MessageBody() chatHistory: ChatHistoryType) {
     console.log('[CHAT HISTORY] ', chatHistory);
-    this.socketService.createChatHistory(chatHistory);
+    this.socketService.createChatHistory(chatHistory).catch(err=> err);
+    this.server.to(chatHistory.clientId).emit('CHAT_NOTIFY', chatHistory);
   }
 
 }

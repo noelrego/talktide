@@ -56,4 +56,5 @@ export type ChatHistoryType = {
     replayedBy?: string;
     replayedMsgId?: string;
     msgTime: string;
+    clientId?: string;
 }
