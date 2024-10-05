@@ -3,7 +3,7 @@ import { SocketService } from '../socket/socket.service';
 import { Observable, Subscription } from 'rxjs';
 import { AvailableUserType, CreateMemberType, MemberListType, SelectedRecipientChatType, SocketEvtNames, UserInfoType } from '../../common';
 import { Store } from '@ngrx/store';
-import { A_particularUserLoggedout, A_insertAvailableUserList, A_insertMembers, S_availableUserList, S_membersList, S_userInfo, S_userState, A_updateRemoteUserStatus, A_setSelectedRecipient, S_selectedRecipient } from '../../STORE';
+import { A_particularUserLoggedout, A_insertAvailableUserList, A_insertMembers, S_availableUserList, S_membersList, S_userInfo, S_userState, A_updateRemoteUserStatus, A_setSelectedRecipient, S_selectedRecipient, A_updateChatHistory, A_resetChatHistory } from '../../STORE';
 import { ApiDataService } from '../../service/api';
 
 @Component({
@@ -16,19 +16,19 @@ export class RecipientsComponent implements OnInit, AfterContentInit, OnDestroy 
   selectedRecipient: string = '';
   memberList: any = [];
 
-  loggedInUser : UserInfoType | null;
+  loggedInUser: UserInfoType | null;
 
   availableUserList$: Observable<AvailableUserType[]>;
   loggedInUser$: Observable<UserInfoType | null>;
   userStatus$: Observable<string | null>;
   memberList$: Observable<MemberListType[]>;
-  selectedRecipient$ : Observable<SelectedRecipientChatType | null>;
+  selectedRecipient$: Observable<SelectedRecipientChatType | null>;
 
   socketSomeoneLoggedIn$: Subscription;
   socketSomeoneLoggedOut$: Subscription;
   socketCreatedChatMember$: Subscription;
   socketCreatedChatMemberSelf$: Subscription;
-  sockerUserChangedStatus$ : Subscription;
+  sockerUserChangedStatus$: Subscription;
 
   constructor(
     private socketService: SocketService,
@@ -51,7 +51,7 @@ export class RecipientsComponent implements OnInit, AfterContentInit, OnDestroy 
 
     /* Update user info state */
     this.loggedInUser$.subscribe(res => {
-      this.loggedInUser = (res?.authId) ? res: null;
+      this.loggedInUser = (res?.authId) ? res : null;
     })
 
     /* Update Initial State to server on Page refresh! */
@@ -98,7 +98,7 @@ export class RecipientsComponent implements OnInit, AfterContentInit, OnDestroy 
 
   /* To set in state for Selected user for chat */
   selectRecipient(recipient: MemberListType): void {
-    console.log('[SELECTED RECIPIENT] ',recipient);
+    console.log('[SELECTED RECIPIENT] ', recipient);
     const selectedInfo: SelectedRecipientChatType = {
       recipientAuthId: recipient.recipientAuthId,
       recipientFullName: recipient.fullName,
@@ -109,6 +109,9 @@ export class RecipientsComponent implements OnInit, AfterContentInit, OnDestroy 
     this.store.dispatch(A_setSelectedRecipient({
       selectedRecipient: selectedInfo
     }));
+
+    this.getChatHistory(recipient.memberId);
+
   }
 
 
@@ -166,6 +169,27 @@ export class RecipientsComponent implements OnInit, AfterContentInit, OnDestroy 
         console.error(err.toString());
       }
     });
+  }
+
+  // To get the chat history 
+  private getChatHistory(memberId: string): void {
+    this.apiData.getChatHistory(memberId).subscribe({
+      next: (response) => {
+        console.log(response);
+        if (response.status === 200) {
+
+          // Update the store with new message
+          this.store.dispatch(A_updateChatHistory({
+            chatContents: response.body.resData
+          }))
+        } else {
+
+          this.store.dispatch(A_resetChatHistory()); //Reset the message
+        }
+
+      },
+      error: (err) => console.error(err.toString())
+    })
   }
 
   ngAfterContentInit(): void {

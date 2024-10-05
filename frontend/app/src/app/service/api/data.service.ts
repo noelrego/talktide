@@ -45,4 +45,9 @@ export class ApiDataService {
     getmemberList() : Observable<HttpResponse<any>> {
         return this.http.get<any>(API_ENDPOINT.GET_MEMBER_LIST, { observe: 'response' })
     }
+
+    // To get the chat History
+    getChatHistory(memberId: string) : Observable<HttpResponse<any>> {
+        return this.http.get<any>(`${API_ENDPOINT.GET_CHAT_HISTORY}/${memberId}`, { observe: 'response' })
+    }
 } 

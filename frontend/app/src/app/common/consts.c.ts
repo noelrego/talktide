@@ -9,4 +9,5 @@ export const API_ENDPOINT = {
     GET_ALL_USERS : `${BASEURL}/user`,
     GET_AVAILABLEUSER_LIST : `${BASEURL}/user/available-list`,
     GET_MEMBER_LIST: `${BASEURL}/user/member-list`,
+    GET_CHAT_HISTORY: `${BASEURL}/message/chat-history`
 }
