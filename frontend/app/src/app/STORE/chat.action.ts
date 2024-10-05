@@ -1,5 +1,5 @@
 import { createAction, props } from "@ngrx/store";
-import { UserInfoType, AvailableUserType, MemberListType } from "../common";
+import { UserInfoType, AvailableUserType, MemberListType, SelectedRecipientChatType } from "../common";
 
 
 export const A_userLoggedin = createAction('[Auth] User Logged in status', 
@@ -45,4 +45,8 @@ export const A_insertMembers = createAction('[Members] The insert all members',
 
 export const A_updateRemoteUserStatus = createAction('[Update Status] To update the status in recipient list', 
     props<{ authId: string, newStatus: string }>()
+)
+
+export const A_setSelectedRecipient = createAction('[SELECTED] Selected recipient', 
+    props<{ selectedRecipient: SelectedRecipientChatType }>()
 )

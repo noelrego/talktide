@@ -7,8 +7,8 @@
 
         <div class="recipient-list">
             <div class="recipient-row card" *ngFor="let member of memberList$ | async"
-                (click)="selectRecipient(member.recipientAuthId)"
-                [ngClass]="(selectedRecipient === member.recipientAuthId)? 'has-background-primary-20 has-text-white': ''">
+                (click)="selectRecipient(member)"
+                [ngClass]="((selectedRecipient$ | async)?.recipientAuthId === member.recipientAuthId)? 'has-background-primary-20 has-text-white': ''">
                 <div class="group">
                     <div class="profile-pic" [title]="member.recipientStatus" style="cursor: pointer;">
                         <img src="assets/profile-pic.png" alt="Profie Pic">

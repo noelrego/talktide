@@ -28,3 +28,8 @@ export const S_membersList = createSelector(
     myState,
     (state) => state.members
 )
+
+export const S_selectedRecipient = createSelector(
+    myState,
+    (state) => state.selectedRecipient
+)

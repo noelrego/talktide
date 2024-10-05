@@ -1,8 +1,8 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable, Subscribable, Subscription } from 'rxjs';
-import { A_resetAvailableUserList, A_resetuserStatus, A_setUserState, S_loggedInstate, S_userInfo, S_userState, TalkTideState } from '../../STORE';
-import { ProvideReducerName, SocketEvtNames, UserInfoType } from '../../common';
+import { A_resetAvailableUserList, A_resetuserStatus, A_setUserState, S_loggedInstate, S_selectedRecipient, S_userInfo, S_userState, TalkTideState } from '../../STORE';
+import { ProvideReducerName, SelectedRecipientChatType, SocketEvtNames, UserInfoType } from '../../common';
 import { CustomCookieService } from '../../service/cookie/cookie.service';
 import { Router } from '@angular/router';
 import { FormControl, ValueChangeEvent } from '@angular/forms';
@@ -37,7 +37,6 @@ export class ChatWindowComponent implements OnInit, OnDestroy{
 
   userInfo$ : Observable<UserInfoType | null>;
   userStatus$ : Observable<string | null>;
-
   // Socket events
   
 

@@ -4,10 +4,11 @@ export type UserInfoType = {
     fullName: string;
 }
 
-export type SelectedRecipienttoChatType = {
-    recipientId: number | null,
-    recipientUserName: string;
+export type SelectedRecipientChatType = {
+    recipientAuthId: string;
     recipientFullName: string;
+    clientId: string;
+    memberId: string;
 }
 
 export type AvailableUserType = {

@@ -1,5 +1,9 @@
 import { Component } from '@angular/core';
 import { SocketService } from '../socket/socket.service';
+import { Observable } from 'rxjs';
+import { Store } from '@ngrx/store';
+import { SelectedRecipientChatType } from '../../common';
+import { S_selectedRecipient } from '../../STORE';
 
 @Component({
   selector: 'app-chat-box',
@@ -8,14 +12,18 @@ import { SocketService } from '../socket/socket.service';
 })
 export class ChatBoxComponent {
 
-  userName: string = 'User\'s Name';
   newMessage: string = '';
   showPreviewMessage: boolean = false;
-  replayingToPreviewMsg: string = ''
+  replayingToPreviewMsg: string = '';
+
+  selectedRecipient$ : Observable<SelectedRecipientChatType | null>;
 
   constructor(
-    private socketService: SocketService
-  ) {}
+    private socketService: SocketService,
+    private store: Store,
+  ) {
+    this.selectedRecipient$ = this.store.select(S_selectedRecipient);
+  }
 
   // Example messages for demonstration
   messages = [
