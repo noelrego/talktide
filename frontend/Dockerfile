@@ -15,11 +15,11 @@ COPY ./app .
 
 EXPOSE 4200
 
-# RUN npm run build --omit=dev --aot --outputHashing=all
+RUN npm run build --omit=dev --aot --outputHashing=all
 
 FROM nginx:alpine
 
-COPY --from=stage /app/dist/appname /usr/share/nginx/html
+COPY --from=stage /app/dist/talktideapp/browser /usr/share/nginx/html
 COPY ./nginx.conf /etc/nginx/conf.d/default.conf
 
 RUN rm -rf /var/cache/nginx/*

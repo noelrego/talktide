@@ -31,10 +31,15 @@ services:
     build: 
       context: ../frontend
       dockerfile: Dockerfile
+      target: stage
     container_name: chat-fe
-    image: chat-fe:2.0.3
+    image: chat-fe:2.0.0
+    volumes:
+      - ../frontend/app/:/app/
+      # - /app/node_modules
     ports:
-      - 4200:80
+      - 4200:4200
+    command: /bin/sh -c "while true; do sleep 3600; done"
     networks:
       - chat-net
 
@@ -42,59 +47,65 @@ services:
     build: 
       context: ../gateway
       dockerfile: Dockerfile
+      target: stage
     container_name: chat-gateway
-    image: chat-gateway:2.0.1
+    image: chat-gateway:1.0.0
     ports:
       - 8080:8080
     env_file:
       - .env
+    command: /bin/sh -c "while true; do sleep 300; done"
+    volumes:
+      - ../gateway/app/:/app/
     networks:
       - chat-net
-    depends_on:
-      - talktide-broker
   
   talktide-service-authuser:
     build: 
       context: ../service-authuser
       dockerfile: Dockerfile
+      target: stage
     container_name: chat-service-authuser
     env_file:
       - .env
-    image: chat-service-authuser:2.0.0
+    image: chat-service-authuser:1.0.0
+    command: /bin/sh -c "while true; do sleep 300; done"
+    volumes:
+      - ../service-authuser/app/:/app/
     networks:
       - chat-net
-    depends_on:
-      - talktide-db
-      - talktide-broker
 
   talktide-service-amessage:
     build: 
       context: ../service-message
       dockerfile: Dockerfile
+      target: stage
     container_name: chat-service-message
     env_file:
       - .env
-    image: chat-service-message:2.0.0
+    image: chat-service-message:1.0.0
+    command: /bin/sh -c "while true; do sleep 300; done"
+    volumes:
+      - ../service-message/app/:/app/
     networks:
       - chat-net
-    depends_on:
-      - talktide-db
-      - talktide-broker
   
   talktide-socket-server:
     build: 
       context: ../socket-server
       dockerfile: Dockerfile
+      target: stage
     container_name: chat-socket
-    image: chat-socket:2.0.0
+    image: chat-socket:1.0.0
     ports:
       - 8082:8082
     env_file:
       - .env
+    command: /bin/sh -c "while true; do sleep 300; done"
+    volumes:
+      - ../socket-server/app/:/app/
     networks:
       - chat-net
-    depends_on:
-      - talktide-broker
 
 volumes:
   chat-db-vol:
