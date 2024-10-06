@@ -24,6 +24,7 @@ export const initialGlobalState : TalkTideState = {
 export const R_setUserLoggedin = createReducer(
     initialGlobalState,
 
+    // JWT Authenticated
     on(A_userLoggedin, (state, {isLoggedIn}) => {
         console.log(' U P D T I N G  . . . . . S T A T E: ', state.isLoggedIn, isLoggedIn);
         return {
@@ -32,6 +33,7 @@ export const R_setUserLoggedin = createReducer(
           };
     }),
 
+    // Set logged in user info
     on(A_setUserInfo, (state, {userInfo}) => (
         {
             ...state,
@@ -39,6 +41,7 @@ export const R_setUserLoggedin = createReducer(
         }
     )),
 
+    // Set user stae away, available, busy, offline
     on(A_setUserState, (state, { userState }) => (
         {
             ...state,
@@ -46,6 +49,7 @@ export const R_setUserLoggedin = createReducer(
         }
     )),
 
+    // SOme one user logges out
     on(A_particularUserLoggedout, (state, { authId }) => (
         {
             ...state,
@@ -61,6 +65,7 @@ export const R_setUserLoggedin = createReducer(
         }
     )),
 
+    // User state update
     on(A_updateAvilableUserState, (state, { authId, newState }) => (
         {
             ...state,
@@ -105,6 +110,7 @@ export const R_setUserLoggedin = createReducer(
     })),
 
 
+    // Other user in the system chanhes the status
     on(A_otherUserChangedState, (state, {authId, newState}) => ({
         ...state,
         availableUsersList: state.availableUsersList.map(user =>
@@ -174,6 +180,7 @@ export const R_setUserLoggedin = createReducer(
         }
     )),
 
+    // Client side sending message to update the UI
     on(A_pushNewChatContent, (state, { chatContent }) => (
         {
             ...state,
@@ -183,9 +190,10 @@ export const R_setUserLoggedin = createReducer(
 
     on(A_chatNotify, (state, { chatContent }) => {
         
-        // Check sender id is in selected 
+        // Check sender id is in selected recipient
         const msgContent = (state.selectedRecipient?.recipientAuthId === chatContent.senderId) ?
             [chatContent, ...state.chatMessages] : state.chatMessages
+        
         
         // Is sender is not selcted then notify 
         const tempMembers = state.members.map(usr =>
