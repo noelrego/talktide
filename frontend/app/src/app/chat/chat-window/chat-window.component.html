@@ -4,7 +4,7 @@
     <nav class="navbar is-fixed-top" style="background: var(--theme-bg)">
         <div class="navbar-brand ml-3">
             <a class="navbar-item is-uppercase" style="color: var(--theme-color);">
-                <strong>talktide</strong>
+                <strong>talk tide</strong>
             </a>
             <div class="navbar-item">
                 <span class="status-user" [title]="userStatus$ | async" [ngClass]="userStatus$| async">
@@ -18,13 +18,13 @@
         </div>
 
         <!-- Aailable List -->
-        <div class="navbar-menu mr-3" [class.is-active]="isActive">
+        <div class="navbar-menu mr-2" [class.is-active]="isActive">
             <div class="navbar-end">
               <div class="navbar-item">
                 <img src="assets/profile-pic2.png" alt="User Profile">
               </div>
                 <div class="navbar-item" style="white-space: nowrap;">
-                    Hi, <strong>{{ (userInfo$ | async)?.fullName }} - {{(userInfo$ | async)?.authId}}</strong>
+                    Hi, <strong>{{ (userInfo$ | async)?.fullName }}</strong>
                 </div>
                 <div class="navbar-item">
                     <div class="select is-small">

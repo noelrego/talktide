@@ -2,7 +2,7 @@
   position: relative;
   margin: 4rem 3rem 1rem 3rem;
   display: grid;
-  grid-template-columns: 40% 60%;
+  grid-template-columns: 1fr 2fr;
   grid-template-rows: 1fr;
   height: calc(95svh - 4rem);
   gap: 2rem;
