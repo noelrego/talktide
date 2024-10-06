@@ -1,10 +1,6 @@
--- DROP DATABASE IF EXISTS auth_service;
-
 CREATE DATABASE auth_service;
 
 \c auth_service;
-
--- DROP TABLE auth_user;
 
 CREATE TABLE IF NOT EXISTS auth_user (
     id SERIAL PRIMARY KEY,
