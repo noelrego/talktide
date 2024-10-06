@@ -99,7 +99,9 @@ export class ChatBoxComponent implements OnInit, AfterContentInit, OnDestroy {
     this.replayingToPreviewMsg = (chatContent.length > 20) ? 
       `${chatContent.slice(0, 20)} . . .` : chatContent;
     this.previewMsgId = msgId;
-    this.scrollToBottom();
+    setTimeout(() => {
+      this.scrollToBottom();
+    }, 500);
   }
 
   closePreview() {

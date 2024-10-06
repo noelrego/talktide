@@ -2,8 +2,12 @@
 <div class="chat-window">
   <!-- Chat Header -->
   <div class="has-text-centered px-3 py-3 card" style="border-bottom: 1px solid var(--theme-color);">
-    <h5 class="title is-5 has-text-dark" *ngIf="selectedRecipient.recipientFullName; else noUserSelected">{{
-      (selectedRecipient$ | async)?.recipientFullName }} - {{selectedRecipient.memberId}} - {{selectedRecipient.clientId}}</h5>
+    <h5 class="title is-5 has-text-dark profile-name" *ngIf="selectedRecipient.recipientFullName; else noUserSelected">
+      <span>
+        <img src="assets/profile-pic.png" class="mr-2 ml-2" alt="profile" style="height: 28px; width: auto;">
+      </span>
+      {{ (selectedRecipient$ | async)?.recipientFullName }}  
+    </h5>
     <ng-template #noUserSelected>
       <h5 class="title is-5 has-text-dark">No recipient selected</h5>
     </ng-template>
@@ -38,12 +42,16 @@
 
         <div class="content chat-shape"
           [ngClass]="{'has-background-primary has-text-dark': chat.senderId == loggedInUser?.authId}">
-          <button class="button is-small is-text" (click)="clickReplayMessage(chat.content, chat.msgId)">
-            <span class="icon pr-1" title="Replay">
-              <i class="fas fa-reply"></i>
-            </span>
-            <!-- <span>Replay</span> -->
-          </button>
+          
+          <div class="bar">
+            <button class="button is-small is-text" (click)="clickReplayMessage(chat.content, chat.msgId)">
+              <span class="icon pr-1" title="Replay">
+                <i class="fas fa-reply"></i>
+              </span>
+            </button>
+            <time>{{ chat.msgTime }}</time>
+          </div>
+          
           <!-- If preview is there -->
           <div class="preview-msg px-1 py-1" *ngIf="chat.hasPreview">
             <div class="is-size-6 has-text-primary-20 has-text-weight-bold">{{chat.replayedBy}}</div>
@@ -53,7 +61,6 @@
             <span>{{ chat.content }}</span>
           </p>
         </div>
-        <time>{{ chat.msgTime }} - {{chat.memberId}}</time>
       </div>
     </div>
 

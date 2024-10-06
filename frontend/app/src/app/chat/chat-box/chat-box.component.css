@@ -57,10 +57,16 @@
     height: 40px;
 }
 
-.chat-message time {
-    font-size: 12px;
-    color: #aaa;
-    margin-left: 10px;
+.bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.bar time {
+    font-size: .7rem;
+    color: gray;
+    font-weight: bold;
 }
 
 .line {
@@ -81,6 +87,13 @@
 
 .has-err {
     outline: 1px solid red !important;
+}
+
+.profile-name {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    justify-content: center;
 }
 
 

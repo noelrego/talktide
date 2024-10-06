@@ -2,16 +2,6 @@
     display: block;
 }
 
-@media screen and (max-width: 895px) {
-   
-
-    .rec-box {
-        height: var(--responsive-recipient-height) !important;
-        overflow-y: scroll;
-        background: var(--bulma-primary-90);
-    }
-}
-
 .rec-box {
     height: 90svh;
     overflow-x: hidden;
@@ -92,3 +82,14 @@
 .name-responsive {
     display: none;
 }
+
+
+@media screen and (max-width: 895px) {
+   
+    /* 
+        .rec-box {
+            height: var(--responsive-recipient-height) !important;
+            overflow-y: scroll;
+            background: var(--bulma-primary-90);
+        } */
+    }
