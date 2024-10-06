@@ -47,8 +47,6 @@ export class ChatSocketGateway implements OnGatewayInit, OnGatewayConnection, On
     await this.socketService.socketUpadteUserStatus(N_SocketUpdateAction.CONNECTED, updatingData);
     
     // Update user logged in status to all other recipient
-    // const loggedinMember = await this.socketService.getMemberInfo(authData.authId).catch(e => e);
-    // console.log('[SOMEONE LOGIN ] memebr info: ', loggedinMember);
     this.server.emit('SOMEONE_LOGGEDIN', authData.authId);
 
   }
@@ -88,18 +86,6 @@ export class ChatSocketGateway implements OnGatewayInit, OnGatewayConnection, On
   }
 
 
-
-  // // Client asking for Logged in users
-  // @SubscribeMessage(SocketEvtNames.REQUEST_LOGGEDINUSERS)
-  // async handleRequestLoggedinUsers(@ConnectedSocket() client: Socket) {
-    
-  //   const clientAuthId = client['user'].authId;
-  //   const list = await this.socketService.requestAvailableUsers(clientAuthId);
-  //   console.log('LIST: ', list);
-    
-  // }
-
-
   // To create members like chat history
   @SubscribeMessage(SocketEvtNames.CREATE_MEMBER_BY_AVAILABLE_LIST)
   async handleCreateMember(@ConnectedSocket() client: Socket, @MessageBody() members: CreateMemberType) {
@@ -125,7 +111,6 @@ export class ChatSocketGateway implements OnGatewayInit, OnGatewayConnection, On
   // To create a chat 
   @SubscribeMessage(SocketEvtNames.CHAT_SENT)
   handleChatSent(@ConnectedSocket() client: Socket, @MessageBody() chatHistory: ChatHistoryType) {
-    console.log('[CHAT HISTORY] ', chatHistory);
     this.socketService.createChatHistory(chatHistory).catch(err=> err);
     this.server.to(chatHistory.clientId).emit('CHAT_NOTIFY', chatHistory);
   }

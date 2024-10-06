@@ -18,7 +18,6 @@ export class ChatGatewayService {
      * @param members 
      */
     async createChatMembersService(members: CreateMemberType) : Promise<N_GenericResType> {
-        console.log(' CREATE MEMEBR : ', members);
         const response : N_GenericResType = await firstValueFrom(
             this.authServiceClient.send(N_MsgPatternAuthUserService.CREATE_MEMBER, members)
         )
@@ -61,7 +60,6 @@ export class ChatGatewayService {
         const list = await firstValueFrom(
             this.authServiceClient.send(N_MsgPatternAuthUserService.GET_AVAILABLE_LIST, clientAuthId)
         );  
-        console.log(list);
         return list;
 
     }

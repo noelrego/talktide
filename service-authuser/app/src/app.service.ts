@@ -235,7 +235,7 @@ export class AppService {
       }
       return true;
     } catch (error) {
-      console.log('err: ', error.toString());
+      console.error('err: ', error.toString());
       return false;
     }
   }
@@ -248,7 +248,6 @@ export class AppService {
    */
   async getAvailableUserListService(authId: string): Promise<N_GenericResType> {
     try {
-      console.log('AVAILABLE LIST: ', authId);
       const users = await this.authUserRepo
         .createQueryBuilder('auth_user')
         .leftJoinAndSelect('auth_user.statusInfo', 'statusInfo')
@@ -289,12 +288,9 @@ export class AppService {
    */
   async createChatMemberService(payload: CreateMemberType): Promise<N_GenericResType> {
     try {
-      console.log('In Servce: ', payload);
 
       const chatMembers = [payload.firstMember.toString(), payload.secondMember.toString()];
       const roomName: string = `chat_room_${payload.firstMember}_${payload.secondMember}`;
-
-      console.log(chatMembers, roomName);
 
       // Array
       const ifExists = await this.memberRepo.findOne({
@@ -362,8 +358,6 @@ export class AppService {
         }
       }
 
-      console.log(' REQUESTER : ', authId);
-
       const tofetchMemberInfo = await memberExist.reduce<Promise<ReduceMemberTye>>(async (acc, item) => {
         const onlyrecipient = item.chatMembers.filter(ids => ids !== authId).join(',')
         // const memberInfo = await this.authUserRepo.find
@@ -374,8 +368,6 @@ export class AppService {
         .leftJoinAndSelect('auth_user.statusInfo', 'statusInfo')
         .where('auth_user.id = :onlyrecipient', { onlyrecipient })
         .getOne();
-
-        console.log('MEMBER INFO INSIDE REDUCE: ', memebrInfo);
 
         const tempLastMsg : string = (memebrInfo.statusInfo.systemStatus === SystemStatus.LOGIN) ?
         '. . .' : 'User logged out'
@@ -392,9 +384,6 @@ export class AppService {
         });
         return acc;
       }, Promise.resolve({memberInfo: []}));
-
-      console.log('Transform memebr info', tofetchMemberInfo);
-
 
       return {
         statusCode: HttpStatus.OK,
@@ -418,7 +407,6 @@ export class AppService {
    */
   async getMemberInfoService(authId: string) : Promise<object> {
     try {
-      console.log('[SOMEONE LOGGEDIN] : ---------');
       const chatMembers = [authId];
 
       const memebrInfo = await this.authUserRepo
@@ -427,7 +415,6 @@ export class AppService {
       .where('auth_user.id = :authId', {authId})
       .getOne();
 
-      console.log('MEMBER: ', memebrInfo);
       if (!memebrInfo) return {};
 
       const memberInfoData : MemberListType = {
@@ -444,7 +431,7 @@ export class AppService {
       return memberInfoData;
 
     } catch (error) {
-      console.log(error.toString());
+      console.error(error.toString());
       return {};
     }
   }
