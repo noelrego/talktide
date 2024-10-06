@@ -4,9 +4,16 @@ import { UserModule } from './user/user.module';
 import { APP_GUARD } from '@nestjs/core';
 import { AtGuard, AtStrategy } from './jwt';
 import { MessageModule } from './message/message.module';
+import { LoggerModule } from 'nestjs-pino';
 
 @Module({
-  imports: [UserModule, MessageModule],
+  imports: [
+    LoggerModule.forRoot({
+      pinoHttp: {
+        level: 'debug'
+      }
+    }),
+    UserModule, MessageModule],
   controllers: [],
   providers: [
     AtStrategy,
