@@ -19,8 +19,8 @@
   .chat-layout {
     grid-template-columns: 1fr;
     grid-template-rows: var(--responsive-recipient-height) 1fr;
-    margin: 4.2rem 1rem .5rem 1rem;
-  } 
+    margin: 4.2rem 1.2rem .5rem 1.2rem;
+  }
 
  .app-recipient {
     height: auto;
