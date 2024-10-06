@@ -97,7 +97,7 @@
 }
 
 
-@media screen and (max-width: 895px) {
+@media screen and (max-width: 796px) {
     .chat-window {
         height: 75svh !important;
         min-height: 50svh !important;
