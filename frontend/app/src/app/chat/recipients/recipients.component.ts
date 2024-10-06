@@ -56,9 +56,9 @@ export class RecipientsComponent implements OnInit, AfterContentInit, OnDestroy 
     })
 
     /* Update Initial State to server on Page refresh! */
-    // this.userStatus$.subscribe(res =>
-    //   this.socketService.emit(SocketEvtNames.CHANGE_USER_STATE, res)
-    // );
+    this.userStatus$.subscribe(res =>
+      this.socketService.emit(SocketEvtNames.CHANGE_USER_STATE, res)
+    );
 
     /* - - - - - - - - - Regitser socket events - - - - - - - - - - -  */
     this.socketSomeoneLoggedIn$ = this.socketService.onEvent(SocketEvtNames.SOMEONE_LOGGEDIN).subscribe(res => {
