@@ -31,7 +31,7 @@ The application architecture uses API Gatewat and Datbase per service micro serv
 | 7 | Message Service | To manage user chat history. Which has it's own database | |
 | 8 | Docker | To build and run the application| |
 
-## Application Instalation Steps
+## Application Installation Steps
 
 Follow this guide to setup the application locally.
 [TalkTide Instaltion process](./docker/README.md)
