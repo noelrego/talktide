@@ -34,4 +34,4 @@ The application architecture uses API Gatewat and Datbase per service micro serv
 ## Application Installation Steps
 
 Follow this guide to setup the application locally.
-[TalkTide Instaltion process](./docker/README.md)
+[TalkTide Local Hosting process](./docker/README.md)
