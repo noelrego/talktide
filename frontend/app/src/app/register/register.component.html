@@ -56,7 +56,7 @@
           <div class="field">
             <label class="label">Password <span class="has-text-danger">*</span></label>
             <div class="control">
-              <input class="input" placeholder="Enter your password" formControlName="password" autocomplete="off" id="reg-password">
+              <input type="password" class="input" placeholder="Enter your password" formControlName="password" autocomplete="off" id="reg-password">
             </div>
             <div *ngIf="registerForm.get('password')?.errors && registerForm.get('password')?.touched"
               class="help is-danger">
