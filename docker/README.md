@@ -25,6 +25,7 @@
     ```
     $ mv sample.env .env
     ```
+    `NOTE` '''Replace the `sample.env` file which is shared seperately over the Email'''
 4. Bring up the Database service and create Table relations. Build the Database service. From the directory `talktide/docker` and run the follwing commands.
     ```
     $ docker-compose build talktide-db && docker-compose up -d talktide-db
@@ -40,4 +41,6 @@
 ### Application Acess
 Once the docker build is complete the application starts with above command.
 Navigate to [http://localhost:4200/](http://localhost:4200/register).
+
+[RabbitMQ](http://localhost:15672/) user `guest` as credentials.
 
