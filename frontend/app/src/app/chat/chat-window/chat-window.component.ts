@@ -22,19 +22,6 @@ export class ChatWindowComponent implements OnInit, OnDestroy{
   
   selectOption = new FormControl('');
 
-  recipients = [
-    { name: 'Jane Doe', logo: 'path_to_logo1.jpg' },
-    { name: 'John Smith', logo: 'path_to_logo2.jpg' },
-    
-  ];
-
-  messages = [
-    { sender: 'Jane Doe', text: 'Good morning Charles!' },
-    { sender: 'Jane Doe', text: 'How are you?' },
-  ];
-
-  newMessage = '';
-
   userInfo$ : Observable<UserInfoType | null>;
   userStatus$ : Observable<string | null>;
   // Socket events
@@ -63,7 +50,6 @@ export class ChatWindowComponent implements OnInit, OnDestroy{
 
     // V18 Angular Documentation
    this.selectOption.valueChanges.subscribe(val => {
-    console.log('<OPTION>-----------', val);
       const stateVal = (val) ? val : '';  // Val not null at valuechange event
       this.store.dispatch(A_setUserState({userState: stateVal}));
       
@@ -81,7 +67,6 @@ export class ChatWindowComponent implements OnInit, OnDestroy{
 
   logout() {
     // Handle logout
-    console.log('Logging out...');
     this.myCookie.deleteCookie();
     this.lsService.deleteLocalStorage();
     this.store.dispatch(A_resetAvailableUserList());
@@ -91,17 +76,6 @@ export class ChatWindowComponent implements OnInit, OnDestroy{
     this.router.navigate(['/login']);
 
   }
-
-  sendMessage() {
-    if (this.newMessage.trim()) {
-      this.messages.push({
-        sender: 'Charles', 
-        text: this.newMessage
-      });
-      this.newMessage = '';
-    }
-  }
-
 
   ngOnDestroy(): void {
     this.store.dispatch(A_resetAvailableUserList());

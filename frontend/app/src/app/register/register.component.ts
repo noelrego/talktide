@@ -52,7 +52,6 @@ export class RegisterComponent {
 
     this.apiData.checkUserName(userName).subscribe({
       next: (response) => {
-        console.log(response);
         if (response.status === 200) {
           this.userAvailable = true;
           this.userAvailableResponse = response.body.message;
@@ -79,7 +78,6 @@ export class RegisterComponent {
   onSubmit() {
     if (!this.userAvailable) return;
     if (this.registerForm.valid) {
-      console.log('Registration Form Submitted!', this.registerForm.value);
 
       // Make API Call
       const payload: RegisterUserDto = {
@@ -88,7 +86,6 @@ export class RegisterComponent {
         lastName: this.registerForm.value.lastName,
         password: this.registerForm.value.password
       }
-      console.log(payload);
       this.apiData.registerUser(payload).subscribe({
         next: (response) => {
           if (response.status === 201) {

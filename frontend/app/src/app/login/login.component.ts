@@ -70,7 +70,6 @@ export class LoginComponent {
               userName: response.body?.resData?.userInfo?.username,
               fullName: response.body?.resData?.userInfo?.fullName
             }
-            console.log('Logged in User info:', tempUserInfo);
 
             // Set unser info in State and Local storage
             this.lsService.setUserInfo(tempUserInfo);
@@ -89,7 +88,7 @@ export class LoginComponent {
           setTimeout(() => {
               this.invalidUser = false;
           }, 2500);
-          console.log(err);
+          console.error(err.toString());
           this.loginForm.reset();
         }
       });

@@ -89,8 +89,6 @@ export class RecipientsComponent implements OnInit, AfterContentInit, OnDestroy 
     });
 
     this.socketChatNotification$ = this.socketService.onEvent(SocketEvtNames.CHAT_NOTIFY).subscribe(res => {
-      console.log('[NOTIFY MESSAGE]');
-
       // Check if selected participant is same
       this.store.dispatch(A_chatNotify({
         chatContent: res
@@ -108,7 +106,6 @@ export class RecipientsComponent implements OnInit, AfterContentInit, OnDestroy 
 
   /* To set in state for Selected user for chat */
   selectRecipient(recipient: MemberListType): void {
-    console.log('[SELECTED RECIPIENT] ', recipient);
     const selectedInfo: SelectedRecipientChatType = {
       recipientAuthId: recipient.recipientAuthId,
       recipientFullName: recipient.fullName,
@@ -185,7 +182,6 @@ export class RecipientsComponent implements OnInit, AfterContentInit, OnDestroy 
   private getChatHistory(memberId: string): void {
     this.apiData.getChatHistory(memberId).subscribe({
       next: (response) => {
-        console.log(response);
         if (response.status === 200) {
 
           // Update the store with new message

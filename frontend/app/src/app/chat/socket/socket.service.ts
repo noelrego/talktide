@@ -12,13 +12,10 @@ export class SocketService {
   socketConnected: boolean = false;
 
   constructor(private myCookie: CustomCookieService) {
-    console.log(' [SOCKET SEVICE] Some one called me Initiating . . .');
   }
 
   connectSocket(): void {
-    console.log(' S O C K E T   C O O N E C T I N G');
     const socketUrl = ENVS.WEBSOCKRT_URL;
-    console.log('SOCKET URI: ', socketUrl);
 
     this.socket = io(socketUrl, {
       reconnection : true,
@@ -32,7 +29,6 @@ export class SocketService {
 
     // Handle successful connection
     this.socket.on('connect', () => {
-      console.log('Socket connected');
       this.socketConnected = true;
 
 
@@ -46,18 +42,15 @@ export class SocketService {
 
     // Handle disconnection
     this.socket.on('disconnect', (reason: string) => {
-      console.log(`Socket disconnected:--------`);
       this.socketConnected = false;
     });
 
     // Handle reconnection attempts
     this.socket.on('reconnect_attempt', (attemptNumber: number) => {
-      console.log(`Reconnection attempt #${attemptNumber}`);
     });
 
     // Handle successful reconnection
     this.socket.on('reconnect', () => {
-      console.log('Socket reconnected');
       this.socketConnected = true;
     });
 
@@ -71,7 +64,6 @@ export class SocketService {
 
   // Generic: Listen for specific events
   onEvent(event: string, time = null): Observable<any> {
-    console.log('[NGRX] registering onEvent  ', event);
       return new Observable(observer => {
         this.socket.on(event, (data: any) => {
           observer.next(data);

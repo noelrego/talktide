@@ -24,7 +24,6 @@ export class LocalStrgService {
 
     // Set user status
     setUserStatus(status: string) : void {
-        console.log('LOCAL STORAGE]: . . . ', status);
         localStorage.setItem(LocalStrgNames.USER_STATUS, status);
     }
 
@@ -38,7 +37,6 @@ export class LocalStrgService {
     }
 
     deleteIfExists(key: string) : void {
-        console.log('[Localstorage] deletething :', key)
         if (localStorage.getItem(key)) {
             localStorage.removeItem(key);
         }
