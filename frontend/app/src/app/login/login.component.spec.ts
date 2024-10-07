@@ -46,16 +46,16 @@ describe('LoginComponent', () => {
     fixture.detectChanges();
   });
 
-  xit('should create the component', () => {
+  it('should create the component', () => {
     expect(component).toBeTruthy();
   });
 
-  xit('should initialize the Login form', () => {
+  it('should initialize the Login form', () => {
     expect(component.loginForm.contains('username')).toBeTrue();
     expect(component.loginForm.contains('password')).toBeTrue();
   });
 
-  xit('should validate username', () => {
+  it('should validate username', () => {
     const usernameControl = component.loginForm.controls['username'];
 
     usernameControl.setValue('valid_username123');
@@ -66,25 +66,25 @@ describe('LoginComponent', () => {
     expect(usernameControl.errors).toEqual({ invalidUsername: true });
   });
 
-  xit('should navigate to chat if token cookie is present', () => {
+  it('should navigate to chat if token cookie is present', () => {
     mockCookieService.hasTokenCookie.and.returnValue(true);
     component.ngOnInit();
     expect(mockRouter.navigate).toHaveBeenCalledWith(['chat']);
   });
 
-  xit('should not navigate protect the route', () => {
+  it('should not navigate protect the route', () => {
     mockCookieService.hasTokenCookie.and.returnValue(false);
     component.ngOnInit();
     expect(mockRouter.navigate).not.toHaveBeenCalled();
   });
 
-  xit('should mark mark form as touched', () => {
+  it('should mark mark form as touched', () => {
     spyOn(component.loginForm, 'markAllAsTouched');
     component.onSubmit();
     expect(component.loginForm.markAllAsTouched).toHaveBeenCalled();
   });
 
-  xit('should call login API and do login', () => {
+  it('should call login API and do login', () => {
     const mockResponse = new HttpResponse({
       status: 200,
       statusText: 'OK',
@@ -124,7 +124,7 @@ describe('LoginComponent', () => {
   });
 
 
-  xit('should handle login error and reset form', () => {
+  it('should handle login error and reset form', () => {
     mockApiDataService.loginUser.and.returnValue(throwError(() => new Error('Login failed')));
     
     component.loginForm.setValue({ username: 'testuser', password: 'password' });

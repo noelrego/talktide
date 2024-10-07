@@ -110,7 +110,7 @@ export class ChatBoxComponent implements OnInit, AfterContentInit, OnDestroy {
     this.previewMsgId = '';
   }
 
-  private getFormattedTime(): string {
+  public getFormattedTime(): string {
     const date = new Date();
     let hours = date.getHours();
     const minutes = date.getMinutes().toString().padStart(2, '0');
