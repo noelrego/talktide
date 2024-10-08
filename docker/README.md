@@ -29,7 +29,7 @@
 4. Bring up the Database service and create Table relations. Build the Database service. From the directory `talktide/docker` and run the follwing commands.
     ```
     $ docker-compose build talktide-db && docker-compose up -d talktide-db
-    $ cat ../database/master.sql | docker exec -i chat-db -U admin
+    $ cat ../database/master.sql | docker exec -i chat-db psql -U admin
     ```
     this should create database schema required for the application.
 5. Now build all the remaining services and bring up the application.
